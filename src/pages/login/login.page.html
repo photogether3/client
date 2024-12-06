@@ -1,0 +1,9 @@
+로그인 페이지
+
+<form [formGroup]="loginForm" class="flex flex-col h-full w-1/3 bg-blue-50 p-10">
+  <input type="text" formControlName="username" placeholder="아이디">
+  <input type="password" formControlName="password" placeholder="비밀번호">
+  <button>로그인</button>
+</form>
+
+{{loginForm.value | json}}
