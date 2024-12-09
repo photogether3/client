@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SignUpFormT } from '../../entities/login';
+import { SignUpFormT } from '../../entities/auth';
 
 @Component({
   selector: 'sign-up-page',

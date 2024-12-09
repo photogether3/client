@@ -3,8 +3,8 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { authInterceptor } from '../shared/interceptors';
+import { authInterceptor, errorInterceptor } from '../shared/interceptors';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideHttpClient(withInterceptors([authInterceptor])), provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
+  providers: [provideHttpClient(withInterceptors([errorInterceptor, authInterceptor])), provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
 };
