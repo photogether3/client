@@ -1,4 +1,4 @@
-<a href="/sign_up" class="inline-block ml-auto border border-black">회원가입</a>
+<a href="/sign-up" class="inline-block ml-auto border border-black">회원가입</a>
 
 <div class="flex items-center justify-between mb-6">
   <h1 class="flex-1">로그인</h1>
@@ -6,8 +6,8 @@
 </div>
 
 <form [formGroup]="loginForm" class="flex flex-col h-full">
-  <input type="text" formControlName="username" placeholder="이메일(example@gmail.com)">
-  <input type="password" formControlName="password" placeholder="비밀번호">
+  <input type="text" formControlName="username" placeholder="이메일(example@gmail.com)" class="mb-2">
+  <input type="password" formControlName="password" placeholder="비밀번호" class="mb-2">
   <button [disabled]="loginForm.invalid" (click)="onLogin()">로그인</button>
 </form>
 
