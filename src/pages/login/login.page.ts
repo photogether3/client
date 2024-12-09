@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { LoginFormT } from '../../app/entities/login';
 import { JsonPipe } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { LoginFormT } from '../../app/entities/login';
 
 @Component({
   selector: 'login-page',
@@ -19,4 +19,8 @@ export class LoginPage {
     username: new FormControl('', { nonNullable: true }),
     password: new FormControl('', { nonNullable: true }),
   })
+
+  onLogin() {
+    console.log('로그인');
+  }
 }

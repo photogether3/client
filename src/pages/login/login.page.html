@@ -1,9 +1,23 @@
-로그인 페이지
+<a href="/sign_up" class="inline-block ml-auto border border-black">회원가입</a>
 
-<form [formGroup]="loginForm" class="flex flex-col h-full w-1/3 bg-blue-50 p-10">
-  <input type="text" formControlName="username" placeholder="아이디">
+<div class="flex items-center justify-between mb-6">
+  <h1 class="flex-1">로그인</h1>
+  <a href="/find_password" class="text-sm text-gray-400">비밀번호를 잊어버리셨나요?</a>
+</div>
+
+<form [formGroup]="loginForm" class="flex flex-col h-full">
+  <input type="text" formControlName="username" placeholder="이메일(example@gmail.com)">
   <input type="password" formControlName="password" placeholder="비밀번호">
-  <button>로그인</button>
+  <button [disabled]="loginForm.invalid" (click)="onLogin()">로그인</button>
 </form>
+
+<p class="mt-6">다른 방법으로 로그인하기</p>
+<div class="flex items-center [&>span]:rounded-full [&>span]:bg-blue-500 [&>span]:w-12 [&>span]:h-12">
+  <span>카카오</span>
+  <span>구글</span>
+  <span>트위터</span>
+  <span>애플</span>
+  <span>라인</span>
+</div>
 
 {{loginForm.value | json}}
