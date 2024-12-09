@@ -1,7 +1,7 @@
 import { JsonPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { LoginFormT } from '../../app/entities/login';
+import { LoginFormT } from '../../entities/login';
 
 @Component({
   selector: 'login-page',
