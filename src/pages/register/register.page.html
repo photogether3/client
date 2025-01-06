@@ -1,4 +1,4 @@
-<a href="/sign-in" class="inline-block ml-auto border border-black">로그인</a>
+<a routerLink="/login" class="inline-block ml-auto border border-black">로그인</a>
 
 <div class="flex items-center justify-between mb-6">
   <h1 class="flex-1">회원가입</h1>
@@ -9,6 +9,5 @@
   <input type="text" formControlName="email" placeholder="이메일(example@gmail.com)" class="mb-2">
   <input type="password" formControlName="password" placeholder="비밀번호(영문, 숫자, 특문 중 2개 조합 10자 이상)" class="mb-2">
   <button [disabled]="signUpForm.invalid" (click)="onSignUp()">가입하기</button>
+  {{signUpForm.value | json}}
 </form>
-
-{{signUpForm.value | json}}

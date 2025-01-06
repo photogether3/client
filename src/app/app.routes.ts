@@ -1,21 +1,21 @@
 import { Routes } from '@angular/router';
 import { LoginPage } from '../pages/login';
 import { HomePage } from '../pages/home';
-import { signUpPage } from '../pages/sign-up';
+import { RegisterPage } from 'src/pages/register';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'sign-in',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
   {
-    path: 'sign-in',
+    path: 'login',
     component: LoginPage
   },
   {
-    path: 'sign-up',
-    component: signUpPage
+    path: 'register',
+    component: RegisterPage
   },
   {
     path: 'home',
