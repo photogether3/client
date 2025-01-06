@@ -1,13 +1,13 @@
 import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthApi, LoginFormT } from '../../entities/auth';
 
 @Component({
   selector: 'login-page',
   templateUrl: './login.page.html',
-  imports: [ReactiveFormsModule, JsonPipe]
+  imports: [ReactiveFormsModule, JsonPipe, RouterLink]
 })
 export class LoginPage {
   public loginForm = new FormGroup<LoginFormT>({
