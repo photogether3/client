@@ -11,4 +11,8 @@ export class AuthApi {
   onLogin(loginObj: { username: string, password: string }) {
     return this.http.post(`${environment.serverUrl}/api/v1/auth/login`, loginObj);
   }
+
+  onRegister(registerObj: {email: string, password: string}) {
+    return this.http.post(`${environment.serverUrl}/api/v1/auth/register`, registerObj)
+  }
 }

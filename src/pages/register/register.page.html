@@ -5,9 +5,8 @@
 </div>
 
 <form [formGroup]="signUpForm" class="flex flex-col h-full">
-  <input type="text" formControlName="name" placeholder="이름(2자 이상)" class="mb-2">
   <input type="text" formControlName="email" placeholder="이메일(example@gmail.com)" class="mb-2">
   <input type="password" formControlName="password" placeholder="비밀번호(영문, 숫자, 특문 중 2개 조합 10자 이상)" class="mb-2">
-  <button [disabled]="signUpForm.invalid" (click)="onSignUp()">가입하기</button>
+  <button [disabled]="signUpForm.invalid" (click)="onRegister()">가입하기</button>
   {{signUpForm.value | json}}
 </form>
