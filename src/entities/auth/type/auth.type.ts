@@ -6,7 +6,6 @@ export type LoginFormT = {
 }
 
 export type SignUpFormT = {
-  name: FormControl<string>,
   email: FormControl<string>,
   password: FormControl<string>,
 }
