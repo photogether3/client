@@ -1,15 +1,21 @@
-<a routerLink="/login" class="inline-block ml-auto border border-black">로그인</a>
+<section class="flex flex-col gap-5">
+  <div>
+    <h1 class="text-3xl font-bold">사진첩 덜어내기</h1>
+    <p class="mt-1">캡쳐사진 "사진첩 덜어내기"를 통해 정리해보세요! 🧹</p>
+  </div>
 
-<div class="flex items-center justify-between mb-6">
-  <h1 class="flex-1">회원가입</h1>
-</div>
+  <form [formGroup]="signUpForm" class="flex flex-col h-full gap-2">
+    <input type="text" formControlName="email" placeholder="이메일(example@gmail.com)" />
+    @if (signUpForm.get('email')?.pending) {
+      로딩중 ..
+    }
+    {{ message() }}
+    <input type="password" formControlName="password" placeholder="비밀번호" />
+    <button [disabled]="signUpForm.invalid" (click)="onRegister()">가입하기</button>
+  </form>
 
-<form [formGroup]="signUpForm" class="flex flex-col h-full gap-2">
-  <input type="text" formControlName="email" placeholder="이메일(example@gmail.com)" />
-  @if (signUpForm.get('email')?.pending) {
-    로딩중 ..
-  } 
-  {{ message() }}
-  <input type="password" formControlName="password" placeholder="비밀번호" />
-  <button [disabled]="signUpForm.invalid" (click)="onRegister()">가입하기</button>
-</form>
+  <p>
+    계정이 있으신가요?
+    <a routerLink="/login" class="text-blue-600">로그인 페이지</a>로 이동하기
+  </p>
+</section>
