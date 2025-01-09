@@ -6,7 +6,9 @@
 
 <form [formGroup]="signUpForm" class="flex flex-col h-full gap-2">
   <input type="text" formControlName="email" placeholder="이메일(example@gmail.com)" />
-  {{ isLoading() ? 'loading ...' : '' }}
+  @if (signUpForm.get('email')?.pending) {
+    로딩중 ..
+  } 
   {{ message() }}
   <input type="password" formControlName="password" placeholder="비밀번호" />
   <button [disabled]="signUpForm.invalid" (click)="onRegister()">가입하기</button>
