@@ -13,8 +13,10 @@ import { CustomValidators } from 'src/shared/validators';
 })
 export class RegisterPage implements OnInit {
   public signUpForm!: FormGroup<SignUpFormT>;
-  public emailErrorMsg = signal<string | null>(null);
-  public confirmPwdErrorMsg = signal<string | null>(null);
+  public errorMessage = signal<Record<string, string | null>>({
+    email: null,
+    confirmPassword: null,
+  });
 
   private readonly authApi = inject(AuthApi);
   private readonly userApi = inject(UserApi);
@@ -22,34 +24,15 @@ export class RegisterPage implements OnInit {
   private readonly customValidators = inject(CustomValidators);
 
   ngOnInit() {
-    this.signUpForm.get('email')?.statusChanges.subscribe((status) => {
-      if (status === 'INVALID') {
-        const emailControl = this.signUpForm.get('email');
-
-        if (emailControl?.hasError('required')) {
-          this.emailErrorMsg.set('이메일은 필수입니다.');
-        } else if (emailControl?.hasError('email')) {
-          this.emailErrorMsg.set('유효한 이메일 형식이 아닙니다.');
-        } else if (emailControl?.hasError('duplicateEmail')) {
-          this.emailErrorMsg.set('사용 중인 이메일입니다.');
-        }
-      } else {
-        this.emailErrorMsg.set(null);
-      }
+    this.subscribeToStatusChanges('email', {
+      required: '이메일은 필수입니다.',
+      email: '유효한 이메일 형식이 아닙니다.',
+      duplicateEmail: '사용 중인 이메일입니다.',
     });
 
-    this.signUpForm.get('confirmPassword')?.statusChanges.subscribe((status) => {
-      if (status === 'INVALID') {
-        const confirmPassword = this.signUpForm.get('confirmPassword');
-
-        if (confirmPassword?.hasError('required')) {
-          this.confirmPwdErrorMsg.set('비밀번호 확인은 필수입니다.');
-        } else if (confirmPassword?.hasError('passwordMismatch')) {
-          this.confirmPwdErrorMsg.set('비밀번호가 일치하지 않습니다.');
-        }
-      } else {
-        this.confirmPwdErrorMsg.set(null);
-      }
+    this.subscribeToStatusChanges('confirmPassword', {
+      required: '비밀번호 확인은 필수입니다.',
+      passwordMismatch: '비밀번호가 일치하지 않습니다.',
     });
   }
 
@@ -77,6 +60,29 @@ export class RegisterPage implements OnInit {
 
     this.authApi.onRegister(formData).subscribe(() => {
       this.router.navigateByUrl('/verify-otp');
+    });
+  }
+
+  private subscribeToStatusChanges(controlName: keyof SignUpFormT, errorMap: Record<string, string>) {
+    this.signUpForm.get(controlName)?.statusChanges.subscribe((status) => {
+      if (status === 'INVALID') {
+        const control = this.signUpForm.get(controlName);
+        const errors = control?.errors;
+        console.log(errors);
+
+        if (errors) {
+          const firstErrorKey = Object.keys(errors)[0];
+          this.errorMessage.update((current) => ({
+            ...current,
+            [controlName]: errorMap[firstErrorKey] || null,
+          }));
+        }
+      } else {
+        this.errorMessage.update((current) => ({
+          ...current,
+          [controlName]: null,
+        }));
+      }
     });
   }
 }
