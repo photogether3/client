@@ -1,17 +1,16 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { AuthApi, SignUpFormT } from 'src/entities/auth';
-import { UserApi } from 'src/entities/user';
-import { CommonModule } from '@angular/common';
-import { CustomValidators } from 'src/shared/validators';
+import { Component, inject, OnInit, signal } from "@angular/core";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { AuthApi, SignUpFormT } from "src/entities/auth";
+import { UserApi } from "src/entities/user";
+import { CustomValidators } from "src/shared/validators";
 
 @Component({
-  selector: 'register-page',
-  templateUrl: './register.page.html',
-  imports: [ReactiveFormsModule, RouterLink, CommonModule],
+  selector: 'app-register-form',
+  templateUrl: './register-form.component.html',
+  imports: [ReactiveFormsModule]
 })
-export class RegisterPage implements OnInit {
+export class RegisterFormComponent implements OnInit {
   public signUpForm!: FormGroup<SignUpFormT>;
   public errorMessage = signal<Record<string, string | null>>({
     email: null,

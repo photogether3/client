@@ -1,0 +1,15 @@
+<form [formGroup]="signUpForm" class="flex h-full flex-col gap-2">
+  <input type="text" formControlName="email" placeholder="이메일(example@gmail.com)" />
+  @if (signUpForm.get('email')?.pending) {
+    <span class="ml-1"> 로딩중 .. </span>
+  }
+  @if (errorMessage()['email']) {
+    <p class="ml-1 text-sm text-red-600">{{ errorMessage()['email'] }}</p>
+  }
+  <input type="password" formControlName="password" placeholder="비밀번호" />
+  <input type="password" formControlName="confirmPassword" placeholder="비밀번호 확인" />
+  @if (errorMessage()['confirmPassword']) {
+    <p class="ml-1 text-sm text-red-600">{{ errorMessage()['confirmPassword'] }}</p>
+  }
+  <button [disabled]="signUpForm.invalid" (click)="onRegister()">가입하기</button>
+</form>
