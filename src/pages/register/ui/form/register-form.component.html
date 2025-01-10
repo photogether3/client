@@ -4,12 +4,15 @@
     <span class="ml-1"> 로딩중 .. </span>
   }
   @if (errorMessage()['email']) {
-    <p class="ml-1 text-sm text-red-600">{{ errorMessage()['email'] }}</p>
+    <p class="ml-1 text-xs text-red-600">{{ errorMessage()['email'] }}</p>
   }
   <input type="password" formControlName="password" placeholder="비밀번호" />
+  @if (errorMessage()['password']) {
+    <p class="ml-1 text-xs text-red-600">{{ errorMessage()['password'] }}</p>
+  }
   <input type="password" formControlName="confirmPassword" placeholder="비밀번호 확인" />
   @if (errorMessage()['confirmPassword']) {
-    <p class="ml-1 text-sm text-red-600">{{ errorMessage()['confirmPassword'] }}</p>
+    <p class="ml-1 text-xs text-red-600">{{ errorMessage()['confirmPassword'] }}</p>
   }
   <button [disabled]="signUpForm.invalid" (click)="onRegister()">가입하기</button>
 </form>

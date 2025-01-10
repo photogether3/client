@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angula
 import { Router } from "@angular/router";
 import { AuthApi, RegisterFormType } from "src/entities/auth";
 import { UserApi } from "src/entities/user";
+import { PASSWORD_REGEX } from "src/shared/const";
 import { CustomValidators } from "src/shared/validators";
 
 @Component({
@@ -29,6 +30,11 @@ export class RegisterFormComponent implements OnInit {
       duplicateEmail: '사용 중인 이메일입니다.',
     });
 
+    this.subscribeToStatusChanges('password', {
+      required: '비밀번호는 필수입니다.',
+      pattern: '비밀번호는 8~15자이며, 숫자, 영문자, 특수문자를 포함해야 합니다.',
+    });
+
     this.subscribeToStatusChanges('confirmPassword', {
       required: '비밀번호 확인은 필수입니다.',
       passwordMismatch: '비밀번호가 일치하지 않습니다.',
@@ -43,7 +49,10 @@ export class RegisterFormComponent implements OnInit {
         updateOn: 'change',
         nonNullable: true,
       }),
-      password: new FormControl('', { validators: [Validators.required], nonNullable: true }),
+      password: new FormControl('', {
+        validators: [Validators.required, Validators.pattern(PASSWORD_REGEX)],
+        nonNullable: true
+      }),
       confirmPassword: new FormControl('', {
         validators: [Validators.required],
         asyncValidators: [this.customValidators.checkPasswordMatch()],
