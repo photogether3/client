@@ -2,7 +2,7 @@ import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthApi, LoginFormT } from '../../entities/auth';
+import { AuthApi, LoginFormType } from 'src/entities/auth';
 
 @Component({
   selector: 'login-page',
@@ -10,8 +10,8 @@ import { AuthApi, LoginFormT } from '../../entities/auth';
   imports: [ReactiveFormsModule, JsonPipe, RouterLink]
 })
 export class LoginPage {
-  public loginForm = new FormGroup<LoginFormT>({
-    username: new FormControl('', { nonNullable: true }),
+  public loginForm = new FormGroup<LoginFormType>({
+    email: new FormControl('', { nonNullable: true }),
     password: new FormControl('', { nonNullable: true }),
   })
 

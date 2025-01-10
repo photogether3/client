@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { AuthApi, SignUpFormT } from "src/entities/auth";
+import { AuthApi, RegisterFormType } from "src/entities/auth";
 import { UserApi } from "src/entities/user";
 import { CustomValidators } from "src/shared/validators";
 
@@ -11,7 +11,7 @@ import { CustomValidators } from "src/shared/validators";
   imports: [ReactiveFormsModule]
 })
 export class RegisterFormComponent implements OnInit {
-  public signUpForm!: FormGroup<SignUpFormT>;
+  public signUpForm!: FormGroup<RegisterFormType>;
   public errorMessage = signal<Record<string, string | null>>({
     email: null,
     confirmPassword: null,
@@ -36,7 +36,7 @@ export class RegisterFormComponent implements OnInit {
   }
 
   constructor() {
-    this.signUpForm = new FormGroup<SignUpFormT>({
+    this.signUpForm = new FormGroup<RegisterFormType>({
       email: new FormControl('', {
         validators: [Validators.required, Validators.email],
         asyncValidators: [this.customValidators.checkDuplicateEmail((email) => this.userApi.onDuplicateEmail(email))],
@@ -62,7 +62,7 @@ export class RegisterFormComponent implements OnInit {
     });
   }
 
-  private subscribeToStatusChanges(controlName: keyof SignUpFormT, errorMap: Record<string, string>) {
+  private subscribeToStatusChanges(controlName: keyof RegisterFormType, errorMap: Record<string, string>) {
     this.signUpForm.get(controlName)?.statusChanges.subscribe((status) => {
       if (status === 'INVALID') {
         const control = this.signUpForm.get(controlName);
