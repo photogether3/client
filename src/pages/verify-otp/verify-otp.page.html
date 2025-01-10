@@ -4,8 +4,13 @@
     <p class="mt-1">이메일 확인 후, 인증 코드를 입력해주세요!</p>
   </div>
 
-  <input type="number" minlength="6" />
-  <button (click)="onVerify()">인증하기</button>
+  <form [formGroup]="otpForm" class="">
+    <input type="string" minlength="6" formControlName="otp" class="w-full" />
+    @if (getErrorMessage()) {
+      <p class="mt-1 ml-1 text-xs text-red-600">{{ getErrorMessage() }}</p>
+    }
+    <button [disabled]="otpForm.invalid" (click)="onVerify()" class="w-full mt-3">인증하기</button>
+  </form>
 
   <p class="flex items-center justify-between">
     인증코드가 가지 않았나요 ?
