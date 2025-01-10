@@ -1,1 +1,14 @@
-otp 인증 페이지
+<section class="flex flex-col gap-5">
+  <div>
+    <h1 class="text-3xl font-bold">OTP 인증</h1>
+    <p class="mt-1">이메일 확인 후, 인증 코드를 입력해주세요!</p>
+  </div>
+
+  <input type="number" minlength="6" />
+  <button (click)="onVerify()">인증하기</button>
+
+  <p class="flex items-center justify-between">
+    인증코드가 가지 않았나요 ?
+    <button class="">재요청</button>
+  </p>
+</section>

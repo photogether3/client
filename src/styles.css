@@ -10,13 +10,46 @@ input {
   border-radius: 10px;
 }
 
-button{
+button {
   display: block;
   padding: 10px 20px;
   background-color: skyblue;
   border-radius: 10px;
 
-  &:disabled{
+  &:disabled {
     opacity: 50%;
   }
+} /* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* TODO 지울 것  */
+input {
+  padding: 10px 20px;
+  border: 1px solid gray;
+  border-radius: 10px;
+}
+
+button {
+  display: block;
+  padding: 10px 20px;
+  background-color: skyblue;
+  border-radius: 10px;
+
+  &:disabled {
+    opacity: 50%;
+  }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox  */
+input[type='number'] {
+  -moz-appearance: textfield;
 }

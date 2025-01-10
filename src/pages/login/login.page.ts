@@ -2,23 +2,23 @@ import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthApi, LoginFormT } from '../../entities/auth';
+import { AuthApi, LoginFormType } from 'src/entities/auth';
 
 @Component({
   selector: 'login-page',
   templateUrl: './login.page.html',
-  imports: [ReactiveFormsModule, JsonPipe, RouterLink]
+  imports: [ReactiveFormsModule, JsonPipe, RouterLink],
 })
 export class LoginPage {
-  public loginForm = new FormGroup<LoginFormT>({
-    username: new FormControl('', { nonNullable: true }),
+  public loginForm = new FormGroup<LoginFormType>({
+    email: new FormControl('', { nonNullable: true }),
     password: new FormControl('', { nonNullable: true }),
-  })
+  });
 
   private authApi = inject(AuthApi);
   private router = inject(Router);
 
-  constructor() { }
+  constructor() {}
 
   onLogin() {
     const loginObj = this.loginForm.getRawValue();
@@ -29,8 +29,8 @@ export class LoginPage {
         localStorage.setItem('accessToken', res.accessToken);
         this.router.navigateByUrl('/home');
       } else {
-        alert('로그인 실패 😥')
+        alert('로그인 실패 😥');
       }
-    })
+    });
   }
 }
