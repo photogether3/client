@@ -7,10 +7,16 @@
   <form [formGroup]="signUpForm" class="flex flex-col h-full gap-2">
     <input type="text" formControlName="email" placeholder="이메일(example@gmail.com)" />
     @if (signUpForm.get('email')?.pending) {
-      로딩중 ..
+      <span class="ml-1"> 로딩중 .. </span>
     }
-    {{ message() }}
+    @if (emailErrorMsg()) {
+      <p class="ml-1 text-sm text-red-600">{{ emailErrorMsg() }}</p>
+    }
     <input type="password" formControlName="password" placeholder="비밀번호" />
+    <input type="password" formControlName="confirmPassword" placeholder="비밀번호 확인" />
+    @if (confirmPwdErrorMsg()) {
+      <p class="ml-1 text-sm text-red-600">{{ confirmPwdErrorMsg() }}</p>
+    }
     <button [disabled]="signUpForm.invalid" (click)="onRegister()">가입하기</button>
   </form>
 

@@ -1,11 +1,12 @@
-import { FormControl } from "@angular/forms";
+import { FormControl } from '@angular/forms';
 
 export type LoginFormT = {
-  username: FormControl<string>,
-  password: FormControl<string>,
-}
+  username: FormControl<string>;
+  password: FormControl<string>;
+};
 
 export type SignUpFormT = {
-  email: FormControl<string>,
-  password: FormControl<string>,
-}
+  email: FormControl<string>;
+  password: FormControl<string>;
+  confirmPassword: FormControl<string>;
+};
