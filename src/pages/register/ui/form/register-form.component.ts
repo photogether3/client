@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { AuthApi, RegisterFormType } from "src/entities/auth";
@@ -11,35 +11,28 @@ import { CustomValidators } from "src/shared/validators";
   templateUrl: './register-form.component.html',
   imports: [ReactiveFormsModule]
 })
-export class RegisterFormComponent implements OnInit {
+export class RegisterFormComponent {
   public signUpForm!: FormGroup<RegisterFormType>;
-  public errorMessage = signal<Record<string, string | null>>({
-    email: null,
-    confirmPassword: null,
-  });
 
   private readonly authApi = inject(AuthApi);
   private readonly userApi = inject(UserApi);
   private readonly router = inject(Router);
   private readonly customValidators = inject(CustomValidators);
-
-  ngOnInit() {
-    this.subscribeToStatusChanges('email', {
+  private readonly errorMessages: Record<string, Record<string, string>> = {
+    email: {
       required: '이메일은 필수입니다.',
       email: '유효한 이메일 형식이 아닙니다.',
       duplicateEmail: '사용 중인 이메일입니다.',
-    });
-
-    this.subscribeToStatusChanges('password', {
+    },
+    password: {
       required: '비밀번호는 필수입니다.',
       pattern: '비밀번호는 8~15자이며, 숫자, 영문자, 특수문자를 포함해야 합니다.',
-    });
-
-    this.subscribeToStatusChanges('confirmPassword', {
+    },
+    confirmPassword: {
       required: '비밀번호 확인은 필수입니다.',
       passwordMismatch: '비밀번호가 일치하지 않습니다.',
-    });
-  }
+    },
+  };
 
   constructor() {
     this.signUpForm = new FormGroup<RegisterFormType>({
@@ -51,6 +44,7 @@ export class RegisterFormComponent implements OnInit {
       }),
       password: new FormControl('', {
         validators: [Validators.required, Validators.pattern(PASSWORD_REGEX)],
+        updateOn: 'change',
         nonNullable: true
       }),
       confirmPassword: new FormControl('', {
@@ -71,26 +65,18 @@ export class RegisterFormComponent implements OnInit {
     });
   }
 
-  private subscribeToStatusChanges(controlName: keyof RegisterFormType, errorMap: Record<string, string>) {
-    this.signUpForm.get(controlName)?.statusChanges.subscribe((status) => {
-      if (status === 'INVALID') {
-        const control = this.signUpForm.get(controlName);
-        const errors = control?.errors;
-        console.log(errors);
+  getErrorMessage(controlName: keyof RegisterFormType): string | null {
+    const control = this.signUpForm.get(controlName);
 
-        if (errors) {
-          const firstErrorKey = Object.keys(errors)[0];
-          this.errorMessage.update((current) => ({
-            ...current,
-            [controlName]: errorMap[firstErrorKey] || null,
-          }));
-        }
-      } else {
-        this.errorMessage.update((current) => ({
-          ...current,
-          [controlName]: null,
-        }));
+    if (control?.invalid) {
+      if (control.hasError('required') && !control.touched) {
+        return null;
       }
-    });
+
+      const firstErrorKey = Object.keys(control.errors || {})[0];
+      return this.errorMessages[controlName][firstErrorKey] || null;
+    }
+
+    return null;
   }
 }
