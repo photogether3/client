@@ -1,7 +1,7 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthApi, OtpFormType } from 'src/entities/auth';
+import { AuthApi, AuthService, OtpFormType } from 'src/entities/auth';
 import { OTP_REGEX } from 'src/shared/const';
 
 @Component({
@@ -10,10 +10,11 @@ import { OTP_REGEX } from 'src/shared/const';
   imports: [ReactiveFormsModule],
 })
 export class VerifyOtpFormComponent {
-  public email = input<string>('');
+  public email: string = '';
   public otpForm!: FormGroup;
 
   private authApi = inject(AuthApi);
+  private authService = inject(AuthService);
   private router = inject(Router);
 
   private readonly errorMessages: Record<string, string> = {
@@ -29,11 +30,15 @@ export class VerifyOtpFormComponent {
         updateOn: 'change',
       }),
     });
+
+    // TODO email 로컬 스토리지에 저장 ?
+    this.email = localStorage.getItem('email') || '';
+    console.log(this.email);
   }
 
   onVerify() {
     const otp = this.otpForm.getRawValue().otp;
-    // TODO deviceId 어떻게 설정
+    // TODO (해결) deviceId 어떻게 설정 => fingerprinter? | 로컬스토리지에 저장
     const deviceId = 'test';
     const deviceModel = navigator.userAgent;
     const deviceOs = navigator.platform;
@@ -43,7 +48,7 @@ export class VerifyOtpFormComponent {
     console.log(deviceOs, 'deviceOs');
 
     const formValue = {
-      email: this.email(),
+      email: this.email,
       otp: otp,
       deviceId,
       deviceModel,
@@ -52,9 +57,7 @@ export class VerifyOtpFormComponent {
 
     console.log(formValue);
     this.authApi.verifyOtp(formValue).subscribe((res) => {
-      // TODO 토큰 저장
-      console.log(res);
-      console.log('otp 인증 성공!');
+      this.authService.store(res);
 
       this.router.navigateByUrl('/home');
     });
