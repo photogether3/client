@@ -1,15 +1,15 @@
-import { Component, inject } from "@angular/core";
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
-import { AuthApi, RegisterFormType } from "src/entities/auth";
-import { UserApi } from "src/entities/user";
-import { PASSWORD_REGEX } from "src/shared/const";
-import { CustomValidators } from "src/shared/validators";
+import { Component, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthApi, RegisterFormType } from 'src/entities/auth';
+import { UserApi } from 'src/entities/user';
+import { PASSWORD_REGEX } from 'src/shared/const';
+import { CustomValidators } from 'src/shared/validators';
 
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
-  imports: [ReactiveFormsModule]
+  imports: [ReactiveFormsModule],
 })
 export class RegisterFormComponent {
   public signUpForm!: FormGroup<RegisterFormType>;
@@ -45,7 +45,7 @@ export class RegisterFormComponent {
       password: new FormControl('', {
         validators: [Validators.required, Validators.pattern(PASSWORD_REGEX)],
         updateOn: 'change',
-        nonNullable: true
+        nonNullable: true,
       }),
       confirmPassword: new FormControl('', {
         validators: [Validators.required],
@@ -61,6 +61,8 @@ export class RegisterFormComponent {
     const formData = this.signUpForm.getRawValue();
 
     this.authApi.onRegister(formData).subscribe(() => {
+      // TODO email 저장 리펙토링 필요
+      localStorage.setItem('email', formData.email);
       this.router.navigateByUrl('/verify-otp');
     });
   }
