@@ -1,14 +1,16 @@
-<a routerLink="/register" class="inline-block ml-auto border border-black">회원가입</a>
+<section class="flex flex-col gap-5">
+  <div>
+    <h1 class="text-3xl font-bold">사진첩 덜어내기</h1>
+    <p class="mt-1">캡쳐사진 "사진첩 덜어내기"를 통해 정리해보세요! 🧹</p>
+  </div>
 
-<div class="flex items-center justify-between mb-6">
-  <h1 class="flex-1">로그인</h1>
-  <a href="/find_password" class="text-sm text-gray-400">비밀번호를 잊어버리셨나요?</a>
-</div>
+  <form [formGroup]="loginForm" class="flex h-full flex-col">
+    <input type="text" formControlName="email" placeholder="이메일(example@gmail.com)" class="mb-2" />
+    <input type="password" formControlName="password" placeholder="비밀번호" class="mb-2" />
+    <button [disabled]="loginForm.invalid" (click)="onLogin()">로그인</button>
+  </form>
 
-<form [formGroup]="loginForm" class="flex flex-col h-full">
-  <input type="text" formControlName="username" placeholder="이메일(example@gmail.com)" class="mb-2">
-  <input type="password" formControlName="password" placeholder="비밀번호" class="mb-2">
-  <button [disabled]="loginForm.invalid" (click)="onLogin()">로그인</button>
-</form>
+  <a href="/find_password" class="text-center text-sm text-gray-400 underline">비밀번호 찾기</a>
 
-{{loginForm.value | json}}
+  <a routerLink="/register" class="block rounded-[10px] bg-blue-100 px-5 py-[10px] text-center disabled:bg-opacity-50">이메일 회원가입</a>
+</section>
