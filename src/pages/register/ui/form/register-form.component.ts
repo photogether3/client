@@ -60,7 +60,7 @@ export class RegisterFormComponent {
     // form.value와 form.getRawValue의 차이점 !
     const formData = this.signUpForm.getRawValue();
 
-    this.authApi.onRegister(formData).subscribe(() => {
+    this.authApi.register(formData).subscribe(() => {
       // TODO email 저장 리펙토링 필요
       localStorage.setItem('email', formData.email);
       this.router.navigateByUrl('/verify-otp');

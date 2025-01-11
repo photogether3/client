@@ -1,3 +1,9 @@
+export type loginDTO = {
+  email: string;
+  password: string;
+  deviceId: string;
+};
+
 export type RegisterDTO = {
   email: string;
   password: string;

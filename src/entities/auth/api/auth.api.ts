@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { OtpDTO, RegisterDTO } from '../model';
+import { loginDTO, OtpReqDTO, OtpResDTO, RegisterDTO } from '../model';
 import { environment } from 'src/shared/environments';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,15 +10,15 @@ import { environment } from 'src/shared/environments';
 export class AuthApi {
   private http = inject(HttpClient);
 
-  onLogin(loginObj: { email: string; password: string }) {
+  login(loginObj: loginDTO) {
     return this.http.post(`${environment.serverUrl}/api/v1/auth/login`, loginObj);
   }
 
-  onRegister(registerObj: RegisterDTO) {
+  register(registerObj: RegisterDTO) {
     return this.http.post(`${environment.serverUrl}/api/v1/auth/register`, registerObj);
   }
 
-  verifyOtp(otpObj: OtpDTO) {
-    return this.http.post(`${environment.serverUrl}/api/v1/devices`, otpObj);
+  verifyOtp(otpObj: OtpReqDTO): Observable<OtpResDTO> {
+    return this.http.post<OtpResDTO>(`${environment.serverUrl}/api/v1/devices`, otpObj);
   }
 }
