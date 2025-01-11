@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { VerifyOtpFormComponent } from '../form';
 
 @Component({
@@ -6,13 +6,6 @@ import { VerifyOtpFormComponent } from '../form';
   templateUrl: './verify-otp.page.html',
   imports: [VerifyOtpFormComponent],
 })
-export class VerifyOtpPage implements OnInit {
-  public email: string = '';
-
+export class VerifyOtpPage {
   constructor() {}
-
-  ngOnInit(): void {
-    // TODO email 로컬 스토리지에 저장 ?
-    this.email = localStorage.getItem('email') || '';
-  }
 }

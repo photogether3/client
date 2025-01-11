@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { AuthApi, AuthService, OtpFormType } from 'src/entities/auth';
 import { OTP_REGEX } from 'src/shared/const';
+import crypto from 'crypto-js';
 
 @Component({
   selector: 'verify-otp-form',
@@ -14,7 +15,6 @@ export class VerifyOtpFormComponent {
   public otpForm!: FormGroup;
 
   private authApi = inject(AuthApi);
-  private authService = inject(AuthService);
   private router = inject(Router);
 
   private readonly errorMessages: Record<string, string> = {
@@ -38,8 +38,7 @@ export class VerifyOtpFormComponent {
 
   onVerify() {
     const otp = this.otpForm.getRawValue().otp;
-    // TODO (해결) deviceId 어떻게 설정 => fingerprinter? | 로컬스토리지에 저장
-    const deviceId = 'test';
+    const deviceId = crypto.SHA256(new Date().getTime().toString()).toString();
     const deviceModel = navigator.userAgent;
     const deviceOs = navigator.platform;
 
@@ -57,8 +56,11 @@ export class VerifyOtpFormComponent {
 
     console.log(formValue);
     this.authApi.verifyOtp(formValue).subscribe((res) => {
-      this.authService.store(res);
+      const instance = AuthService.getInstance();
+      instance.store(res);
 
+      // TODO 디바이스 id 로컬스토리지 저장 서비스 분리
+      localStorage.setItem('deviceId', deviceId);
       this.router.navigateByUrl('/home');
     });
   }
