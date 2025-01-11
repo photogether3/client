@@ -1,18 +1,17 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthApi, OtpFormType } from 'src/entities/auth';
 import { OTP_REGEX } from 'src/shared/const';
 
 @Component({
-  selector: 'verify-otp-page',
-  templateUrl: './verify-otp.page.html',
+  selector: 'verify-otp-form',
+  templateUrl: './verify-otp-form.component.html',
   imports: [ReactiveFormsModule],
 })
-export class VerifyOtpPage implements OnInit {
+export class VerifyOtpFormComponent {
+  public email = input<string>('');
   public otpForm!: FormGroup;
-
-  private email: string = '';
 
   private authApi = inject(AuthApi);
   private router = inject(Router);
@@ -32,12 +31,9 @@ export class VerifyOtpPage implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.email = localStorage.getItem('email') || '';
-  }
-
   onVerify() {
     const otp = this.otpForm.getRawValue().otp;
+    // TODO deviceId 어떻게 설정
     const deviceId = 'test';
     const deviceModel = navigator.userAgent;
     const deviceOs = navigator.platform;
@@ -47,7 +43,7 @@ export class VerifyOtpPage implements OnInit {
     console.log(deviceOs, 'deviceOs');
 
     const formValue = {
-      email: this.email,
+      email: this.email(),
       otp: otp,
       deviceId,
       deviceModel,

@@ -1,1 +1,1 @@
-export * from './verify-otp.page'
+export * from './ui';
