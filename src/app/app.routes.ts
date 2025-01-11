@@ -13,7 +13,7 @@ export const routes: Routes = [
   },
   {
     path: 'register',
-    loadComponent: () => import('../pages/register').then((m) => m.RegisterPage),
+    loadComponent: () => import('../pages/register/ui/page').then((m) => m.RegisterPage),
   },
   {
     path: 'verify-otp',
