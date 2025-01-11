@@ -14,3 +14,9 @@ export type LoginFormType = {
 export type OtpFormType = {
   otp: FormControl<number | null>;
 };
+
+export type JwtResource = {
+  readonly accessToken: string;
+  readonly refreshToken: string;
+  readonly expiresIn: number;
+};

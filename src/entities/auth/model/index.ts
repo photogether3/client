@@ -1,2 +1,2 @@
-export * from './register.dto';
-export * from './register.view';
+export * from './auth.dto';
+export * from './auth.type';

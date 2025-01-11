@@ -3,10 +3,17 @@ export type RegisterDTO = {
   password: string;
 };
 
-export type OtpDTO = {
+export type OtpReqDTO = {
   email: string;
   otp: string;
   deviceId: string;
   deviceModel: string;
   deviceOs: string;
+};
+
+export type OtpResDTO = {
+  status: string;
+  accessToken: string;
+  expiresIn: number;
+  refreshToken: string;
 };
