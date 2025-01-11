@@ -1,8 +1,5 @@
 import { Routes } from '@angular/router';
-import { LoginPage } from '../pages/login';
-import { HomePage } from '../pages/home';
-import { RegisterPage } from 'src/pages/register/ui/page';
-import { VerifyOtpPage } from 'src/pages/verify-otp';
+import { AuthGuard } from 'src/entities/auth';
 
 export const routes: Routes = [
   {
@@ -12,18 +9,19 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginPage,
+    loadComponent: () => import('../pages/login').then((m) => m.LoginPage),
   },
   {
     path: 'register',
-    component: RegisterPage,
-  },
-  {
-    path: 'home',
-    component: HomePage,
+    loadComponent: () => import('../pages/register').then((m) => m.RegisterPage),
   },
   {
     path: 'verify-otp',
-    component: VerifyOtpPage,
+    loadComponent: () => import('../pages/verify-otp').then((m) => m.VerifyOtpPage),
+  },
+  {
+    path: 'home',
+    loadComponent: () => import('../pages/home').then((m) => m.HomePage),
+    canActivate: [AuthGuard],
   },
 ];
