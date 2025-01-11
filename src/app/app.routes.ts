@@ -9,7 +9,7 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () => import('../pages/login').then((m) => m.LoginPage),
+    loadComponent: () => import('../pages/login/ui/page').then((m) => m.LoginPage),
   },
   {
     path: 'register',

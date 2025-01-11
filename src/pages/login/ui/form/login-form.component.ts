@@ -1,15 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthApi, LoginFormType } from 'src/entities/auth';
 import { PASSWORD_REGEX } from 'src/shared/const';
 
 @Component({
-  selector: 'login-page',
-  templateUrl: './login.page.html',
-  imports: [ReactiveFormsModule, RouterLink],
+  selector: 'app-login-form',
+  templateUrl: './login-form.component.html',
+  imports: [ReactiveFormsModule],
 })
-export class LoginPage {
+export class LoginFormComponent {
   public loginForm!: FormGroup<LoginFormType>;
 
   private authApi = inject(AuthApi);
