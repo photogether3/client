@@ -38,7 +38,7 @@ export class RegisterFormComponent {
     this.signUpForm = new FormGroup<RegisterFormType>({
       email: new FormControl('', {
         validators: [Validators.required, Validators.email],
-        asyncValidators: [this.customValidators.checkDuplicateEmail((email) => this.userApi.onDuplicateEmail(email))],
+        asyncValidators: [this.customValidators.checkDuplicateEmail((email) => this.userApi.checkDuplicatedEmail(email))],
         updateOn: 'change',
         nonNullable: true,
       }),
@@ -61,9 +61,11 @@ export class RegisterFormComponent {
     const formData = this.signUpForm.getRawValue();
 
     this.authApi.register(formData).subscribe(() => {
-      // TODO email 저장 리펙토링 필요
-      localStorage.setItem('email', formData.email);
-      this.router.navigateByUrl('/verify-otp');
+      this.router.navigateByUrl('/verify-otp', {
+        state: {
+          email: formData.email,
+        },
+      });
     });
   }
 

@@ -31,9 +31,8 @@ export class VerifyOtpFormComponent {
       }),
     });
 
-    // TODO email 로컬 스토리지에 저장 ?
-    this.email = localStorage.getItem('email') || '';
-    console.log(this.email);
+    const navigation = this.router.getCurrentNavigation();
+    this.email = navigation?.extras?.state?.['email'] || null;
   }
 
   onVerify() {
