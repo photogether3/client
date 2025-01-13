@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthApi, LoginFormType } from 'src/entities/auth';
+import { AuthApi, AuthService, LoginFormType } from 'src/entities/auth';
 import { PASSWORD_REGEX } from 'src/shared/const';
 
 @Component({
@@ -50,6 +50,10 @@ export class LoginFormComponent {
       this.authApi.login(loginDTO).subscribe((res) => {
         if (res) {
           alert('로그인 성공! ✨');
+
+          const instance = AuthService.getInstance();
+          instance.store(res);
+
           this.router.navigateByUrl('/home');
         } else {
           alert('로그인 실패 😥');
