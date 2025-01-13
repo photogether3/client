@@ -2,7 +2,6 @@ import { JwtResource } from '../model';
 
 export class AuthService {
   private accessToken: string | null = null;
-  private refreshToken: string | null = null;
   private expiresIn: number | null = null;
   private refreshTokenKey = 'RT';
 
@@ -22,16 +21,16 @@ export class AuthService {
   }
 
   getRefreshToken(): string | null {
-    if (!this.refreshToken) {
-      this.refreshToken = localStorage.getItem(this.refreshTokenKey);
-    }
-    return this.refreshToken;
+    return localStorage.getItem(this.refreshTokenKey);
+  }
+
+  getExpiresIn(): number | null {
+    return this.expiresIn;
   }
 
   store(resource: JwtResource) {
     const { accessToken, expiresIn, refreshToken } = resource;
     this.accessToken = accessToken;
-    this.refreshToken = refreshToken;
     this.expiresIn = expiresIn;
 
     if (refreshToken) {
@@ -41,7 +40,6 @@ export class AuthService {
 
   clear() {
     this.accessToken = null;
-    this.refreshToken = null;
     this.expiresIn = null;
 
     localStorage.removeItem(this.refreshTokenKey);
