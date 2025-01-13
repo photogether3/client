@@ -17,7 +17,7 @@ export type OtpReqDTO = {
   deviceOs: string;
 };
 
-export type OtpResDTO = {
+export type jwtSourceDTO = {
   status: string;
   accessToken: string;
   expiresIn: number;
