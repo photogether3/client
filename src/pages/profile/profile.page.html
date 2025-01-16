@@ -1,0 +1,22 @@
+@if (profile) {
+  <h1 class="mb-6 text-3xl font-bold">내 프로필 조회</h1>
+
+  <div class="flex flex-col items-center gap-2">
+    <img [src]="profile.image" alt="프로필 임시 이미지" class="h-28 w-28 rounded-full" />
+    <div>
+      <span class="block text-center text-lg font-bold">{{ profile.nickname }}</span>
+      <span class="block text-center text-sm text-gray-600">&#64;{{ profile.email.split('@')[0] }}</span>
+    </div>
+    <p>{{ profile.content }}</p>
+    <div class="flex gap-2">
+      @for (tag of profile.tags; track $index) {
+        <span class="rounded-[8px] bg-blue-200 px-2 py-1">{{ tag }}</span>
+      }
+    </div>
+    <a routerLink="/edit" class="mt-6 block w-full rounded-[10px] bg-blue-500 px-5 py-[10px] text-center text-white disabled:bg-opacity-50">프로필 수정</a>
+    <button class="w-full px-5 py-[10px]">로그아웃</button>
+    <button class="w-full px-5 py-[10px]">화면 테마</button>
+    <button class="w-full px-5 py-[10px]">기록 초기화</button>
+    <button class="w-full px-5 py-[10px]">회원탈퇴</button>
+  </div>
+}

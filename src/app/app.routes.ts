@@ -20,6 +20,10 @@ export const routes: Routes = [
     loadComponent: () => import('../pages/verify-otp/ui/page').then((m) => m.VerifyOtpPage),
   },
   {
+    path: 'profile',
+    loadComponent: () => import('../pages/profile').then((m) => m.ProfilePage),
+  },
+  {
     path: 'home',
     loadComponent: () => import('../pages/home').then((m) => m.HomePage),
     canActivate: [AuthGuard],
