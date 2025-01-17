@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { UserApi } from 'src/entities/user';
 import { ProfileType } from 'src/entities/user/model/user.type';
 import { ModalService } from 'src/shared/components';
-import { EditNicknameDialog } from './ui';
+import { EditNicknameDialog, EditPasswordDialog } from './ui';
 
 @Component({
   selector: 'profile-page',
@@ -24,10 +24,18 @@ export class ProfilePage {
         tags: ['건강', '뷰티', '런닝', '뜨개질'],
       };
     });
+
+    this.updatePassword();
   }
 
-  editNickname() {
+  updateNickname() {
     this.modalService.open(EditNicknameDialog, this.profile?.nickname).subscribe((res) => {
+      console.log(res);
+    });
+  }
+
+  updatePassword() {
+    this.modalService.open(EditPasswordDialog).subscribe((res) => {
       console.log(res);
     });
   }

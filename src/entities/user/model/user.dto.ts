@@ -8,3 +8,9 @@ export type ProfileDTO = {
 export type UpdateNicknameDTO = {
   nickname: string;
 };
+
+export type UpdatePasswordDTO = {
+  email: string;
+  otp: string;
+  password: string;
+};

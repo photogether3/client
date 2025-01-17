@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/shared/environments';
-import { ProfileDTO, UpdateNicknameDTO } from '../model';
+import { ProfileDTO, UpdateNicknameDTO, UpdatePasswordDTO } from '../model';
 import { skipAuth } from 'src/shared/interceptors';
 
 @Injectable({
@@ -26,5 +26,10 @@ export class UserApi {
   // 닉네임 변경
   updateNickname(updatedNickName: UpdateNicknameDTO): Observable<ProfileDTO> {
     return this.http.patch<ProfileDTO>(`${environment.serverUrl}/api/v1/users/nickname`, updatedNickName);
+  }
+
+  // 비밀번호 변경
+  updatePassword(updatedPassword: UpdatePasswordDTO): Observable<ProfileDTO> {
+    return this.http.patch<ProfileDTO>(`${environment.serverUrl}/api/v1/users/password`, updatedPassword);
   }
 }
