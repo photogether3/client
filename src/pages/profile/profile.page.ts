@@ -5,11 +5,12 @@ import { ModalService } from 'src/shared/components';
 import { EditNicknameDialog, EditPasswordDialog } from './ui';
 import { AuthApi, AuthService } from 'src/entities/auth';
 import { Router } from '@angular/router';
+import { TagComponent } from 'src/shared/components/tag';
 
 @Component({
   selector: 'profile-page',
   templateUrl: './profile.page.html',
-  imports: [],
+  imports: [TagComponent],
 })
 export class ProfilePage {
   public profile: ProfileType | undefined = undefined;

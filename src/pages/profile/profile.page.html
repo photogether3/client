@@ -10,7 +10,7 @@
     <p>{{ profile.content }}</p>
     <div class="flex gap-2">
       @for (tag of profile.tags; track $index) {
-        <span class="rounded-[8px] bg-blue-200 px-2 py-1">{{ tag }}</span>
+        <app-tag [tagName]="tag" />
       }
     </div>
     <a routerLink="/edit" class="mt-6 block w-full rounded-[10px] bg-blue-500 px-5 py-[10px] text-center text-white disabled:bg-opacity-50">프로필 수정</a>
