@@ -4,3 +4,7 @@ export type ProfileDTO = {
   email: string;
   createdAt: string;
 };
+
+export type UpdateNicknameDTO = {
+  nickname: string;
+};

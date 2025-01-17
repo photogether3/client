@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/shared/environments';
-import { ProfileDTO } from '../model';
+import { ProfileDTO, UpdateNicknameDTO } from '../model';
 import { skipAuth } from 'src/shared/interceptors';
 
 @Injectable({
@@ -14,12 +14,17 @@ export class UserApi {
   // 이메일 중복 검증
   checkDuplicatedEmail(email: string) {
     return this.http.get<{ isDuplicate: boolean }>(`${environment.serverUrl}/api/v1/users/emails/${email}/duplicated`, {
-      context: skipAuth()
+      context: skipAuth(),
     });
   }
 
   // 내 프로필 조회
   getProfile(): Observable<ProfileDTO> {
     return this.http.get<ProfileDTO>(`${environment.serverUrl}/api/v1/users/me`);
+  }
+
+  // 닉네임 변경
+  updateNickname(updatedNickName: UpdateNicknameDTO): Observable<ProfileDTO> {
+    return this.http.patch<ProfileDTO>(`${environment.serverUrl}/api/v1/users/nickname`, updatedNickName);
   }
 }
