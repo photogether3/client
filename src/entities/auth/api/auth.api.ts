@@ -11,12 +11,10 @@ import { jwtSourceDTO, loginDTO, OtpReqDTO, RegisterDTO } from '../model';
 export class AuthApi {
   private http = inject(HttpClient);
 
-  login(loginObj: loginDTO) {
-    return this.http
-      .post(`${environment.serverUrl}/api/v1/auth/login`, loginObj, {
-        context: skipAuth(),
-      })
-      .pipe(tap(console.log));
+  login(loginObj: loginDTO): Observable<jwtSourceDTO> {
+    return this.http.post<jwtSourceDTO>(`${environment.serverUrl}/api/v1/auth/login`, loginObj, {
+      context: skipAuth(),
+    });
   }
 
   register(registerObj: RegisterDTO) {
@@ -39,5 +37,10 @@ export class AuthApi {
         headers,
       },
     );
+  }
+
+  // 로그아웃
+  logout() {
+    return this.http.delete(`${environment.serverUrl}/api/v1/devices`);
   }
 }

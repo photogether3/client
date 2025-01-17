@@ -3,6 +3,8 @@ import { UserApi } from 'src/entities/user';
 import { ProfileType } from 'src/entities/user/model/user.type';
 import { ModalService } from 'src/shared/components';
 import { EditNicknameDialog, EditPasswordDialog } from './ui';
+import { AuthApi, AuthService } from 'src/entities/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'profile-page',
@@ -12,6 +14,8 @@ import { EditNicknameDialog, EditPasswordDialog } from './ui';
 export class ProfilePage {
   public profile: ProfileType | undefined = undefined;
 
+  private readonly router = inject(Router);
+  private readonly authApi = inject(AuthApi);
   private readonly userApi = inject(UserApi);
   private readonly modalService = inject(ModalService);
 
@@ -24,8 +28,6 @@ export class ProfilePage {
         tags: ['건강', '뷰티', '런닝', '뜨개질'],
       };
     });
-
-    this.updatePassword();
   }
 
   updateNickname() {
@@ -37,6 +39,16 @@ export class ProfilePage {
   updatePassword() {
     this.modalService.open(EditPasswordDialog).subscribe((res) => {
       console.log(res);
+    });
+  }
+
+  onLogout() {
+    this.authApi.logout().subscribe((res) => {
+      console.log(res);
+
+      const instance = AuthService.getInstance();
+      instance.clear();
+      this.router.navigateByUrl('login');
     });
   }
 }
