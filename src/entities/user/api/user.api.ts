@@ -13,23 +13,23 @@ export class UserApi {
 
   // 이메일 중복 검증
   checkDuplicatedEmail(email: string) {
-    return this.http.get<{ isDuplicate: boolean }>(`${environment.serverUrl}/api/v1/users/emails/${email}/duplicated`, {
+    return this.http.get<{ isDuplicate: boolean }>(`${environment.serverUrl}/v1/users/emails/${email}/duplicated`, {
       context: skipAuth(),
     });
   }
 
   // 내 프로필 조회
   getProfile(): Observable<ProfileDTO> {
-    return this.http.get<ProfileDTO>(`${environment.serverUrl}/api/v1/users/me`);
+    return this.http.get<ProfileDTO>(`${environment.serverUrl}/v1/users/me`);
   }
 
   // 닉네임 변경
   updateNickname(updatedNickName: UpdateNicknameDTO): Observable<ProfileDTO> {
-    return this.http.patch<ProfileDTO>(`${environment.serverUrl}/api/v1/users/nickname`, updatedNickName);
+    return this.http.patch<ProfileDTO>(`${environment.serverUrl}/v1/users/nickname`, updatedNickName);
   }
 
   // 비밀번호 변경
   updatePassword(updatedPassword: UpdatePasswordDTO): Observable<ProfileDTO> {
-    return this.http.patch<ProfileDTO>(`${environment.serverUrl}/api/v1/users/password`, updatedPassword);
+    return this.http.patch<ProfileDTO>(`${environment.serverUrl}/v1/users/password`, updatedPassword);
   }
 }

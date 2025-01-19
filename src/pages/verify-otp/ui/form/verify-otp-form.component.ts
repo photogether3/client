@@ -3,7 +3,6 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { AuthApi, AuthService, OtpFormType } from 'src/entities/auth';
 import { OTP_REGEX } from 'src/shared/const';
-import crypto from 'crypto-js';
 
 @Component({
   selector: 'verify-otp-form',
@@ -37,20 +36,10 @@ export class VerifyOtpFormComponent {
 
   onVerify() {
     const otp = this.otpForm.getRawValue().otp;
-    const deviceId = crypto.SHA256(new Date().getTime().toString()).toString();
-    const deviceModel = navigator.userAgent;
-    const deviceOs = navigator.platform;
-
-    console.log(deviceId, 'deviceId');
-    console.log(deviceModel, 'diviceModel');
-    console.log(deviceOs, 'deviceOs');
 
     const formValue = {
       email: this.email,
       otp: otp,
-      deviceId,
-      deviceModel,
-      deviceOs,
     };
 
     console.log(formValue);
@@ -58,8 +47,6 @@ export class VerifyOtpFormComponent {
       const instance = AuthService.getInstance();
       instance.store(res);
 
-      // TODO 디바이스 id 로컬스토리지 저장 서비스 분리
-      localStorage.setItem('deviceId', deviceId);
       this.router.navigateByUrl('/home');
     });
   }

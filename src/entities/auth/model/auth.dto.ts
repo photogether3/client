@@ -1,7 +1,6 @@
 export type loginDTO = {
   email: string;
   password: string;
-  deviceId: string;
 };
 
 export type RegisterDTO = {
@@ -9,12 +8,13 @@ export type RegisterDTO = {
   password: string;
 };
 
-export type OtpReqDTO = {
+export type GenerateOtpDTO = {
+  email: string;
+};
+
+export type VerifyOtpDTO = {
   email: string;
   otp: string;
-  deviceId: string;
-  deviceModel: string;
-  deviceOs: string;
 };
 
 export type jwtSourceDTO = {

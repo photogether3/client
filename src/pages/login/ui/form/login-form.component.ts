@@ -41,27 +41,20 @@ export class LoginFormComponent {
   }
 
   onLogin() {
-    const loginObj = this.loginForm.getRawValue();
-    const deviceId = localStorage.getItem('deviceId');
+    const loginDTO = this.loginForm.getRawValue();
 
-    if (deviceId) {
-      const loginDTO = { ...loginObj, deviceId };
+    this.authApi.login(loginDTO).subscribe((res) => {
+      if (res) {
+        alert('로그인 성공! ✨');
 
-      this.authApi.login(loginDTO).subscribe((res) => {
-        if (res) {
-          alert('로그인 성공! ✨');
+        const instance = AuthService.getInstance();
+        instance.store(res);
 
-          const instance = AuthService.getInstance();
-          instance.store(res);
-
-          this.router.navigateByUrl('/home');
-        } else {
-          alert('로그인 실패 😥');
-        }
-      });
-    } else {
-      alert('deviceId가 없습니다!');
-    }
+        this.router.navigateByUrl('/home');
+      } else {
+        alert('로그인 실패 😥');
+      }
+    });
   }
 
   getErrorMessage(controlName: keyof LoginFormType): string | null {
