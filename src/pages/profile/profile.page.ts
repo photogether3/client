@@ -1,16 +1,15 @@
 import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthApi, AuthService } from 'src/entities/auth';
 import { UserApi } from 'src/entities/user';
 import { ProfileType } from 'src/entities/user/model/user.type';
-import { ModalService } from 'src/shared/components';
-import { EditNicknameDialog, EditPasswordDialog } from './ui';
-import { AuthApi, AuthService } from 'src/entities/auth';
-import { Router } from '@angular/router';
-import { TagComponent } from 'src/shared/components/tag';
+import { ButtonComponent, ModalService, TagComponent } from 'src/shared/components';
+import { EditPasswordDialog } from './ui';
 
 @Component({
   selector: 'profile-page',
   templateUrl: './profile.page.html',
-  imports: [TagComponent],
+  imports: [TagComponent, ButtonComponent],
 })
 export class ProfilePage {
   public profile: ProfileType | undefined = undefined;
@@ -28,12 +27,6 @@ export class ProfilePage {
         image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHe6hYgyoH_DbL5N_2MWuG3jEwtw2lD7N4Zw&s',
         tags: ['건강', '뷰티', '런닝', '뜨개질'],
       };
-    });
-  }
-
-  updateNickname() {
-    this.modalService.open(EditNicknameDialog, this.profile?.nickname).subscribe((res) => {
-      console.log(res);
     });
   }
 

@@ -3,6 +3,6 @@
   <h2 class="mb-4 text-xl font-bold">닉네임 변경</h2>
   <form [formGroup]="nicknameEditForm" class="flex flex-col gap-2">
     <input type="text" formControlName="nickname" />
-    <button (click)="updateNickname()" class="w-full">변경하기</button>
+    <app-button text="변경하기" (click)="updateNickname()" class="w-full" />
   </form>
 </div>

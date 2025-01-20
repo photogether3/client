@@ -1,4 +1,4 @@
-<form [formGroup]="loginForm" class="flex h-full flex-col gap-2">
+<form [formGroup]="loginForm" class="flex flex-col h-full gap-2">
   <input type="text" formControlName="email" placeholder="이메일(example@gmail.com)" />
   @if (getErrorMessage('email')) {
     <p class="ml-1 text-xs text-red-600">{{ getErrorMessage('email') }}</p>
@@ -7,5 +7,5 @@
   @if (getErrorMessage('password')) {
     <p class="ml-1 text-xs text-red-600">{{ getErrorMessage('password') }}</p>
   }
-  <button [disabled]="loginForm.invalid" (click)="onLogin()">로그인</button>
+  <app-button text="로그인" [isDisabled]="loginForm.invalid" (click)="onLogin()" />
 </form>

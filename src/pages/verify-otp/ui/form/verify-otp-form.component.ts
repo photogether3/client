@@ -2,12 +2,13 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthApi, AuthService, OtpFormType } from 'src/entities/auth';
+import { ButtonComponent } from 'src/shared/components';
 import { OTP_REGEX } from 'src/shared/const';
 
 @Component({
   selector: 'verify-otp-form',
   templateUrl: './verify-otp-form.component.html',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ButtonComponent],
 })
 export class VerifyOtpFormComponent {
   public email: string = '';

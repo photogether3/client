@@ -15,7 +15,7 @@ export const buttonVariants = cva('flex items-center justify-center', {
       xs: 'text-sm px-2 py-0.5 rounded-[6px]',
     },
     width: {
-      full: 'w-full',
+      full: 'w-full block',
       auto: 'w-auto',
     },
   },

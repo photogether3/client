@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UpdateNicknameDTO, UserApi } from 'src/entities/user';
-import { ModalService } from 'src/shared/components';
+import { ButtonComponent, ModalService } from 'src/shared/components';
 
 @Component({
   selector: 'edit-nickname-dialog',
   templateUrl: './edit-nickname-dialog.component.html',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ButtonComponent],
 })
 export class EditNicknameDialog {
   public nicknameEditForm!: FormGroup;
