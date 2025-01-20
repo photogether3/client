@@ -43,6 +43,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
+  if (req.url.includes('assets/icons') && req.url.endsWith('.svg')) {
+    return next(req);
+  }
+
   // 2. refresh token 확인
   const refreshToken = instance.getRefreshToken();
 
