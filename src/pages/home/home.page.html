@@ -1,1 +1,17 @@
-홈페이지
+<div class="flex flex-col min-h-screen bg-secondary5 border-x">
+  <!-- header -->
+  <header class="flex items-center gap-3 px-4 py-5 bg-white border-b shadow-sm">
+    <app-icon name="info" />
+    <span class="text-xl font-bold">강수정님의 사진첩</span>
+  </header>
+
+  <!-- main -->
+  <main class="flex-grow px-4 py-4">
+    <div class="grid grid-cols-2 gap-2">
+      <app-album-card [images]="images" title="2025 봄옷 쇼핑" tag="패션" />
+    </div>
+  </main>
+
+  <!-- footer -->
+  <app-footer class="mt-auto" />
+</div>

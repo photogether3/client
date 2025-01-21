@@ -1,0 +1,12 @@
+<section class="relative h-[140px] rounded-[12px] bg-white shadow-md">
+  <div [ngClass]="{ 'grid grid-cols-2 grid-rows-[70px_70px]': images().length > 1 }" class="h-full rounded-[12px] blur-[2px]">
+    @for (image of representativeImages(); track $index) {
+      <img [src]="image.src" [alt]="image.alt" class="min-h-1/2" />
+    }
+  </div>
+  <div class="absolute left-1 top-1/3">
+    <app-tag [tagName]="tag()" [appearance]="'primary'" />
+    <h4 class="font-bold">{{ title() }}</h4>
+    <span class="text-sm">{{ images().length }}개 사진</span>
+  </div>
+</section>
