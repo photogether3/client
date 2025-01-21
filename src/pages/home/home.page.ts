@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { IconComponent } from 'src/shared/components';
+import { ButtonComponent, IconComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { AlbumCardComponent } from './components';
 
 @Component({
   selector: 'home-page',
   templateUrl: './home.page.html',
-  imports: [FooterWidget, IconComponent, AlbumCardComponent],
+  imports: [FooterWidget, IconComponent, AlbumCardComponent, ButtonComponent],
 })
 export class HomePage {
   private router = inject(Router);

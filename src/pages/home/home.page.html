@@ -1,17 +1,31 @@
 <div class="flex flex-col min-h-screen bg-secondary5 border-x">
   <!-- header -->
-  <header class="flex items-center gap-3 px-4 py-5 bg-white border-b shadow-sm">
+  <header class="sticky top-0 z-10 flex items-center w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
     <app-icon name="info" />
     <span class="text-xl font-bold">강수정님의 사진첩</span>
   </header>
 
   <!-- main -->
   <main class="flex-grow px-4 py-4">
-    <div class="grid grid-cols-2 gap-2">
+    <div class="grid grid-cols-2 gap-3">
       <app-album-card [images]="images" title="2025 봄옷 쇼핑" tag="패션" />
+      <app-album-card [images]="images" title="2025 봄옷 쇼핑" tag="패션" />
+      <app-album-card [images]="images" title="2025 봄옷 쇼핑" tag="패션" />
+      <app-album-card [images]="images" title="2025 봄옷 쇼핑" tag="패션" />
+      <app-button text="사진첩 생성하기" appearance="secondary" class="col-span-full" />
     </div>
+
+    <section>
+      <h4 class="font-bold">미분류</h4>
+      <div class="h-[140px] rounded-[12px] border border-black bg-white"></div>
+    </section>
+
+    <section>
+      <h4 class="font-bold">휴지통</h4>
+      <div class="h-[140px] rounded-[12px] border border-black bg-white"></div>
+    </section>
   </main>
 
   <!-- footer -->
-  <app-footer class="mt-auto" />
+  <app-footer class="sticky bottom-0 mt-auto" />
 </div>
