@@ -1,16 +1,16 @@
 <footer class="z-10 h-[80px] border-t bg-white">
   <ul class="flex h-full items-center justify-around text-sm [&>li]:flex [&>li]:cursor-pointer [&>li]:flex-col [&>li]:items-center [&>li]:gap-1">
-    <li class="hover:font-bold">
+    <li routerLink="/home" class="hover:font-bold">
       <app-icon name="photo" />
-      <a routerLink="/home">홈화면</a>
+      <span>홈화면</span>
     </li>
-    <li class="hover:font-bold">
+    <li routerLink="/create" class="hover:font-bold">
       <app-icon name="upload" />
-      <a routerLink="/create">추가하기</a>
+      <span>추가하기</span>
     </li>
-    <li class="hover:font-bold">
+    <li routerLink="/profile" class="hover:font-bold">
       <app-icon name="info" />
-      <a routerLink="/profile">내정보</a>
+      <span>내정보</span>
     </li>
   </ul>
 </footer>
