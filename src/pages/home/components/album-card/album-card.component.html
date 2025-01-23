@@ -1,4 +1,4 @@
-<section class="relative h-[140px] rounded-[12px] bg-white shadow-md">
+<section (click)="goPage()" class="relative h-[140px] rounded-[12px] bg-white shadow-md hover:cursor-pointer hover:shadow-xl">
   <div [ngClass]="{ 'grid grid-cols-2 grid-rows-[70px_70px]': images().length > 1 }" class="h-full w-full rounded-[12px] blur-[2px]">
     @for (image of representativeImages(); track $index; let i = $index) {
       <img
