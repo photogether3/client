@@ -1,8 +1,0 @@
-<!-- TODO 일반 모달창에 컴포넌트 삽입하는 방식으로 리펙토링 -->
-<div class="rounded-[12px] bg-white p-6 shadow-lg">
-  <h2 class="mb-4 text-xl font-bold">닉네임 변경</h2>
-  <form [formGroup]="nicknameEditForm" class="flex flex-col gap-2">
-    <input type="text" formControlName="nickname" />
-    <app-button text="변경하기" (click)="updateNickname()" class="w-full" />
-  </form>
-</div>
