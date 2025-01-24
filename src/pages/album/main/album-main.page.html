@@ -1,0 +1,34 @@
+<div class="flex flex-col min-h-screen bg-secondary5 border-x">
+  @if (album) {
+    <!-- header -->
+    <header class="sticky top-0 z-10 flex items-center w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
+      <button class="text-xl font-bold"><</button>
+      <span class="text-xl font-bold">{{ album.title }}</span>
+      <app-tag [appearance]="'outline'" [tagName]="album.tag" size="m" class="ml-auto" />
+    </header>
+
+    <div class="grid grid-cols-3 gap-3 p-4 bg-white border-b">
+      <app-button text="사진첩 삭제" appearance="secondary" />
+      <app-button text="사진첩 수정" appearance="secondary" />
+      <app-button text="사진첩 정리" appearance="secondary" />
+    </div>
+
+    <!-- main -->
+    <main class="grid grid-cols-2 gap-8 p-4">
+      <!-- post-card -->
+      @for (post of album.images; track $index) {
+        <!-- TODO 1. 마소니 레이아웃 적용 2. 컴포넌트 분리 -->
+        <section class="relative bg-white rounded-lg shadow-lg">
+          <img [src]="post.src" [alt]="post.alt" class="h-full rounded-lg" />
+          <div class="absolute left-1 top-1/2">
+            <span class="text-lg font-bold">{{ post.alt }}</span>
+            <p class="text-sm line-clamp-2">게시물 내용입니다. 게시물 내용입니다. 게시물 내용이빈다.</p>
+          </div>
+        </section>
+      }
+    </main>
+  }
+
+  <!-- footer -->
+  <app-footer class="sticky bottom-0 mt-auto" />
+</div>

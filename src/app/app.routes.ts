@@ -28,4 +28,13 @@ export const routes: Routes = [
     loadComponent: () => import('../pages/home').then((m) => m.HomePage),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'album',
+    children: [
+      {
+        path: ':id',
+        loadComponent: () => import('../pages/album').then((m) => m.AlbumMainPage),
+      },
+    ],
+  },
 ];
