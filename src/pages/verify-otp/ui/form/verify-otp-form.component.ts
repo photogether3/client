@@ -48,7 +48,7 @@ export class VerifyOtpFormComponent {
       const instance = AuthService.getInstance();
       instance.store(res);
 
-      this.router.navigateByUrl('/home');
+      this.router.navigateByUrl('/onboarding');
     });
   }
 

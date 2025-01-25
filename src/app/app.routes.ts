@@ -20,8 +20,8 @@ export const routes: Routes = [
     loadComponent: () => import('../pages/verify-otp/ui/page').then((m) => m.VerifyOtpPage),
   },
   {
-    path: 'profile',
-    loadComponent: () => import('../pages/profile').then((m) => m.ProfilePage),
+    path: 'onboarding',
+    loadComponent: () => import('../pages/onboarding').then((m) => m.OnboardingPage),
   },
   {
     path: 'home',
@@ -36,5 +36,9 @@ export const routes: Routes = [
         loadComponent: () => import('../pages/album').then((m) => m.AlbumMainPage),
       },
     ],
+  },
+  {
+    path: 'profile',
+    loadComponent: () => import('../pages/profile').then((m) => m.ProfilePage),
   },
 ];

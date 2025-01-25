@@ -1,0 +1,44 @@
+<div class="flex flex-col min-h-screen gap-5 p-4 bg-secondary5">
+  <div class="flex justify-between">
+    <button (click)="setStep(1)" class="text-xl font-bold"><</button>
+    <span>
+      <span class="font-bold">{{ activeStep() }}</span>
+      /2
+    </span>
+  </div>
+
+  @if (activeStep() === 1) {
+    <div>
+      <p class="text-lg font-bold">내 정보를 입력해주세요.</p>
+      <p>회원님에 대해서 알려주세요.</p>
+    </div>
+
+    <form [formGroup]="initForm">
+      <div class="flex flex-col gap-1">
+        <label for="nickname">닉네임</label>
+        <input id="nickname" type="text" placeholder="닉네임을 입력해주세요." formControlName="nickname" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <label for="bio">자기소개</label>
+        <textarea name="bio" id="bio" placeholder="내 소개를 입력해주세요." formControlName="bio" rows="10" class="p-4 rounded-lg resize-none"></textarea>
+      </div>
+    </form>
+
+    <app-button text="다음으로" (click)="setStep(2)" />
+  } @else {
+    <div>
+      <p class="text-lg font-bold">내 피드에 관리하고 싶은 관심주제</p>
+      <p>선택한 주제에 대한 사진첩을 만드실 수 있습니다.</p>
+    </div>
+
+    <div class="flex flex-wrap w-full gap-2 p-3 bg-white border rounded-lg">
+      @for (category of categoryList; track $index) {
+        <app-tag [tagName]="category.name" size="m" class="cursor-pointer" (click)="toggleCategory(category.categoryId)" />
+      }
+    </div>
+    <app-button text="+ 주제 제안하기" appearance="secondary" />
+
+    <p>선택한 주제는 나중에 다시 수정할 수 있어요!</p>
+    <app-button text="사진첩 덜어내러 가기" (click)="submit()" />
+  }
+</div>
