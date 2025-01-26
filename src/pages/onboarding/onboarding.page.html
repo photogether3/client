@@ -18,9 +18,9 @@
         <label for="nickname">닉네임</label>
         <input id="nickname" type="text" placeholder="닉네임을 입력해주세요." formControlName="nickname" />
       </div>
-      <div class="flex flex-col gap-1">
+      <div class="flex flex-col gap-1 mt-2">
         <label for="bio">자기소개</label>
-        <textarea name="bio" id="bio" placeholder="내 소개를 입력해주세요." formControlName="bio" rows="10" class="p-4 rounded-lg resize-none"></textarea>
+        <textarea name="bio" id="bio" placeholder="내 소개를 입력해주세요." formControlName="bio" rows="10" class="p-4 border border-black rounded-lg resize-none"></textarea>
       </div>
     </form>
 
@@ -33,7 +33,12 @@
 
     <div class="flex flex-wrap w-full gap-2 p-3 bg-white border rounded-lg">
       @for (category of categoryList; track $index) {
-        <app-tag [tagName]="category.name" size="m" class="cursor-pointer" (click)="toggleCategory(category.categoryId)" />
+        <app-tag
+          [tagName]="category.name"
+          size="m"
+          [appearance]="categoryFormArray.value.includes(category.categoryId) ? 'primary' : 'outline'"
+          (click)="toggleCategory(category.categoryId)"
+          class="cursor-pointer" />
       }
     </div>
     <app-button text="+ 주제 제안하기" appearance="secondary" />
@@ -41,4 +46,5 @@
     <p>선택한 주제는 나중에 다시 수정할 수 있어요!</p>
     <app-button text="사진첩 덜어내러 가기" (click)="submit()" />
   }
+  {{ initForm.value | json }}
 </div>
