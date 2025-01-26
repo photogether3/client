@@ -1,22 +1,42 @@
-@if (profile) {
-  <h1 class="mt-10 mb-6 text-3xl font-bold">내 프로필 조회</h1>
+<div class="min-h-screen bg-secondary5">
+  @if (profile) {
+    <!-- header -->
+    <header class="sticky top-0 z-10 flex items-center w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
+      <button class="text-xl font-bold"><</button>
+      <span class="text-xl font-bold">내 프로필 조회</span>
+    </header>
 
-  <div class="flex flex-col items-center w-full gap-2">
-    <img [src]="profile.image" alt="프로필 임시 이미지" class="rounded-full h-28 w-28" />
-    <div>
-      <span class="block text-lg font-bold text-center">{{ profile.nickname }}</span>
-      <span class="block text-sm text-center text-gray-600">&#64;{{ profile.email.split('@')[0] }}</span>
+    <div class="flex flex-col w-full gap-5 px-4 py-6">
+      <!-- TODO 프로필 사진 조회 -->
+      <div class="flex items-center justify-center">
+        <img [src]="profile.image" alt="프로필 임시 이미지" class="rounded-full h-28 w-28" />
+      </div>
+      <div>
+        <span class="block text-lg font-bold text-center">{{ profile.nickname }}</span>
+        <span class="block text-sm text-center text-gray-600">&#64;{{ profile.email.split('@')[0] }}</span>
+      </div>
+      <div class="text-sm">
+        <span class="block">
+          <span class="inline-block mr-4 font-semibold">이메일 |</span>
+          {{ profile.email }}
+        </span>
+        <p>
+          <span class="inline-block mr-4 font-semibold">자기소개 | </span>
+          {{ profile.bio }}
+        </p>
+      </div>
+      <div class="flex gap-2">
+        @for (tag of profile.tags; track $index) {
+          <app-tag [tagName]="tag.name" appearance="outline" size="s" />
+        }
+      </div>
+      <div class="flex flex-col gap-2">
+        <app-button text="프로필 수정" width="full" (click)="goUpdatePage()" class="w-full" />
+        <app-button text="로그아웃" width="full" (click)="onLogout()" class="w-full" />
+        <app-button text="비밀번호 변경" width="full" (click)="updatePassword()" class="w-full" />
+        <app-button text="기록 초기화" width="full" class="w-full" />
+        <app-button text="회원탈퇴" appearance="secondary" width="full" class="w-full" />
+      </div>
     </div>
-    <p>{{ profile.content }}</p>
-    <div class="flex gap-2">
-      @for (tag of profile.tags; track $index) {
-        <app-tag [tagName]="tag" />
-      }
-    </div>
-    <a routerLink="/edit" class="mt-6 block w-full rounded-[10px] bg-blue-500 px-5 py-[10px] text-center text-white disabled:bg-opacity-50">프로필 수정</a>
-    <app-button text="로그아웃" width="full" (click)="onLogout()" class="w-full" />
-    <app-button text="비밀번호 변경" width="full" (click)="updatePassword()" class="w-full" />
-    <app-button text="기록 초기화" width="full" class="w-full" />
-    <app-button text="회원탈퇴" appearance="outline" width="full" class="w-full" />
-  </div>
-}
+  }
+</div>
