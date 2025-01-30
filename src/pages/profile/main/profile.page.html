@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-secondary5">
+<div class="flex flex-col min-h-screen bg-secondary5 border-x">
   @if (profile) {
     <!-- header -->
     <header class="sticky top-0 z-10 flex items-center w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
@@ -6,7 +6,7 @@
       <span class="text-xl font-bold">내 프로필 조회</span>
     </header>
 
-    <div class="flex flex-col w-full gap-5 px-4 py-6">
+    <div class="flex flex-col flex-1 w-full gap-5 px-4 py-6">
       <!-- TODO 프로필 사진 조회 -->
       <div class="flex items-center justify-center">
         <img [src]="profile.image" alt="프로필 임시 이미지" class="rounded-full h-28 w-28" />
@@ -34,9 +34,12 @@
         <app-button text="프로필 수정" width="full" (click)="goUpdatePage()" class="w-full" />
         <app-button text="로그아웃" width="full" (click)="onLogout()" class="w-full" />
         <app-button text="비밀번호 변경" width="full" (click)="updatePassword()" class="w-full" />
-        <app-button text="기록 초기화" width="full" class="w-full" />
-        <app-button text="회원탈퇴" appearance="secondary" width="full" class="w-full" />
+        <app-button text="기록 초기화" width="full" (click)="reset()" class="w-full" />
+        <app-button text="회원탈퇴" appearance="secondary" width="full" (click)="withdraw()" class="w-full" />
       </div>
     </div>
   }
+
+  <!-- footer -->
+  <app-footer class="sticky bottom-0 mt-auto" />
 </div>

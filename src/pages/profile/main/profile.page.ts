@@ -3,14 +3,15 @@ import { Router } from '@angular/router';
 import { AuthApi, AuthService } from 'src/entities/auth';
 import { ProfileDTO, UserApi } from 'src/entities/user';
 import { ButtonComponent, ModalService, TagComponent } from 'src/shared/components';
-import { EditPasswordDialog } from './ui';
+import { EditPasswordDialog } from '../ui';
 import { CategoriesDTO, CategoryApi } from 'src/entities/category';
 import { forkJoin } from 'rxjs';
+import { FooterWidget } from 'src/widgets/footer';
 
 @Component({
   selector: 'profile-page',
   templateUrl: './profile.page.html',
-  imports: [TagComponent, ButtonComponent],
+  imports: [TagComponent, ButtonComponent, FooterWidget],
 })
 export class ProfilePage {
   public profile: (ProfileDTO & { image: string; tags: CategoriesDTO[] }) | undefined = undefined;
@@ -51,5 +52,17 @@ export class ProfilePage {
   }
 
   // 프로필 수정 페이지 이동
-  goUpdatePage() {}
+  goUpdatePage() {
+    this.router.navigateByUrl('/profile/update');
+  }
+
+  // 기록 초기화
+  reset() {
+    alert('기능 개발중 ..');
+  }
+
+  // 회원탈퇴
+  withdraw() {
+    alert('기능 개발중 ...');
+  }
 }

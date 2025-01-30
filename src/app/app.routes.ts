@@ -39,6 +39,15 @@ export const routes: Routes = [
   },
   {
     path: 'profile',
-    loadComponent: () => import('../pages/profile').then((m) => m.ProfilePage),
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('../pages/profile/main').then((m) => m.ProfilePage),
+      },
+      {
+        path: 'update',
+        loadComponent: () => import('../pages/profile/update').then((m) => m.ProfileUpdatePage),
+      },
+    ],
   },
 ];
