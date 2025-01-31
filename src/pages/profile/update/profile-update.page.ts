@@ -41,15 +41,21 @@ export class ProfileUpdatePage {
       });
 
       tags.forEach((tag) => this.categoryArray.push(this.fb.control(tag)));
-
-      console.log(profile);
-      console.log(this.profileUpdateForm.value);
     });
   }
 
   // 사용자 이미지 업데이트
   onFileSelected(event: Event) {
-    alert('기능 개발중 ...');
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.profileUpdateForm.patchValue({ file });
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      console.log(this.profileUpdateForm.value);
+    }
   }
 
   updateCategory() {
