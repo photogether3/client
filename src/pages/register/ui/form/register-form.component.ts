@@ -62,7 +62,7 @@ export class RegisterFormComponent {
     const formData = this.signUpForm.getRawValue();
 
     this.authApi.register(formData).subscribe(() => {
-      this.router.navigateByUrl('/verify-otp', {
+      this.router.navigateByUrl('/otp/verify', {
         state: {
           email: formData.email,
         },

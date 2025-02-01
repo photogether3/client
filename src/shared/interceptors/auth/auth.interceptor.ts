@@ -27,8 +27,6 @@ export type PendingRequest = {
 
 let isRefreshing = false; // 현재 토큰 갱신 중인지 확인
 
-// TODO 각 api마다 설정해줘야 함 ex. login, register, verify-otp 등등
-// ex. this.http.get('/api/data', { context: skipAuth() }).subscribe();
 export function skipAuth(): HttpContext {
   return new HttpContext().set(skipJwtContextToken, true);
 }

@@ -7,11 +7,11 @@ import { ButtonComponent } from 'src/shared/components';
 import { OTP_REGEX } from 'src/shared/const';
 
 @Component({
-  selector: 'verify-otp-form',
-  templateUrl: './verify-otp-form.component.html',
+  selector: 'otp-verify-form',
+  templateUrl: './otp-verify-form.component.html',
   imports: [ReactiveFormsModule, ButtonComponent],
 })
-export class VerifyOtpFormComponent implements OnInit, OnDestroy {
+export class OtpVerifyFormComponent implements OnInit, OnDestroy {
   public email: string = '';
   public otpForm!: FormGroup;
 

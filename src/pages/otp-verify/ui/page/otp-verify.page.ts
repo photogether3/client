@@ -1,15 +1,15 @@
 import { Component, inject } from '@angular/core';
-import { VerifyOtpFormComponent } from '../form';
 import { AuthApi } from 'src/entities/auth';
 import { Router } from '@angular/router';
 import { ButtonComponent } from 'src/shared/components';
+import { OtpVerifyFormComponent } from '../form';
 
 @Component({
-  selector: 'verify-otp-page',
-  templateUrl: './verify-otp.page.html',
-  imports: [VerifyOtpFormComponent, ButtonComponent],
+  selector: 'otp-verify-page',
+  templateUrl: './otp-verify.page.html',
+  imports: [OtpVerifyFormComponent, ButtonComponent],
 })
-export class VerifyOtpPage {
+export class OtpVerifyPage {
   private readonly authApi = inject(AuthApi);
   private readonly router = inject(Router);
 

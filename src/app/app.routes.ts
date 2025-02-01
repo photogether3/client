@@ -16,8 +16,8 @@ export const routes: Routes = [
     loadComponent: () => import('../pages/register/ui/page').then((m) => m.RegisterPage),
   },
   {
-    path: 'verify-otp',
-    loadComponent: () => import('../pages/verify-otp/ui/page').then((m) => m.VerifyOtpPage),
+    path: 'otp/verify',
+    loadComponent: () => import('../pages/otp-verify/ui/page').then((m) => m.OtpVerifyPage),
   },
   {
     path: 'onboarding',

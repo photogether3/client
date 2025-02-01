@@ -35,7 +35,7 @@ export class ProfilePage {
 
   // 비밀번호 변경
   updatePassword() {
-    this.router.navigateByUrl('/verify-otp', {
+    this.router.navigateByUrl('/otp/verify', {
       state: {
         email: this.profile?.email,
       },
