@@ -1,18 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { CategoriesDTO, CategoryApi } from 'src/entities/category';
-import { BottomSheetService, ButtonComponent, ModalService, TagComponent } from 'src/shared/components';
+import { BottomSheetService, ButtonComponent, TagComponent } from 'src/shared/components';
 
 @Component({
-  selector: 'update-categories-dialog',
-  templateUrl: './update-categories-dialog.component.html',
+  selector: 'categories-update-dialog',
+  templateUrl: './categories-update-dialog.component.html',
   imports: [TagComponent, ButtonComponent],
 })
-export class UpdateCategoriesDialog {
+export class CategoriesUpdateDialog {
   public categoryList: (CategoriesDTO & { selected: boolean })[] = [];
 
   private readonly bottomSheetService = inject(BottomSheetService);
   private readonly categoryApi = inject(CategoryApi);
-  private readonly modalService = inject(ModalService);
 
   constructor() {
     const categoryArray = this.bottomSheetService.data;

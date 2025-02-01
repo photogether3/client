@@ -2,20 +2,19 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserApi } from 'src/entities/user';
 import { EditPasswordType } from 'src/entities/user/model/user.type';
-import { ButtonComponent, ModalService } from 'src/shared/components';
+import { ButtonComponent } from 'src/shared/components';
 import { OTP_REGEX, PASSWORD_REGEX } from 'src/shared/const';
 
 @Component({
-  selector: 'edit-password-dialog',
-  templateUrl: './edit-password-dialog.component.html',
+  selector: 'password-update-dialog',
+  templateUrl: './password-update-dialog.component.html',
   imports: [ReactiveFormsModule, ButtonComponent],
 })
-export class EditPasswordDialog {
+export class PasswordUpdateDialog {
   public passwordEditForm!: FormGroup;
 
   private fb = inject(FormBuilder);
   private readonly userApi = inject(UserApi);
-  private readonly modalService = inject(ModalService);
 
   constructor() {
     this.passwordEditForm = new FormGroup<EditPasswordType>({

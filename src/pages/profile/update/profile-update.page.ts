@@ -6,7 +6,7 @@ import { CategoriesDTO, CategoryApi } from 'src/entities/category';
 import { UserApi } from 'src/entities/user';
 import { BottomSheetService, ButtonComponent, ModalReactiveService, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
-import { UpdateCategoriesDialog } from '../ui';
+import { CategoriesUpdateDialog } from '../ui';
 
 @Component({
   selector: 'profile-update-page',
@@ -63,7 +63,7 @@ export class ProfileUpdatePage {
 
   updateCategory() {
     const categoryArray = this.categoryArray.value;
-    this.bottomSheetService.open(UpdateCategoriesDialog, categoryArray).subscribe((res) => {
+    this.bottomSheetService.open(CategoriesUpdateDialog, categoryArray).subscribe((res) => {
       if (!res) return;
 
       this.categoryArray.clear();

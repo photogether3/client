@@ -1,2 +1,2 @@
-export * from './edit-password-dialog';
-export * from './update-categories-dialog';
+export * from './password-update-dialog';
+export * from './categories-update-dialog';
