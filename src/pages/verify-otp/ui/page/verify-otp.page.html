@@ -1,11 +1,9 @@
-<section class="flex flex-col gap-5">
+<section class="flex flex-col min-h-screen gap-5 px-4 pt-10 bg-secondary5">
   <div>
     <h1 class="text-3xl font-bold">OTP 인증</h1>
     <p class="mt-1">이메일 확인 후, 인증 코드를 입력해주세요!</p>
   </div>
-  <verify-otp-form> </verify-otp-form>
-  <p class="flex items-center justify-between">
-    인증코드가 가지 않았나요 ?
-    <button>재요청</button>
-  </p>
+  <verify-otp-form />
+  <p class="mt-10">인증코드가 가지 않았나요 ?</p>
+  <app-button text="인증코드 재요청" />
 </section>
