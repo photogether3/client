@@ -2,10 +2,11 @@ import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
-import { CategoryApi } from 'src/entities/category';
+import { CategoriesDTO, CategoryApi } from 'src/entities/category';
 import { UserApi } from 'src/entities/user';
-import { ButtonComponent, TagComponent } from 'src/shared/components';
+import { BottomSheetService, ButtonComponent, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
+import { UpdateCategoriesDialog } from '../ui';
 
 @Component({
   selector: 'profile-update-page',
@@ -18,6 +19,7 @@ export class ProfileUpdatePage {
   private readonly fb = inject(FormBuilder);
   private readonly userApi = inject(UserApi);
   private readonly categoryApi = inject(CategoryApi);
+  private readonly bottomSheetService = inject(BottomSheetService);
 
   get categoryArray() {
     return this.profileUpdateForm.get('categories') as FormArray;
@@ -59,7 +61,13 @@ export class ProfileUpdatePage {
   }
 
   updateCategory() {
-    alert('기능 개발중 ..');
+    const categoryArray = this.categoryArray.value;
+    this.bottomSheetService.open(UpdateCategoriesDialog, categoryArray).subscribe((res) => {
+      if (!res) return;
+
+      this.categoryArray.clear();
+      res.forEach((category: CategoriesDTO) => this.categoryArray.push(this.fb.control(category)));
+    });
   }
 
   updateProfile() {

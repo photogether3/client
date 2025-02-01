@@ -1,0 +1,10 @@
+<div class="flex w-[24rem] flex-col gap-4 rounded-t-[12px] bg-white p-6 shadow-lg">
+  <div class="mx-auto h-[3px] w-12 rounded-full bg-gray-600"></div>
+  <div class="flex gap-2 p-2 border rounded-lg">
+    @for (category of categoryList; track $index) {
+      <app-tag [appearance]="category.selected ? 'primary' : 'outline'" [tagName]="category.name" size="s" (click)="toggleCategory(category.categoryId)" class="cursor-pointer" />
+    }
+  </div>
+  <app-button appearance="outline" text="+주제 제안하기" />
+  <app-button text="태그 선택 완료" (click)="completed()" />
+</div>
