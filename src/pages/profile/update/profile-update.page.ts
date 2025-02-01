@@ -4,7 +4,7 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular
 import { forkJoin } from 'rxjs';
 import { CategoriesDTO, CategoryApi } from 'src/entities/category';
 import { UserApi } from 'src/entities/user';
-import { BottomSheetService, ButtonComponent, TagComponent } from 'src/shared/components';
+import { BottomSheetService, ButtonComponent, ModalReactiveService, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { UpdateCategoriesDialog } from '../ui';
 
@@ -20,6 +20,7 @@ export class ProfileUpdatePage {
   private readonly userApi = inject(UserApi);
   private readonly categoryApi = inject(CategoryApi);
   private readonly bottomSheetService = inject(BottomSheetService);
+  private readonly modalReactiveService = inject(ModalReactiveService);
 
   get categoryArray() {
     return this.profileUpdateForm.get('categories') as FormArray;
@@ -71,6 +72,17 @@ export class ProfileUpdatePage {
   }
 
   updateProfile() {
-    alert('프로필 편집 기능 개발중 ...');
+    const { nickname, bio } = this.profileUpdateForm.value;
+    const categoryIds = this.profileUpdateForm.get('categories')?.value.map((category: CategoriesDTO) => category.categoryId);
+    const updateProfileDTO = { nickname, bio, categoryIds: JSON.stringify(categoryIds) };
+
+    this.userApi.updateProfile(updateProfileDTO).subscribe(() => {
+      const modalData = {
+        title: '프로필 편집 완료',
+        subTitle: '프로필 편집이 완료되었습니다.',
+        content: '확인 버튼을 누르시면 홈 화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
+      };
+      this.modalReactiveService.open(modalData);
+    });
   }
 }

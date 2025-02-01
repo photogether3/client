@@ -20,5 +20,5 @@ export type UpdatePasswordDTO = {
 export type UpdateProfileDTO = {
   nickname: string;
   bio: string;
-  categoryIds: string[];
+  categoryIds: string;
 };

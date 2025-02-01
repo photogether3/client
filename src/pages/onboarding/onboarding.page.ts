@@ -52,7 +52,8 @@ export class OnboardingPage {
   }
 
   submit() {
-    const updateProfileDTO = this.initForm.getRawValue();
+    const { nickname, bio, categoryIds } = this.initForm.value;
+    const updateProfileDTO = { nickname, bio, categoryIds: JSON.stringify(categoryIds) };
     this.userApi.updateProfile(updateProfileDTO).subscribe(() => {
       this.router.navigateByUrl('/home');
     });
