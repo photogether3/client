@@ -6,7 +6,7 @@ export const tagVariants = cva('inlie-flex items-center justify-center whitespac
       primary: ['text-white', 'bg-primary50', 'hover:bg-primary60'],
       accent: ['text-white', 'bg-accent50', 'hover:bg-accent60'],
       secondary: ['text-white', 'bg-secondary50', 'hover:bg-secondary60'],
-      outline: ['text-black', 'border', 'border-base04', 'hover:text-white hover:bg-secondary60'],
+      outline: ['text-black', 'border', 'bg-white', 'border-base04', 'hover:text-white hover:bg-secondary60'],
     },
     size: {
       l: ['text-base', 'px-6', 'py-3', 'rounded-[14px]'],
