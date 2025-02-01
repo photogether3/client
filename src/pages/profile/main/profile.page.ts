@@ -1,11 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthApi, AuthService } from 'src/entities/auth';
-import { ProfileDTO, UserApi } from 'src/entities/user';
-import { ButtonComponent, ModalService, TagComponent } from 'src/shared/components';
-import { EditPasswordDialog } from '../ui';
-import { CategoriesDTO, CategoryApi } from 'src/entities/category';
 import { forkJoin } from 'rxjs';
+import { AuthApi, AuthService } from 'src/entities/auth';
+import { CategoriesDTO, CategoryApi } from 'src/entities/category';
+import { ProfileDTO, UserApi } from 'src/entities/user';
+import { ButtonComponent, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 
 @Component({
@@ -20,7 +19,6 @@ export class ProfilePage {
   private readonly authApi = inject(AuthApi);
   private readonly userApi = inject(UserApi);
   private readonly categoryApi = inject(CategoryApi);
-  private readonly modalService = inject(ModalService);
 
   constructor() {
     forkJoin({
@@ -37,8 +35,10 @@ export class ProfilePage {
 
   // 비밀번호 변경
   updatePassword() {
-    this.modalService.open(EditPasswordDialog).subscribe((res) => {
-      console.log(res);
+    this.router.navigateByUrl('/verify-otp', {
+      state: {
+        email: this.profile?.email,
+      },
     });
   }
 

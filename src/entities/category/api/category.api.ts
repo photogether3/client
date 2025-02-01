@@ -18,6 +18,6 @@ export class CategoryApi {
 
   // 관심있는 카테고리 목록 조회
   fetchFavCategories(): Observable<CategoriesDTO[]> {
-    return this.http.get<CategoriesDTO[]>(`${environment.serverUrl}/v1/categories/favorites`);
+    return this.http.get<CategoriesDTO[]>(`${environment.serverUrl}/v1/favorites`);
   }
 }
