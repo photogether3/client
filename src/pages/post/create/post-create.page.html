@@ -9,31 +9,34 @@
   </header>
 
   <!-- main -->
-  <form class="flex flex-col flex-1 w-full gap-5 px-4 py-6">
+  <form [formGroup]="postCreateForm" class="flex flex-col flex-1 w-full gap-5 px-4 py-6">
     <img
       src="https://image.aladin.co.kr/product/26681/50/letslook/K092730989_fl.jpg?MW=750&WG=3&WS=100&&WO=30&WF=-15x15&WU=https://image.aladin.co.kr/img/common/openmarket_ci.png"
       alt="임시 이미지"
       class="h-[485px] rounded-lg" />
     <label class="flex flex-col gap-2">
       <span>게시물 제목</span>
-      <input type="text" placeholder="게시물 제목을 입력해주세요." />
+      <input type="text" placeholder="게시물 제목을 입력해주세요." formControlName="title" />
     </label>
     <label class="flex flex-col gap-2">
       <span>게시물 내용</span>
-      <textarea placeholder="게시물 내용을 입력해주세요." rows="10" class="p-4 border border-black rounded-lg resize-none"></textarea>
+      <textarea placeholder="게시물 내용을 입력해주세요." formControlName="content" rows="10" class="p-4 border border-black rounded-lg resize-none"></textarea>
     </label>
 
-    <div>
+    <div formArrayName="metadataStringify">
       <span class="block mb-3">사진내용</span>
-      @for (imgContent of [1, 1, 1, 1, 1, 1]; track $index) {
-        <div class="flex gap-3 mb-3 last-of-type:mb-0">
+
+      @for (imgContent of metadataArray.controls; track $index) {
+        <div [formGroup]="imgContent" class="flex gap-3 mb-3 last-of-type:mb-0">
           <div>
-            <input type="checkbox" class="w-6 h-6" />
+            <input formControlName="isPublic" type="checkbox" class="w-6 h-6" />
             <span class="block text-sm">노출</span>
           </div>
-          <input type="text" value="사진내용 사진 내용" class="flex-1" />
+          <input formControlName="content" type="text" class="flex-1" />
         </div>
       }
+
+      {{ postCreateForm.value | json }}
     </div>
     <app-button text="다음 단계로" width="full" (click)="updateState()" />
   </form>
