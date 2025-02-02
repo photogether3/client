@@ -32,6 +32,10 @@ export const routes: Routes = [
     path: 'album',
     children: [
       {
+        path: 'create',
+        loadComponent: () => import('../pages/album/create').then((m) => m.AlbumCreatePage),
+      },
+      {
         path: ':id',
         loadComponent: () => import('../pages/album').then((m) => m.AlbumMainPage),
       },
