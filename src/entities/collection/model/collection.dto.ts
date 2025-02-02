@@ -4,3 +4,8 @@ export type CollectionDTO = {
   tag: string;
   images: { src: string; alt: string }[];
 };
+
+export type CollectionCreateDTO = {
+  title: string;
+  categoryId: string;
+};

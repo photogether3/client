@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { CollectionDTO } from '../model';
+import { CollectionCreateDTO, CollectionDTO } from '../model';
+import { environment } from 'src/shared/environments';
 
 @Injectable({
   providedIn: 'root',
@@ -71,5 +72,10 @@ export class CollectionApi {
   getCollection(id: number): Observable<CollectionDTO | undefined> {
     const collection = this.result.find((collection) => collection.id === id);
     return of(collection);
+  }
+
+  // 사진첩 생성
+  createCollection(collectionCreateDTO: CollectionCreateDTO) {
+    return this.http.post(`${environment.serverUrl}/v1/collections`, collectionCreateDTO);
   }
 }

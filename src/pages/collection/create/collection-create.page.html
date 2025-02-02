@@ -24,7 +24,7 @@
         }
       </div>
     </label>
-    <app-button text="사진첩 생성하기" [isDisabled]="collectionCreateForm.invalid" />
+    <app-button text="사진첩 생성하기" [isDisabled]="collectionCreateForm.invalid" (click)="createCollection()" />
   </form>
 
   <!-- footer -->
