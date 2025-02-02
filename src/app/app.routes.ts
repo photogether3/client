@@ -29,15 +29,15 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'album',
+    path: 'collection',
     children: [
       {
         path: 'create',
-        loadComponent: () => import('../pages/album/create').then((m) => m.AlbumCreatePage),
+        loadComponent: () => import('../pages/collection/create').then((m) => m.CollectionCreatePage),
       },
       {
         path: ':id',
-        loadComponent: () => import('../pages/album').then((m) => m.AlbumMainPage),
+        loadComponent: () => import('../pages/collection').then((m) => m.CollectionCreatePage),
       },
     ],
   },

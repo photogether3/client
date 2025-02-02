@@ -1,4 +1,4 @@
-export type AlbumDTO = {
+export type CollectionDTO = {
   id: number;
   title: string;
   tag: string;

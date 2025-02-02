@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { AlbumDTO } from '../model';
+import { CollectionDTO } from '../model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AlbumApi {
+export class CollectionApi {
   private http = inject(HttpClient);
   public result = [
     {
@@ -63,13 +63,13 @@ export class AlbumApi {
   ];
 
   // 사진첩 목록 조회
-  getCollections(): Observable<AlbumDTO[]> {
+  getCollections(): Observable<CollectionDTO[]> {
     return of(this.result);
   }
 
   // 사진첩 상세 조회
-  getCollection(id: number): Observable<AlbumDTO | undefined> {
-    const album = this.result.find((album) => album.id === id);
-    return of(album);
+  getCollection(id: number): Observable<CollectionDTO | undefined> {
+    const collection = this.result.find((collection) => collection.id === id);
+    return of(collection);
   }
 }

@@ -1,10 +1,10 @@
 <div class="flex flex-col min-h-screen bg-secondary5 border-x">
-  @if (album) {
+  @if (collection) {
     <!-- header -->
     <header class="sticky top-0 z-10 flex items-center w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
       <button class="text-xl font-bold"><</button>
-      <span class="text-xl font-bold">{{ album.title }}</span>
-      <app-tag [appearance]="'outline'" [tagName]="album.tag" size="m" class="ml-auto" />
+      <span class="text-xl font-bold">{{ collection.title }}</span>
+      <app-tag [appearance]="'outline'" [tagName]="collection.tag" size="m" class="ml-auto" />
     </header>
 
     <div class="grid grid-cols-3 gap-3 p-4 bg-white border-b">
@@ -16,7 +16,7 @@
     <!-- main -->
     <main class="grid grid-cols-2 gap-8 p-4">
       <!-- post-card -->
-      @for (post of album.images; track $index) {
+      @for (post of collection.images; track $index) {
         <!-- TODO 1. 마소니 레이아웃 적용 2. 컴포넌트 분리 -->
         <section class="relative bg-white rounded-lg shadow-lg">
           <img [src]="post.src" [alt]="post.alt" class="h-full rounded-lg" />

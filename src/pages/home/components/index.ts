@@ -1,1 +1,1 @@
-export * from './album-card';
+export * from './collection-card';

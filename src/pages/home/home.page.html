@@ -8,10 +8,10 @@
   <!-- main -->
   <main class="flex flex-col flex-grow gap-4 px-4 py-4">
     <div class="grid grid-cols-2 gap-3">
-      @for (albumItem of albumList; track $index) {
-        <app-album-card [images]="albumItem.images" [title]="albumItem.title" [tag]="albumItem.tag" [id]="albumItem.id" />
+      @for (collection of collectionList; track $index) {
+        <app-collection-card [images]="collection.images" [title]="collection.title" [tag]="collection.tag" [id]="collection.id" />
       }
-      <app-button text="사진첩 생성하기" appearance="secondary" (click)="createAlbum()" class="col-span-full" />
+      <app-button text="사진첩 생성하기" appearance="secondary" (click)="createCollection()" class="col-span-full" />
     </div>
 
     <section>

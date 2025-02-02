@@ -1,21 +1,21 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AlbumApi } from 'src/entities/album';
+import { CollectionApi } from 'src/entities/collection';
 import { CategoriesDTO, CategoryApi } from 'src/entities/category';
 import { ButtonComponent, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 
 @Component({
-  selector: 'app-album-create',
-  templateUrl: './album-create.page.html',
+  selector: 'app-collection-create',
+  templateUrl: './collection-create.page.html',
   imports: [FooterWidget, ButtonComponent, TagComponent, ReactiveFormsModule],
 })
-export class AlbumCreatePage implements OnInit {
+export class CollectionCreatePage implements OnInit {
   public categoryList: CategoriesDTO[] = [];
   public collectionCreateForm!: FormGroup;
 
   private readonly fb = inject(FormBuilder);
-  private readonly albumApi = inject(AlbumApi);
+  private readonly collectionApi = inject(CollectionApi);
   private readonly categoryApi = inject(CategoryApi);
 
   constructor() {

@@ -1,37 +1,37 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { AlbumApi, AlbumDTO } from 'src/entities/album';
+import { CollectionApi, CollectionDTO } from 'src/entities/collection';
 import { UserApi } from 'src/entities/user';
 import { ButtonComponent, IconComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
-import { AlbumCardComponent } from './components';
 import { Router } from '@angular/router';
+import { CollectionCardComponent } from './components';
 
 @Component({
   selector: 'home-page',
   templateUrl: './home.page.html',
-  imports: [FooterWidget, IconComponent, AlbumCardComponent, ButtonComponent, CommonModule],
+  imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule],
 })
 export class HomePage {
   public nickname: string = '';
-  public albumList: AlbumDTO[] | undefined = undefined;
+  public collectionList: CollectionDTO[] | undefined = undefined;
 
   private readonly router = inject(Router);
   private readonly userApi = inject(UserApi);
-  private readonly albumApi = inject(AlbumApi);
+  private readonly collectionApi = inject(CollectionApi);
 
   constructor() {
     this.userApi.getProfile().subscribe((res) => {
       this.nickname = res.nickname;
     });
 
-    this.albumApi.getCollections().subscribe((res) => {
-      this.albumList = res;
+    this.collectionApi.getCollections().subscribe((res) => {
+      this.collectionList = res;
     });
   }
 
   // 사진첩 생성
-  createAlbum() {
-    this.router.navigateByUrl('album/create');
+  createCollection() {
+    this.router.navigateByUrl('collection/create');
   }
 }
