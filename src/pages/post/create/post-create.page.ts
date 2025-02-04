@@ -10,6 +10,7 @@ import { FooterWidget } from 'src/widgets/footer';
   imports: [ButtonComponent, FooterWidget, ReactiveFormsModule, JsonPipe],
 })
 export class PostCreatePage {
+  public previewUrl: string | ArrayBuffer | null | undefined = null;
   public postCreateForm!: FormGroup;
 
   private readonly fb = inject(FormBuilder);
@@ -20,16 +21,34 @@ export class PostCreatePage {
 
   constructor() {
     this.postCreateForm = this.fb.group({
-      // TODO collectionId 실제 사진첩id로 대체
-      // TODO file 실제 file로 대체
-      collectionId: '1',
+      collectionId: 'Bb7-vVLxfUq8WY28XLh8gdiuIbKbQd',
       title: '',
       content: '',
       metadataStringify: this.fb.array([]),
-      file: 'https://image.aladin.co.kr/product/26681/50/letslook/K092730989_fl.jpg?MW=750&WG=3&WS=100&&WO=30&WF=-15x15&WU=https://image.aladin.co.kr/img/common/openmarket_ci.png',
+      file: '',
     });
 
     this.initializeMetadata();
+  }
+
+  ngOnInit(): void {}
+
+  // 사진 업로드
+  upload(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      this.postCreateForm.patchValue({ file });
+      console.log(this.postCreateForm.value);
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        this.previewUrl = e.target?.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
   }
 
   initializeMetadata() {
