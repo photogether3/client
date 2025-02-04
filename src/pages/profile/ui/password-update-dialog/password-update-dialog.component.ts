@@ -1,30 +1,28 @@
+import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserApi } from 'src/entities/user';
-import { EditPasswordType } from 'src/entities/user/model/user.type';
+import { PasswordUpdateType } from 'src/entities/user/model/user.type';
 import { ButtonComponent } from 'src/shared/components';
-import { OTP_REGEX, PASSWORD_REGEX } from 'src/shared/const';
+import { PASSWORD_REGEX } from 'src/shared/const';
+import { CustomValidators } from 'src/shared/validators';
 
 @Component({
   selector: 'password-update-dialog',
   templateUrl: './password-update-dialog.component.html',
-  imports: [ReactiveFormsModule, ButtonComponent],
+  imports: [ReactiveFormsModule, ButtonComponent, JsonPipe],
 })
 export class PasswordUpdateDialog {
-  public passwordEditForm!: FormGroup;
+  public passwordUpdateForm!: FormGroup;
 
-  private fb = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
+  private readonly customValidators = inject(CustomValidators);
   private readonly userApi = inject(UserApi);
 
   constructor() {
-    this.passwordEditForm = new FormGroup<EditPasswordType>({
-      email: new FormControl('', {
-        validators: [Validators.required, Validators.email],
-        updateOn: 'change',
-        nonNullable: true,
-      }),
-      otp: new FormControl('', {
-        validators: [Validators.required, Validators.pattern(OTP_REGEX)],
+    this.passwordUpdateForm = new FormGroup<PasswordUpdateType>({
+      currentPassword: new FormControl('', {
+        validators: [Validators.required, Validators.pattern(PASSWORD_REGEX)],
         updateOn: 'change',
         nonNullable: true,
       }),
@@ -33,12 +31,20 @@ export class PasswordUpdateDialog {
         updateOn: 'change',
         nonNullable: true,
       }),
+      confirmPassword: new FormControl('', {
+        validators: [Validators.required, Validators.pattern(PASSWORD_REGEX)],
+        asyncValidators: [this.customValidators.checkPasswordMatch()],
+        updateOn: 'change',
+        nonNullable: true,
+      }),
     });
   }
 
-  update() {
-    const formValue = this.passwordEditForm.getRawValue();
-    this.userApi.updatePassword(formValue).subscribe((res) => {
+  updatePassword() {
+    const { currentPassword, password } = this.passwordUpdateForm.getRawValue();
+    const dto = { currentPassword, newPassword: password };
+
+    this.userApi.updatePassword(dto).subscribe((res) => {
       console.log(res);
     });
   }

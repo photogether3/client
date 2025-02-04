@@ -4,8 +4,9 @@ import { forkJoin } from 'rxjs';
 import { AuthApi, AuthService } from 'src/entities/auth';
 import { CategoriesDTO, CategoryApi } from 'src/entities/category';
 import { ProfileDTO, UserApi } from 'src/entities/user';
-import { ButtonComponent, TagComponent } from 'src/shared/components';
+import { ButtonComponent, ModalService, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
+import { PasswordUpdateDialog } from '../ui';
 
 @Component({
   selector: 'profile-page',
@@ -16,6 +17,7 @@ export class ProfilePage {
   public profile: (ProfileDTO & { image: string; tags: CategoriesDTO[] }) | undefined = undefined;
 
   private readonly router = inject(Router);
+  private readonly modalService = inject(ModalService);
   private readonly authApi = inject(AuthApi);
   private readonly userApi = inject(UserApi);
   private readonly categoryApi = inject(CategoryApi);
@@ -35,11 +37,7 @@ export class ProfilePage {
 
   // 비밀번호 변경
   updatePassword() {
-    this.router.navigateByUrl('/otp/verify', {
-      state: {
-        email: this.profile?.email,
-      },
-    });
+    this.modalService.open(PasswordUpdateDialog);
   }
 
   // 로그아웃
