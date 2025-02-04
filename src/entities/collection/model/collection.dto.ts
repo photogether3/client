@@ -1,7 +1,7 @@
 import { CollectionType } from './collection.type';
 
 // home 페이지에서 사용
-export type CollectionGetDTO = {
+export type CollectionsResDTO = {
   totalItemCount: number;
   totalPageCount: number;
   currentPage: number;
@@ -9,7 +9,7 @@ export type CollectionGetDTO = {
   items: CollectionType[];
 };
 
-export type CollectionCreateDTO = {
+export type CollectionReqDTO = {
   title: string;
   categoryId: string;
 };

@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { CollectionCreateDTO, CollectionGetDTO } from '../model';
+import { CollectionReqDTO, CollectionsResDTO } from '../model';
 import { environment } from 'src/shared/environments';
 
 @Injectable({
@@ -64,7 +64,7 @@ export class CollectionApi {
   ];
 
   // 사진첩 목록 조회
-  getCollections(): Observable<CollectionGetDTO> {
+  getCollections(): Observable<CollectionsResDTO> {
     const params = new HttpParams({
       fromObject: {
         page: 1,
@@ -74,17 +74,17 @@ export class CollectionApi {
       },
     });
 
-    return this.http.get<CollectionGetDTO>(`${environment.serverUrl}/v1/collections`, { params });
+    return this.http.get<CollectionsResDTO>(`${environment.serverUrl}/v1/collections`, { params });
   }
 
   // 사진첩 상세 조회
-  getCollection(id: number): Observable<CollectionGetDTO | undefined> {
+  getCollection(id: number): Observable<CollectionsResDTO | undefined> {
     const collection = this.result.find((collection) => collection.id === id);
     return of(undefined);
   }
 
   // 사진첩 생성
-  createCollection(collectionCreateDTO: CollectionCreateDTO) {
+  createCollection(collectionCreateDTO: CollectionReqDTO) {
     return this.http.post(`${environment.serverUrl}/v1/collections`, collectionCreateDTO);
   }
 }

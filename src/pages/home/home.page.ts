@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { CollectionApi, CollectionGetDTO, CollectionType } from 'src/entities/collection';
+import { CollectionApi, CollectionsResDTO, CollectionType } from 'src/entities/collection';
 import { UserApi } from 'src/entities/user';
 import { ButtonComponent, IconComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
@@ -26,7 +26,7 @@ export class HomePage {
       this.nickname = res.nickname;
     });
 
-    this.collectionApi.getCollections().subscribe((res: CollectionGetDTO) => {
+    this.collectionApi.getCollections().subscribe((res: CollectionsResDTO) => {
       this.collectionList = res.items;
     });
   }
