@@ -28,8 +28,8 @@ export class UserApi {
     return this.http.put(`${environment.serverUrl}/v1/users/me`, updateProfileDTO);
   }
 
-  // 비밀번호 변경
+  // 비밀번호 변경 (프로필 페이지)
   updatePassword(updatedPassword: UpdatePasswordDTO): Observable<ProfileDTO> {
-    return this.http.patch<ProfileDTO>(`${environment.serverUrl}/v1/users/password`, updatedPassword);
+    return this.http.patch<ProfileDTO>(`${environment.serverUrl}/v1/users/me/password`, updatedPassword);
   }
 }

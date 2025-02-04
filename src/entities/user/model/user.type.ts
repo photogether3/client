@@ -10,8 +10,8 @@ export type ProfileType = {
   image: string;
 };
 
-export type EditPasswordType = {
-  email: FormControl<string>;
-  otp: FormControl<string>;
+export type PasswordUpdateType = {
+  currentPassword: FormControl<string>;
   password: FormControl<string>;
+  confirmPassword: FormControl<string>;
 };

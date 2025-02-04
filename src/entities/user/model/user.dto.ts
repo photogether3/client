@@ -12,9 +12,8 @@ export type UpdateNicknameDTO = {
 };
 
 export type UpdatePasswordDTO = {
-  email: string;
-  otp: string;
-  password: string;
+  currentPassword: string;
+  newPassword: string;
 };
 
 export type UpdateProfileDTO = {
