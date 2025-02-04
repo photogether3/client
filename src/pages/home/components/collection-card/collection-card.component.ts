@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
+import { CategoriesDTO } from 'src/entities/category';
 import { TagComponent } from 'src/shared/components';
 
 @Component({
@@ -9,10 +10,10 @@ import { TagComponent } from 'src/shared/components';
   imports: [CommonModule, TagComponent],
 })
 export class CollectionCardComponent {
-  public images = input.required<{ alt: string; src: string }[]>();
+  public images = input.required<string[]>();
   public title = input<string>('TITLE');
-  public tag = input<string>('TAG');
-  public id = input<number>(-999);
+  public category = input<CategoriesDTO>();
+  public collectionId = input<string>();
   public representativeImages = computed(() => this.images().slice(0, 4));
 
   private router = inject(Router);
@@ -20,6 +21,6 @@ export class CollectionCardComponent {
   constructor() {}
 
   goPage() {
-    this.router.navigateByUrl('collection/' + this.id().toString());
+    this.router.navigateByUrl('collection/' + this.collectionId());
   }
 }

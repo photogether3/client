@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { CollectionApi, CollectionDTO } from 'src/entities/collection';
+import { Router } from '@angular/router';
+import { CollectionApi, CollectionGetDTO, CollectionType } from 'src/entities/collection';
 import { UserApi } from 'src/entities/user';
 import { ButtonComponent, IconComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
-import { Router } from '@angular/router';
 import { CollectionCardComponent } from './components';
 
 @Component({
@@ -14,7 +14,8 @@ import { CollectionCardComponent } from './components';
 })
 export class HomePage {
   public nickname: string = '';
-  public collectionList: CollectionDTO[] | undefined = undefined;
+  // public collectionList: CollectionDTO[] | undefined = undefined;
+  public collectionList: CollectionType[] | undefined = undefined;
 
   private readonly router = inject(Router);
   private readonly userApi = inject(UserApi);
@@ -25,8 +26,8 @@ export class HomePage {
       this.nickname = res.nickname;
     });
 
-    this.collectionApi.getCollections().subscribe((res) => {
-      this.collectionList = res;
+    this.collectionApi.getCollections().subscribe((res: CollectionGetDTO) => {
+      this.collectionList = res.items;
     });
   }
 

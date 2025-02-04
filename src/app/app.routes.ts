@@ -37,7 +37,7 @@ export const routes: Routes = [
       },
       {
         path: ':id',
-        loadComponent: () => import('../pages/collection').then((m) => m.CollectionCreatePage),
+        loadComponent: () => import('../pages/collection').then((m) => m.CollectionMainPage),
       },
     ],
   },

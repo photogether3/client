@@ -2,14 +2,12 @@
   <div [ngClass]="{ 'grid grid-cols-2 grid-rows-[70px_70px]': images().length > 1 }" class="h-full w-full rounded-[12px] blur-[2px]">
     @for (image of representativeImages(); track $index; let i = $index) {
       <img
-        [src]="image.src"
-        [alt]="image.alt"
         [ngClass]="{ 'rounded-tl-[12px]': i === 0, 'rounded-tr-[12px]': i === 1, 'rounded-bl-[12px]': i === 2, 'rounded-br-[12px]': i === 3 }"
         class="h-[70px] w-full object-cover" />
     }
   </div>
   <div class="absolute text-black left-1 top-1/3">
-    <app-tag [tagName]="tag()" [appearance]="'primary'" />
+    <app-tag [tagName]="category()?.name" [appearance]="'primary'" />
     <h4 class="font-bold">{{ title() }}</h4>
     <span class="text-sm">{{ images().length }}개 사진</span>
   </div>

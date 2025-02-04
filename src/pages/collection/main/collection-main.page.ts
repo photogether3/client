@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CollectionApi, CollectionDTO } from 'src/entities/collection';
-import { ButtonComponent, IconComponent, TagComponent } from 'src/shared/components';
+import { CollectionApi } from 'src/entities/collection';
+import { ButtonComponent, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 
 @Component({
@@ -10,7 +10,7 @@ import { FooterWidget } from 'src/widgets/footer';
   imports: [TagComponent, FooterWidget, ButtonComponent],
 })
 export class CollectionMainPage implements OnInit {
-  public collection: CollectionDTO | undefined = undefined;
+  public collection: any | undefined = undefined;
 
   private readonly route = inject(ActivatedRoute);
   private readonly collectionApi = inject(CollectionApi);
