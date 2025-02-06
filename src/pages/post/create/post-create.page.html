@@ -5,46 +5,71 @@
       <button class="mr-3 text-xl font-bold"><</button>
       <span class="text-xl font-bold">게시물 생성</span>
     </div>
-    <span>1/2</span>
+    <span>{{ step() }}/2</span>
   </header>
 
   <!-- main -->
-  <form [formGroup]="postCreateForm" class="flex flex-col flex-1 w-full gap-5 px-4 py-6">
-    <input type="file" (change)="upload($event)" />
-    @if (previewUrl) {
-      <img [src]="previewUrl" alt="임시 이미지" class="h-[485px] rounded-lg" />
-    } @else {
-      <div class="bg-gray20 flex h-[485px] items-center justify-center rounded-lg border">
-        <p>사진을 선택해주세요.</p>
-      </div>
-    }
-    <label class="flex flex-col gap-2">
-      <span>게시물 제목</span>
-      <input type="text" placeholder="게시물 제목을 입력해주세요." formControlName="title" />
-    </label>
-    <label class="flex flex-col gap-2">
-      <span>게시물 내용</span>
-      <textarea placeholder="게시물 내용을 입력해주세요." formControlName="content" rows="10" class="p-4 border border-black rounded-lg resize-none"></textarea>
-    </label>
-
-    <div formArrayName="metadataStringify">
-      <span class="block mb-3">사진내용</span>
-
-      @for (imgContent of metadataArray.controls; track $index) {
-        <div [formGroup]="imgContent" class="flex gap-3 mb-3 last-of-type:mb-0">
-          <div>
-            <input formControlName="isPublic" type="checkbox" class="w-6 h-6" />
-            <span class="block text-sm">노출</span>
+  <div class="flex-1 w-full px-4 py-6">
+    @if (step() === 1) {
+      <form [formGroup]="postCreateForm" class="flex flex-col gap-5">
+        <input type="file" (change)="upload($event)" />
+        @if (previewUrl) {
+          <img [src]="previewUrl" alt="임시 이미지" class="h-[485px] rounded-lg" />
+        } @else {
+          <div class="bg-gray20 flex h-[485px] items-center justify-center rounded-lg border">
+            <p>사진을 선택해주세요.</p>
           </div>
-          <input formControlName="content" type="text" class="flex-1" />
-        </div>
-      }
+        }
+        <label class="flex flex-col gap-2">
+          <span>게시물 제목</span>
+          <input type="text" placeholder="게시물 제목을 입력해주세요." formControlName="title" />
+        </label>
+        <label class="flex flex-col gap-2">
+          <span>게시물 내용</span>
+          <textarea placeholder="게시물 내용을 입력해주세요." formControlName="content" rows="10" class="p-4 border border-black rounded-lg resize-none"></textarea>
+        </label>
 
-      {{ postCreateForm.value | json }}
-    </div>
-    <app-button text="다음 단계로" width="full" (click)="updateState()" />
-  </form>
+        <div formArrayName="metadataStringify">
+          <span class="block mb-3">사진내용</span>
+
+          @for (imgContent of metadataArray.controls; track $index) {
+            <div [formGroup]="imgContent" class="flex gap-3 mb-3 last-of-type:mb-0">
+              <div>
+                <input formControlName="isPublic" type="checkbox" class="w-6 h-6" />
+                <span class="block text-sm">노출</span>
+              </div>
+              <input formControlName="content" type="text" class="flex-1" />
+            </div>
+          }
+        </div>
+        <app-button text="다음 단계로" width="full" (click)="updateState()" />
+      </form>
+    } @else {
+      <div class="grid grid-cols-2 gap-5 pb-5 border-b border-b-gray-600">
+        @for (collection of collections; track $index) {
+          <div class="">
+            <input
+              type="checkbox"
+              (change)="selectCollection(collection.collectionId, $event)"
+              [checked]="postCreateForm.value.collectionId === collection.collectionId"
+              class="absolute z-20 w-6 h-6" />
+            <app-collection-card [title]="collection.title" [collectionId]="collection.collectionId" [category]="collection.category" [images]="collection.imageUrls" />
+          </div>
+        }
+      </div>
+      <div class="pt-5">
+        <span class="font-bold">미분류</span>
+        <div>
+          <input type="checkbox" class="absolute z-20 w-6 h-6" />
+          <div class="relative h-[140px] rounded-[12px] bg-white shadow-md hover:cursor-pointer hover:shadow-xl"></div>
+        </div>
+      </div>
+      <app-button text="선택한 사진첩에 저장" width="full" (click)="createCollection()" class="mt-5" />
+    }
+  </div>
 
   <!-- footer -->
+  {{ postCreateForm.value | json }}
+
   <app-footer class="sticky bottom-0 mt-auto" />
 </div>
