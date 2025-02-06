@@ -1,0 +1,1 @@
+import{a}from"./chunk-KXKR3LYA.js";import"./chunk-QHM3H5ES.js";import"./chunk-NLQUPEL3.js";import"./chunk-DGXU2TAC.js";import"./chunk-5ZBA7CN6.js";import"./chunk-GAMVPAQP.js";import"./chunk-LFJQS5LE.js";export{a as CollectionCreatePage};
