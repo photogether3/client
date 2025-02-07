@@ -1,10 +1,10 @@
-<div class="flex flex-col min-h-screen bg-secondary5 border-x">
+<div class="flex flex-col min-h-screen border-x bg-secondary5">
   @if (collection) {
     <!-- header -->
     <header class="sticky top-0 z-10 flex items-center w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
       <button class="text-xl font-bold"><</button>
-      <span class="text-xl font-bold">{{ collection.title }}</span>
-      <app-tag [appearance]="'outline'" [tagName]="collection.tag" size="m" class="ml-auto" />
+      <span class="text-xl font-bold">{{ collection.items[0].collection.title }}</span>
+      <app-tag [appearance]="'outline'" [tagName]="collection.items[0].category.name" size="m" class="ml-auto" />
     </header>
 
     <div class="grid grid-cols-3 gap-3 p-4 bg-white border-b">
@@ -14,15 +14,15 @@
     </div>
 
     <!-- main -->
-    <main class="grid grid-cols-2 gap-8 p-4">
+    <main class="grid grid-cols-2 gap-3 p-4">
       <!-- post-card -->
-      @for (post of collection.images; track $index) {
+      @for (post of collection.items; track $index) {
         <!-- TODO 1. 마소니 레이아웃 적용 2. 컴포넌트 분리 -->
         <section class="relative bg-white rounded-lg shadow-lg">
-          <img [src]="post.src" [alt]="post.alt" class="h-full rounded-lg" />
+          <img [src]="post.imageUrl" [alt]="post.title" class="h-full rounded-lg" />
           <div class="absolute left-1 top-1/2">
-            <span class="text-lg font-bold">{{ post.alt }}</span>
-            <p class="text-sm line-clamp-2">게시물 내용입니다. 게시물 내용입니다. 게시물 내용이빈다.</p>
+            <span class="text-lg font-bold">{{ post.title }}</span>
+            <p class="text-sm line-clamp-2">{{ post.content }}</p>
           </div>
         </section>
       }

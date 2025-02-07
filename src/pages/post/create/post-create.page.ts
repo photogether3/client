@@ -99,15 +99,13 @@ export class PostCreatePage {
     const dto = this.postCreateForm.getRawValue();
     console.log(dto);
 
-    this.postApi.createPost(dto).subscribe((res) => {
-      console.log(res);
-
-      // const modalData = {
-      //   title: '게시물 생성 완료',
-      //   subTitle: '게시물 생성이 완료되었습니다.',
-      //   content: '확인 버튼을 누르시면 홈 화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
-      // };
-      // this.modalReactiveService.open(modalData);
+    this.postApi.createPost(dto).subscribe(() => {
+      const modalData = {
+        title: '게시물 생성 완료',
+        subTitle: '게시물 생성이 완료되었습니다.',
+        content: '확인 버튼을 누르시면 홈 화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
+      };
+      this.modalReactiveService.open(modalData);
     });
   }
 }

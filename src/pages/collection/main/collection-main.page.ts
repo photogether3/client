@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CollectionApi } from 'src/entities/collection';
+import { PostApi, PostResDTO } from 'src/entities/post';
 import { ButtonComponent, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 
@@ -10,14 +10,14 @@ import { FooterWidget } from 'src/widgets/footer';
   imports: [TagComponent, FooterWidget, ButtonComponent],
 })
 export class CollectionMainPage implements OnInit {
-  public collection: any | undefined = undefined;
+  public collection: PostResDTO | undefined = undefined;
 
   private readonly route = inject(ActivatedRoute);
-  private readonly collectionApi = inject(CollectionApi);
+  private readonly postApi = inject(PostApi);
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id') as string;
-    this.collectionApi.getCollection(parseInt(id, 10)).subscribe((res) => {
+    this.postApi.getCollection(id).subscribe((res) => {
       this.collection = res;
     });
   }
