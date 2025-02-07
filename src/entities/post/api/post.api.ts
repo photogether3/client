@@ -10,7 +10,7 @@ export class PostApi {
   // 게시물 생성
   createPost(postReqDto: PostReqDto) {
     const formData = this.convertToFormData(postReqDto);
-    return this.http.post<PostReqDto>(`${environment.serverUrl}/v1`, formData, {
+    return this.http.post<PostReqDto>(`${environment.serverUrl}/v1/posts`, formData, {
       headers: {},
     });
   }
