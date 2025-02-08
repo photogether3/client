@@ -61,6 +61,10 @@ export const routes: Routes = [
         path: 'create',
         loadComponent: () => import('../pages/post/create').then((m) => m.PostCreatePage),
       },
+      {
+        path: ':id',
+        loadComponent: () => import('../pages/post/detail').then((m) => m.PostDetailPage),
+      },
     ],
   },
   {

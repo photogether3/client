@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PostApi, PostResDTO } from 'src/entities/post';
 import { ButtonComponent, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
@@ -7,7 +7,7 @@ import { FooterWidget } from 'src/widgets/footer';
 @Component({
   selector: 'app-collection-main',
   templateUrl: './collection-main.page.html',
-  imports: [TagComponent, FooterWidget, ButtonComponent],
+  imports: [TagComponent, FooterWidget, ButtonComponent, RouterLink],
 })
 export class CollectionMainPage implements OnInit {
   @ViewChild('grid') grid!: ElementRef<HTMLElement>;
