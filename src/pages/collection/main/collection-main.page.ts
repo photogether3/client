@@ -103,37 +103,34 @@ export class CollectionMainPage implements OnInit {
   }
 
   wrapAllItems() {
-    // 1. container 요소 생성
+    // 기존의 컨테이너 있다면 삭제
+    const existingContainer = this.grid.nativeElement.querySelector('.container');
+    if (existingContainer) {
+      existingContainer.remove();
+    }
+
+    // 1. container 생성
     const container = document.createElement('div');
     container.classList.add('container');
-    const containerConfig = {
+    this.setElementStyle(container, {
       position: 'relative',
-    };
-    this.setElementStyle(container, containerConfig);
+      margin: '0 auto',
+    });
 
-    // 각 item 요소 순회
     this.items.forEach((item) => {
-      // 2. wrapper 요소 생성
+      // 2. wrapper 생성
       const wrapper = document.createElement('div');
       wrapper.classList.add('wrapper');
-      const wrapperStyleConfig = {
-        'padding-left': this.columnGap / 2 + 'px',
-        'padding-right': this.columnGap / 2 + 'px',
-        'padding-bottom': this.rowGap + 'px',
-      };
-      this.setElementStyle(wrapper, wrapperStyleConfig);
+      this.setElementStyle(wrapper, {
+        padding: `0 ${this.columnGap / 2}px ${this.rowGap}px`,
+      });
 
-      wrapper.appendChild(item.nativeElement);
+      const itemElement = item.nativeElement;
+      wrapper.appendChild(itemElement);
 
-      // 3. brick 요소 생성
+      // 3. brick 생성
       const brick = document.createElement('div');
       brick.classList.add('brick');
-      const brickStyleConfig = {
-        position: 'absolute',
-        left: '0',
-        top: '0',
-      };
-      this.setElementStyle(brick, brickStyleConfig);
       brick.appendChild(wrapper);
 
       container.appendChild(brick);
