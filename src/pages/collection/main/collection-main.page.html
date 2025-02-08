@@ -1,33 +1,31 @@
 <div class="flex flex-col min-h-screen border-x bg-secondary5">
-  @if (collection) {
-    <!-- header -->
-    <header class="sticky top-0 z-10 flex items-center w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
-      <button class="text-xl font-bold"><</button>
+  <!-- header -->
+  <header class="sticky top-0 z-10 flex items-center w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
+    <button class="text-xl font-bold"><</button>
+    @if (collection) {
       <span class="text-xl font-bold">{{ collection.items[0].collection.title }}</span>
       <app-tag [appearance]="'outline'" [tagName]="collection.items[0].category.name" size="m" class="ml-auto" />
-    </header>
+    }
+  </header>
 
-    <div class="grid grid-cols-3 gap-3 p-4 bg-white border-b">
-      <app-button text="사진첩 삭제" appearance="secondary" />
-      <app-button text="사진첩 수정" appearance="secondary" />
-      <app-button text="사진첩 정리" appearance="secondary" />
-    </div>
+  <div class="grid grid-cols-3 gap-3 p-4 bg-white border-b">
+    <app-button text="사진첩 삭제" appearance="secondary" />
+    <app-button text="사진첩 수정" appearance="secondary" />
+    <app-button text="사진첩 정리" appearance="secondary" />
+  </div>
 
-    <!-- main -->
-    <main class="grid grid-cols-2 gap-3 p-4">
-      <!-- post-card -->
-      @for (post of collection.items; track $index) {
-        <!-- TODO 1. 마소니 레이아웃 적용 2. 컴포넌트 분리 -->
-        <section class="relative bg-white rounded-lg shadow-lg">
-          <img [src]="post.imageUrl" [alt]="post.title" class="h-full rounded-lg" />
-          <div class="absolute left-1 top-1/2">
-            <span class="text-lg font-bold">{{ post.title }}</span>
-            <p class="text-sm line-clamp-2">{{ post.content }}</p>
-          </div>
-        </section>
-      }
-    </main>
-  }
+  <!-- main -->
+  <main #grid class="pt-4">
+    @for (post of collection?.items || []; track $index) {
+      <div #item class="bg-white rounded-lg shadow-lg">
+        <img [src]="post.imageUrl" [alt]="post.title" class="rounded-t-lg" />
+        <div class="">
+          <span class="text-lg font-bold">{{ post.title }}</span>
+          <p class="text-sm line-clamp-2">{{ post.content }}</p>
+        </div>
+      </div>
+    }
+  </main>
 
   <!-- footer -->
   <app-footer class="sticky bottom-0 mt-auto" />
