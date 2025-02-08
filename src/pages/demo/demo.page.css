@@ -1,0 +1,38 @@
+/* 아이템들의 공통적인 스타일링을 설정 */
+.item {
+  background-color: #ccc;
+  border: 1px solid #444;
+  width: 170px;
+}
+
+/* 각 아이템의 높이를 임의로 설정 */
+.item1 {
+  height: 152px;
+}
+.item2 {
+  height: 123px;
+}
+.item3 {
+  height: 234px;
+}
+.item4 {
+  height: 143px;
+}
+.item5 {
+  height: 143px;
+}
+.item6 {
+  height: 123px;
+}
+.item7 {
+  height: 332px;
+}
+.item8 {
+  height: 232px;
+}
+.item9 {
+  height: 142px;
+}
+.item10 {
+  height: 224px;
+}

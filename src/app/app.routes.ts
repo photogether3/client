@@ -63,4 +63,8 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'demo',
+    loadComponent: () => import('../pages/demo').then((m) => m.DemoPage),
+  },
 ];
