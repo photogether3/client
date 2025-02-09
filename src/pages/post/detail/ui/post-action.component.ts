@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
-import { BottomSheetService, ButtonComponent, ModalService } from 'src/shared/components';
+import { BottomSheetService, ButtonComponent, ModalReactiveService, ModalService } from 'src/shared/components';
 
 @Component({
   selector: 'post-action',
@@ -12,7 +12,7 @@ export class PostActionComponent {
   public collectionId: string | undefined = undefined;
   public postId: string | undefined = undefined;
 
-  private readonly modalService = inject(ModalService);
+  private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly bottomSheetService = inject(BottomSheetService);
   private readonly router = inject(Router);
 
@@ -44,15 +44,16 @@ export class PostActionComponent {
 
   // 게시물 삭제
   deletePost() {
-    const data = {
+    const modalData = {
       title: '게시물 삭제',
       subTitle: '선택하신 게시물을 삭제합니다.',
       content: '삭제 버튼을 누르시면 해당 게시물이 삭제됩니다. 이 작업은 되돌릴 수 없습니다. 삭제를 원하지 않을 경우 취소 버튼을 눌러주세요.',
+      buttons: ['취소', '확인'],
     };
 
-    // TODO 게시물 삭제 모달 열기
-    // this.modalService.open(CommonModalComponent, data).subscribe((res) => {
-    //   console.log(res);
-    // });
+    this.bottomSheetService.close();
+    this.modalReactiveService.open(modalData).subscribe((buttonText) => {
+      console.log('선택된 버튼:', buttonText);
+    });
   }
 }
