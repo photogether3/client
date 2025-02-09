@@ -9,6 +9,16 @@ export type CollectionsResDTO = {
   items: CollectionType[];
 };
 
+export type CollectionDetailResDTO = {
+  collectionId: string;
+  title: string;
+  postCount: number;
+  category: {
+    categoryId: string;
+    name: string;
+  };
+};
+
 export type CollectionReqDTO = {
   title: string;
   categoryId: string;

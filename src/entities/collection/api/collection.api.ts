@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { CollectionReqDTO, CollectionsResDTO } from '../model';
+import { CollectionDetailResDTO, CollectionReqDTO, CollectionsResDTO } from '../model';
 import { environment } from 'src/shared/environments';
 
 @Injectable({
@@ -22,6 +22,11 @@ export class CollectionApi {
     });
 
     return this.http.get<CollectionsResDTO>(`${environment.serverUrl}/v1/collections`, { params });
+  }
+
+  // 사진첩 상세 조회
+  getCollection(collectionId: string): Observable<CollectionDetailResDTO> {
+    return this.http.get<CollectionDetailResDTO>(`${environment.serverUrl}/v1/collections/${collectionId}`);
   }
 
   // 사진첩 생성
