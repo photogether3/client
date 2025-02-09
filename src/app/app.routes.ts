@@ -62,6 +62,10 @@ export const routes: Routes = [
         loadComponent: () => import('../pages/post/create').then((m) => m.PostCreatePage),
       },
       {
+        path: 'update/:id',
+        loadComponent: () => import('../pages/post/update').then((m) => m.PostUpdatePage),
+      },
+      {
         path: ':id',
         loadComponent: () => import('../pages/post/detail').then((m) => m.PostDetailPage),
       },

@@ -1,0 +1,51 @@
+<div class="flex flex-col min-h-screen border-x bg-secondary5">
+  <!-- header -->
+  <header class="sticky top-0 z-10 flex items-center justify-between w-full px-4 py-5 bg-white border-b shadow-sm">
+    <div>
+      <button class="mr-3 text-xl font-bold"><</button>
+      <span class="text-xl font-bold">게시물 수정</span>
+    </div>
+  </header>
+
+  <!-- main -->
+  <div class="flex-1 w-full px-4 py-6">
+    <form [formGroup]="postUpdateForm" class="flex flex-col gap-5">
+      <input type="file" (change)="upload($event)" />
+      @if (previewUrl) {
+        <img [src]="previewUrl" alt="임시 이미지" class="h-[485px] rounded-lg" />
+      } @else {
+        <div class="flex h-[485px] items-center justify-center rounded-lg border bg-gray20">
+          <p>사진을 선택해주세요.</p>
+        </div>
+      }
+      <label class="flex flex-col gap-2">
+        <span>게시물 제목</span>
+        <input type="text" placeholder="게시물 제목을 입력해주세요." formControlName="title" />
+      </label>
+      <label class="flex flex-col gap-2">
+        <span>게시물 내용</span>
+        <textarea placeholder="게시물 내용을 입력해주세요." formControlName="content" rows="10" class="p-4 border border-black rounded-lg resize-none"></textarea>
+      </label>
+
+      <div formArrayName="metadataStringify">
+        <span class="block mb-3">사진내용</span>
+
+        @for (imgContent of metadataArray.controls; track $index) {
+          <div [formGroup]="imgContent" class="flex gap-3 mb-3 last-of-type:mb-0">
+            <div>
+              <input formControlName="isPublic" type="checkbox" class="w-6 h-6" />
+              <span class="block text-sm">노출</span>
+            </div>
+            <input formControlName="content" type="text" class="flex-1" />
+          </div>
+        }
+      </div>
+      <app-button text="수정된 내용 저장" width="full" />
+    </form>
+  </div>
+
+  <!-- footer -->
+  {{ postUpdateForm.value | json }}
+
+  <app-footer class="sticky bottom-0 mt-auto" />
+</div>

@@ -17,8 +17,8 @@ export class PostActionComponent {
   private readonly router = inject(Router);
 
   constructor() {
-    const { collecitionId, postId } = this.bottomSheetService.data;
-    this.collectionId = collecitionId;
+    const { collectionId, postId } = this.bottomSheetService.data;
+    this.collectionId = collectionId;
     this.postId = postId;
 
     // 페이지 이동 시 바텀시트 닫기
@@ -29,7 +29,12 @@ export class PostActionComponent {
 
   // 게시물 수정
   updatePost() {
-    this.router.navigateByUrl(`post/update/${this.postId}`);
+    this.router.navigateByUrl(`post/update/${this.postId}`, {
+      state: {
+        postId: this.postId,
+        collectionId: this.collectionId,
+      },
+    });
   }
 
   // 게시물 이동
