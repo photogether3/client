@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PostApi, PostResDTO } from 'src/entities/post';
 import { ButtonComponent, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
@@ -18,6 +18,7 @@ export class CollectionMainPage implements OnInit {
   public columnGap = 16;
   public rowGap = 16;
 
+  private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly postApi = inject(PostApi);
   private resizeObserver: ResizeObserver | null = null;
@@ -51,6 +52,12 @@ export class CollectionMainPage implements OnInit {
     });
 
     this.resizeObserver.observe(this.grid.nativeElement);
+  }
+
+  goPage(postId: string) {
+    this.router.navigateByUrl(`post/${postId}`, {
+      state: { collectionId: this.collection?.items[0].collection.collectionId },
+    });
   }
 
   positionAllItems() {

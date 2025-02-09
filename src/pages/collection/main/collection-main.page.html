@@ -17,7 +17,7 @@
   <!-- main -->
   <main #grid class="pt-4">
     @for (post of collection?.items || []; track $index) {
-      <div #item [routerLink]="['/post', post.postId]" class="bg-white rounded-lg shadow-lg cursor-pointer hover:shadow-2xl">
+      <div #item (click)="goPage(post.postId)" class="bg-white rounded-lg shadow-lg cursor-pointer hover:shadow-2xl">
         <img [src]="post.imageUrl" [alt]="post.title" class="rounded-t-lg" />
         <div class="">
           <span class="text-lg font-bold">{{ post.title }}</span>

@@ -1,18 +1,47 @@
 <div class="flex flex-col min-h-screen border-x bg-secondary5">
   <!-- header -->
-  <header class="sticky top-0 z-10 flex items-center w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
-    <button class="text-xl font-bold"><</button>
-    <span class="text-xl font-bold">게시물 제목</span>
+  <header class="sticky top-0 z-10 flex items-center justify-between w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
+    <div class="flex items-center flex-1 gap-2 truncate">
+      <button class="text-xl font-bold"><</button>
+      <span class="text-xl font-bold truncate">{{ post?.title ?? '' }}</span>
+    </div>
+    <button class="text-lg font-bold">...</button>
   </header>
 
-  <div class="grid grid-cols-3 gap-3 p-4 bg-white border-b">
-    <app-button text="사진첩 삭제" appearance="secondary" />
-    <app-button text="사진첩 수정" appearance="secondary" />
-    <app-button text="사진첩 정리" appearance="secondary" />
-  </div>
-
   <!-- main -->
-  <main class="pt-4"></main>
+  <main class="flex-1 w-full px-4 py-6">
+    @defer {
+      @if (post) {
+        <div class="flex flex-col gap-5 bg-white">
+          <img [src]="post.imageUrl" alt="임시 이미지" class="h-[485px] rounded-lg" />
+
+          <div class="flex items-center justify-between px-2 pb-4 border-b border-b-gray-200">
+            <app-tag [tagName]="post.category.name" />
+            <span>{{ post.collection.title }}</span>
+          </div>
+
+          <div class="flex flex-col gap-2 px-2">
+            <span class="text-lg font-bold">게시물 내용</span>
+            <div>{{ post.content }}</div>
+          </div>
+
+          <div class="flex flex-col gap-2 px-2">
+            <span class="text-lg font-bold">사진내용</span>
+            <ul>
+              @for (imgContent of post.metadataList; track $index) {
+                @if (imgContent.isPublic) {
+                  <li class="list-disc list-inside">{{ imgContent.content }}</li>
+                }
+              }
+            </ul>
+          </div>
+        </div>
+      }
+    } @loading {
+      <div class="flex flex-col items-center justify-center min-h-screen text-center bg-white">게시물 정보를 찾을 수 없습니다. 다시 시도해주세요.</div>
+    }
+    <app-button text="목록으로 돌아가기" width="full" (click)="goPage()" />
+  </main>
 
   <!-- footer -->
   <app-footer class="sticky bottom-0 mt-auto" />

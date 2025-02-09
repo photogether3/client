@@ -1,26 +1,31 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { environment } from 'src/shared/environments';
-import { PostReqDto, PostResDTO } from '../model';
-import { Observable } from 'rxjs';
+import { PostReqDto, PostResDTO, PostType } from '../model';
 
 @Injectable({ providedIn: 'root' })
 export class PostApi {
   private readonly http = inject(HttpClient);
 
   // 게시물 목록 조회
-  getCollection(id: string): Observable<PostResDTO | undefined> {
+  getCollection(collectionId: string): Observable<PostResDTO | undefined> {
     const params = new HttpParams({
       fromObject: {
         page: 1,
         perPage: 10,
         sortOrder: 'desc',
         sortBy: 'created_at',
-        collectionId: id,
+        collectionId,
       },
     });
 
     return this.http.get<PostResDTO>(`${environment.serverUrl}/v1/posts`, { params });
+  }
+
+  // 게시물 조회
+  getPost(collectionId: string, postId: string): Observable<PostType | undefined> {
+    return this.getCollection(collectionId).pipe(map((res) => res?.items.find((post) => post.postId === postId)));
   }
 
   // 게시물 생성
