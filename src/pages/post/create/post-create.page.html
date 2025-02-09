@@ -1,4 +1,4 @@
-<div class="flex flex-col min-h-screen bg-secondary5 border-x">
+<div class="flex flex-col min-h-screen border-x bg-secondary5">
   <!-- header -->
   <header class="sticky top-0 z-10 flex items-center justify-between w-full px-4 py-5 bg-white border-b shadow-sm">
     <div>
@@ -16,7 +16,7 @@
         @if (previewUrl) {
           <img [src]="previewUrl" alt="임시 이미지" class="h-[485px] rounded-lg" />
         } @else {
-          <div class="bg-gray20 flex h-[485px] items-center justify-center rounded-lg border">
+          <div class="flex h-[485px] items-center justify-center rounded-lg border bg-gray20">
             <p>사진을 선택해주세요.</p>
           </div>
         }
@@ -45,7 +45,7 @@
         <app-button text="다음 단계로" width="full" (click)="updateState()" />
       </form>
     } @else {
-      <div class="grid grid-cols-2 gap-5 pb-5 border-b border-b-gray-600">
+      <div class="grid grid-cols-2 gap-5 pb-5">
         @for (collection of collections; track $index) {
           <div class="">
             <input
@@ -56,13 +56,6 @@
             <app-collection-card [title]="collection.title" [collectionId]="collection.collectionId" [category]="collection.category" [images]="collection.imageUrls" />
           </div>
         }
-      </div>
-      <div class="pt-5">
-        <span class="font-bold">미분류</span>
-        <div>
-          <input type="checkbox" class="absolute z-20 w-6 h-6" />
-          <div class="relative h-[140px] rounded-[12px] bg-white shadow-md hover:cursor-pointer hover:shadow-xl"></div>
-        </div>
       </div>
       <app-button text="선택한 사진첩에 저장" width="full" (click)="createCollection()" class="mt-5" />
     }
