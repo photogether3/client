@@ -1,6 +1,7 @@
 import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { inject, Injectable } from '@angular/core';
 import { CommonModalComponent } from '../ui';
+import { Observable } from 'rxjs';
 
 export type ReactiveModalData = {
   title: string;
@@ -22,6 +23,6 @@ export class ModalReactiveService {
     }
 
     this.dialogRef = this.dialog.open<CommonModalComponent>(CommonModalComponent, { data });
-    return this.dialogRef.closed;
+    return this.dialogRef.closed as Observable<string | undefined>;
   }
 }

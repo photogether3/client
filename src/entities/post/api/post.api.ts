@@ -41,6 +41,13 @@ export class PostApi {
     return this.http.put<UpdatePostDTO>(`${environment.serverUrl}/v1/posts/${postId}`, updatePostDTO);
   }
 
+  // 게시물 삭제
+  deletePost(postIds: string[]) {
+    return this.http.delete(`${environment.serverUrl}/v1/posts`, {
+      body: { postIds },
+    });
+  }
+
   private convertToFormData(postReqDto: PostReqDto): FormData {
     const formData = new FormData();
     console.log(formData);

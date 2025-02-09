@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
-import { BottomSheetService, ButtonComponent, ModalReactiveService, ModalService } from 'src/shared/components';
+import { PostApi } from 'src/entities/post';
+import { BottomSheetService, ButtonComponent, ModalReactiveService } from 'src/shared/components';
 
 @Component({
   selector: 'post-action',
@@ -14,6 +15,7 @@ export class PostActionComponent {
 
   private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly bottomSheetService = inject(BottomSheetService);
+  private readonly postApi = inject(PostApi);
   private readonly router = inject(Router);
 
   constructor() {
@@ -54,6 +56,21 @@ export class PostActionComponent {
     this.bottomSheetService.close();
     this.modalReactiveService.open(modalData).subscribe((buttonText) => {
       console.log('선택된 버튼:', buttonText);
+
+      if (buttonText === '확인') {
+        this.postApi.deletePost([this.postId as string]).subscribe(() => {
+          const modalData = {
+            title: '게시물 삭제 완료',
+            subTitle: '게시물 삭제가 완료되었습니다.',
+            content: '확인버튼을 누르면 화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
+            buttons: ['확인'],
+          };
+
+          this.modalReactiveService.open(modalData).subscribe(() => {
+            this.router.navigateByUrl(`/collection/${this.collectionId}`);
+          });
+        });
+      }
     });
   }
 }

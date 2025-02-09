@@ -7,7 +7,7 @@
   <p>{{ data.content }}</p>
   <div class="flex items-center gap-4">
     @for (buttonText of data.buttons; track $index) {
-      <app-button [text]="buttonText" (click)="close(buttonText)" class="w-1/2" />
+      <app-button [text]="buttonText" (click)="close(buttonText)" class="flex-1" />
     }
   </div>
 </div>
