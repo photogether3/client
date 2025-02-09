@@ -1,8 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostApi, PostType } from 'src/entities/post';
-import { ButtonComponent, TagComponent } from 'src/shared/components';
+import { BottomSheetService, ButtonComponent, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
+import { PostActionComponent } from './ui';
 
 @Component({
   selector: 'post-detail-page',
@@ -13,6 +14,7 @@ export class PostDetailPage {
   public collectionId: string | undefined = undefined;
   public post: PostType | undefined = undefined;
 
+  private readonly bottomSheetService = inject(BottomSheetService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly postApi = inject(PostApi);
@@ -30,5 +32,13 @@ export class PostDetailPage {
 
   goPage() {
     this.router.navigateByUrl(`collection/${this.collectionId}`);
+  }
+
+  openBottomSheet() {
+    const data = {
+      collectionId: this.collectionId,
+      postId: this.post?.postId,
+    };
+    this.bottomSheetService.open(PostActionComponent, data).subscribe();
   }
 }
