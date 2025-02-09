@@ -6,6 +6,7 @@ export type ReactiveModalData = {
   title: string;
   subTitle: string;
   content: string;
+  buttons: string[];
 };
 
 @Injectable({ providedIn: 'root' })
@@ -21,11 +22,6 @@ export class ModalReactiveService {
     }
 
     this.dialogRef = this.dialog.open<CommonModalComponent>(CommonModalComponent, { data });
-
-    this.dialogRef.closed.subscribe(() => {
-      this.dialogRef = null;
-    });
-
-    return this.dialogRef;
+    return this.dialogRef.closed;
   }
 }

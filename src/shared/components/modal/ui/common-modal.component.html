@@ -5,5 +5,9 @@
   </div>
   <strong>{{ data.subTitle }}</strong>
   <p>{{ data.content }}</p>
-  <app-button text="확인" (click)="confirm()" />
+  <div class="flex items-center gap-4">
+    @for (buttonText of data.buttons; track $index) {
+      <app-button [text]="buttonText" (click)="close(buttonText)" class="w-1/2" />
+    }
+  </div>
 </div>
