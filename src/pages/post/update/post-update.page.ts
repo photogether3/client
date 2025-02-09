@@ -24,16 +24,14 @@ export class PostUpdatePage {
   private readonly modalReactiveService = inject(ModalReactiveService);
 
   get metadataArray(): FormArray<FormGroup> {
-    return this.postUpdateForm.get('metadataStringify') as FormArray<FormGroup>;
+    return this.postUpdateForm.get('metadataList') as FormArray<FormGroup>;
   }
 
   constructor() {
     this.postUpdateForm = this.fb.group({
-      collectionId: '',
       title: '',
       content: '',
-      metadataStringify: this.fb.array([]),
-      file: '',
+      metadataList: this.fb.array([]),
     });
 
     const state = this.router.getCurrentNavigation()?.extras.state;
@@ -45,7 +43,6 @@ export class PostUpdatePage {
     if (this.collectionId && this.postId) {
       this.postApi.getPost(this.collectionId, this.postId).subscribe((res) => {
         this.postUpdateForm.patchValue({
-          collectionId: res?.collection.collectionId,
           title: res?.title,
           content: res?.content,
           file: '',
@@ -53,26 +50,10 @@ export class PostUpdatePage {
 
         res?.metadataList.forEach((img) => this.addMetadata(img.content, img.isPublic));
         this.previewUrl = res?.imageUrl;
+        this.addMetadata();
       });
     } else {
       console.log('사진첩 Id 또는 게시물 Id가 이상합니다!');
-    }
-  }
-
-  // 사진 업로드
-  upload(event: Event) {
-    const input = event.target as HTMLInputElement;
-
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      this.postUpdateForm.patchValue({ file });
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        this.previewUrl = e.target?.result;
-      };
-
-      reader.readAsDataURL(file);
     }
   }
 
@@ -85,11 +66,14 @@ export class PostUpdatePage {
     this.metadataArray.push(metadataGroup);
   }
 
-  createCollection() {
+  updatePost() {
     const dto = this.postUpdateForm.getRawValue();
-    console.log(dto);
+    const updateDTO = {
+      ...dto,
+      metadataList: dto.metadataList.filter((metadata: any) => metadata.content.trim() !== ''),
+    };
 
-    this.postApi.createPost(dto).subscribe(() => {
+    this.postApi.updatePost(this.postId as string, updateDTO).subscribe(() => {
       const modalData = {
         title: '게시물 수정 완료',
         subTitle: '게시물 수정이 완료되었습니다.',

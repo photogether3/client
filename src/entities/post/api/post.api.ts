@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/shared/environments';
-import { PostReqDto, PostResDTO, PostType } from '../model';
+import { PostReqDto, PostResDTO, PostType, UpdatePostDTO } from '../model';
 
 @Injectable({ providedIn: 'root' })
 export class PostApi {
@@ -34,6 +34,11 @@ export class PostApi {
     return this.http.post<PostReqDto>(`${environment.serverUrl}/v1/posts`, formData, {
       headers: {},
     });
+  }
+
+  // 게시물 수정
+  updatePost(postId: string, updatePostDTO: UpdatePostDTO) {
+    return this.http.put<UpdatePostDTO>(`${environment.serverUrl}/v1/posts/${postId}`, updatePostDTO);
   }
 
   private convertToFormData(postReqDto: PostReqDto): FormData {

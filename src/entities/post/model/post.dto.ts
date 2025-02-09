@@ -9,6 +9,15 @@ export type PostReqDto = {
   file: File;
 };
 
+export type UpdatePostDTO = {
+  title: string;
+  content: string;
+  metadataList: {
+    content: string;
+    isPublic: boolean;
+  }[];
+};
+
 export type PostResDTO = {
   totalItemCount: number;
   totalPageCount: number;
