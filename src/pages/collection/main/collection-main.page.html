@@ -2,7 +2,8 @@
   <!-- header -->
   <header class="sticky top-0 z-10 flex items-center w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
     <button class="text-xl font-bold"><</button>
-    @if (collection) {
+    <!-- TODO 사진첩 상세 조회로 변경 -->
+    @if (collection && collection.items.length > 0) {
       <span class="text-xl font-bold">{{ collection.items[0].collection.title }}</span>
       <app-tag [appearance]="'outline'" [tagName]="collection.items[0].category.name" size="m" class="ml-auto" />
     }

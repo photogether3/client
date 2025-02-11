@@ -27,6 +27,8 @@ export class CollectionMainPage implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id') as string;
+    if (!id) return;
+
     this.postApi.getCollection(id).subscribe((res) => {
       this.collection = res;
 
