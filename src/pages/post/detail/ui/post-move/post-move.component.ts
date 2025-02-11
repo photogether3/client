@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { CollectionApi, CollectionType } from 'src/entities/collection';
+import { PostApi, PostMoveReqDTO } from 'src/entities/post';
 import { CollectionCardComponent } from 'src/pages/home';
-import { BottomSheetService, ButtonComponent, ModalReactiveService } from 'src/shared/components';
+import { BottomSheetService, ButtonComponent } from 'src/shared/components';
 
 @Component({
   selector: 'post-move',
@@ -14,10 +14,9 @@ export class PostMoveComponent {
   public selectedCollectionId: string | undefined = undefined;
   public collections: CollectionType[] = [];
 
-  private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly bottomSheetService = inject(BottomSheetService);
   private readonly collectionApi = inject(CollectionApi);
-  private readonly router = inject(Router);
+  private readonly postApi = inject(PostApi);
 
   constructor() {
     this.postId = this.bottomSheetService.data;
@@ -36,6 +35,14 @@ export class PostMoveComponent {
   }
 
   movePost() {
-    console.log(this.selectedCollectionId);
+    const postMoveDTO = {
+      postIds: [this.postId],
+      collectionId: this.selectedCollectionId,
+    } as PostMoveReqDTO;
+
+    console.log(postMoveDTO);
+    this.postApi.movePost(postMoveDTO).subscribe(() => {
+      this.bottomSheetService.close('success');
+    });
   }
 }

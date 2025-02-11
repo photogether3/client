@@ -44,7 +44,16 @@ export class PostActionComponent {
   movePost() {
     this.bottomSheetService.close();
     this.bottomSheetService.open(PostMoveComponent, this.postId).subscribe((res) => {
-      console.log(res);
+      if (res === 'success') {
+        const modalData = {
+          title: '게시물 이동 완료',
+          subTitle: '게시물 이동이 완료되었습니다.',
+          content: '확인 버튼을 누르시면 홈화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
+          buttons: ['확인'],
+        };
+
+        this.modalReactiveService.open(modalData).subscribe();
+      }
     });
   }
 

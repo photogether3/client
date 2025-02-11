@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/shared/environments';
-import { PostReqDto, PostResDTO, PostType, UpdatePostDTO } from '../model';
+import { PostMoveReqDTO, PostReqDto, PostResDTO, PostType, UpdatePostDTO } from '../model';
 
 @Injectable({ providedIn: 'root' })
 export class PostApi {
@@ -46,6 +46,11 @@ export class PostApi {
     return this.http.delete(`${environment.serverUrl}/v1/posts`, {
       body: { postIds },
     });
+  }
+
+  // 게시물 이동
+  movePost(postMoveReqDto: PostMoveReqDTO) {
+    return this.http.patch(`${environment.serverUrl}/v1/posts/move`, postMoveReqDto);
   }
 
   private convertToFormData(postReqDto: PostReqDto): FormData {

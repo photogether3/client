@@ -22,8 +22,11 @@ export class CollectionCardComponent {
 
   goPage() {
     const url = this.router.url;
-    if (url.includes('/post/create')) return;
 
-    this.router.navigateByUrl('collection/' + this.collectionId());
+    if (url.includes('home')) {
+      this.router.navigateByUrl('collection/' + this.collectionId());
+    } else {
+      return;
+    }
   }
 }
