@@ -1,1 +1,2 @@
-export * from './post-action.component';
+export * from './post-action';
+export * from './post-move';

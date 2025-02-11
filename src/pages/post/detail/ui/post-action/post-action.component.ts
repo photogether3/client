@@ -3,6 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { PostApi } from 'src/entities/post';
 import { BottomSheetService, ButtonComponent, ModalReactiveService } from 'src/shared/components';
+import { PostMoveComponent } from '../post-move';
 
 @Component({
   selector: 'post-action',
@@ -41,7 +42,10 @@ export class PostActionComponent {
 
   // 게시물 이동
   movePost() {
-    // TODO 게시물 이동 바텀시트 열기
+    this.bottomSheetService.close();
+    this.bottomSheetService.open(PostMoveComponent, this.postId).subscribe((res) => {
+      console.log(res);
+    });
   }
 
   // 게시물 삭제
