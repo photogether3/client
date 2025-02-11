@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
   imports: [FooterWidget, ButtonComponent, TagComponent, ReactiveFormsModule],
 })
 export class CollectionUpdatePage implements OnInit {
+  public collectionId: string | undefined = undefined;
   public categoryList: CategoriesDTO[] = [];
   public collectionUpdateForm!: FormGroup;
 
@@ -29,9 +30,9 @@ export class CollectionUpdatePage implements OnInit {
   }
 
   ngOnInit(): void {
-    const collectionId = this.route.snapshot.paramMap.get('id') as string;
+    this.collectionId = this.route.snapshot.paramMap.get('id') as string;
 
-    this.collectionApi.getCollection(collectionId).subscribe((res) => {
+    this.collectionApi.getCollection(this.collectionId).subscribe((res) => {
       this.collectionUpdateForm.patchValue({
         title: res.title,
         categoryId: res.category.categoryId,
@@ -51,9 +52,10 @@ export class CollectionUpdatePage implements OnInit {
   // 사진첩 수정
   updateCollection() {
     const dto = this.collectionUpdateForm.getRawValue();
-    this.collectionApi.createCollection(dto).subscribe((res) => {
-      console.log(res);
 
+    if (!this.collectionId) return;
+
+    this.collectionApi.updateCollection(this.collectionId, dto).subscribe(() => {
       const modalData = {
         title: '사진첩 수정 완료',
         subTitle: '사진첩 수정이 완료되었습니다.',

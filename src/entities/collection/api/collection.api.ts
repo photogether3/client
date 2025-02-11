@@ -33,4 +33,9 @@ export class CollectionApi {
   createCollection(collectionCreateDTO: CollectionReqDTO) {
     return this.http.post(`${environment.serverUrl}/v1/collections`, collectionCreateDTO);
   }
+
+  // 사진첩 수정
+  updateCollection(collectionId: string, collectionReqDTO: CollectionReqDTO) {
+    return this.http.put(`${environment.serverUrl}/v1/collections/${collectionId}`, collectionReqDTO);
+  }
 }
