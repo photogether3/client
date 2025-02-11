@@ -17,6 +17,7 @@ export class CollectionMainPage implements OnInit {
   public columnWidth = 150;
   public columnGap = 16;
   public rowGap = 16;
+  public collectionId: string | undefined = undefined;
 
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -26,10 +27,10 @@ export class CollectionMainPage implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id') as string;
-    if (!id) return;
+    this.collectionId = this.route.snapshot.paramMap.get('id') as string;
+    if (!this.collectionId) return;
 
-    this.postApi.getCollection(id).subscribe((res) => {
+    this.postApi.getCollection(this.collectionId).subscribe((res) => {
       this.collection = res;
 
       this.items.changes.subscribe(() => {
@@ -56,10 +57,16 @@ export class CollectionMainPage implements OnInit {
     this.resizeObserver.observe(this.grid.nativeElement);
   }
 
+  // 게시물 상세 페이지 이동
   goPage(postId: string) {
     this.router.navigateByUrl(`post/${postId}`, {
       state: { collectionId: this.collection?.items[0].collection.collectionId },
     });
+  }
+
+  // 사진첩 수정 페이지 이동
+  goUpdatePage() {
+    this.router.navigateByUrl(`collection/update/${this.collectionId}`);
   }
 
   positionAllItems() {

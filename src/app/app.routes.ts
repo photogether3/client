@@ -36,6 +36,10 @@ export const routes: Routes = [
         loadComponent: () => import('../pages/collection/create').then((m) => m.CollectionCreatePage),
       },
       {
+        path: 'update/:id',
+        loadComponent: () => import('../pages/collection/update').then((m) => m.CollectionUpdatePage),
+      },
+      {
         path: ':id',
         loadComponent: () => import('../pages/collection').then((m) => m.CollectionMainPage),
       },

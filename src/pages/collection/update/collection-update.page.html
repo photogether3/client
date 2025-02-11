@@ -1,0 +1,32 @@
+<div class="flex flex-col min-h-screen border-x bg-secondary5">
+  <!-- header -->
+  <header class="sticky top-0 z-10 flex items-center w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
+    <button class="text-xl font-bold"><</button>
+    <span class="text-xl font-bold">사진첩 수정</span>
+  </header>
+
+  <!-- main -->
+  <form [formGroup]="collectionUpdateForm" class="flex flex-col flex-1 gap-4 p-4">
+    <label class="flex flex-col gap-2">
+      <span>사진첩 제목</span>
+      <input type="text" formControlName="title" placeholder="사진첩 제목을 입력해주세요." formControlName="title" />
+    </label>
+    <label class="flex flex-col flex-1 gap-2">
+      <span>관심사 선택</span>
+      <div class="flex flex-wrap flex-1 w-full gap-2 p-3 bg-white border rounded-lg">
+        @for (category of categoryList; track $index) {
+          <app-tag
+            [tagName]="category.name"
+            size="m"
+            [appearance]="collectionUpdateForm.get('categoryId')?.value === category.categoryId ? 'primary' : 'outline'"
+            (click)="clickCategory(category.categoryId)"
+            class="cursor-pointer" />
+        }
+      </div>
+    </label>
+    <app-button text="수정된 내용 저장" [isDisabled]="collectionUpdateForm.invalid" (click)="updateCollection()" />
+  </form>
+
+  <!-- footer -->
+  <app-footer class="sticky bottom-0 mt-auto" />
+</div>
