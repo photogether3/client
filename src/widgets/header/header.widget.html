@@ -1,6 +1,6 @@
 <header class="sticky top-0 z-10 flex items-center w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
   @if (hasBackButton()) {
-    <button (click)="goBack()" class="text-xl font-bold"><</button>
+    <button (click)="goBack()" class="flex items-center justify-center text-xl font-bold rounded-full size-8 hover:bg-gray-200"><</button>
   }
   <span class="w-full text-xl font-bold truncate">{{ title() }}</span>
   <ng-content select="[rightContent]" />
