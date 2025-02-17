@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { CategoriesDTO, CategoryApi } from 'src/entities/category';
-import { BottomSheetService, ButtonComponent, TagComponent } from 'src/shared/components';
+import { CategoriesDTO, CategoryApi, TagComponent } from 'src/entities/category';
+import { BottomSheetService, ButtonComponent } from 'src/shared/components';
 
 @Component({
   selector: 'categories-update-dialog',

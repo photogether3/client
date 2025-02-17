@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CollectionApi } from 'src/entities/collection';
-import { CategoriesDTO, CategoryApi } from 'src/entities/category';
-import { ButtonComponent, ModalReactiveService, TagComponent } from 'src/shared/components';
+import { CategoriesDTO, CategoryApi, TagComponent } from 'src/entities/category';
+import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { ActivatedRoute } from '@angular/router';
 import { HeaderWidget } from 'src/widgets/header';

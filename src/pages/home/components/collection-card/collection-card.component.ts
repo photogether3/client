@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
+import { TagComponent } from 'src/entities/category';
 import { CollectionType } from 'src/entities/collection';
-import { TagComponent } from 'src/shared/components';
 
 @Component({
   selector: 'app-collection-card',

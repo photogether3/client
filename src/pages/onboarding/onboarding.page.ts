@@ -2,9 +2,9 @@ import { CommonModule, JsonPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CategoriesDTO, CategoryApi } from 'src/entities/category';
+import { CategoriesDTO, CategoryApi, TagComponent } from 'src/entities/category';
 import { UserApi } from 'src/entities/user';
-import { ButtonComponent, TagComponent } from 'src/shared/components';
+import { ButtonComponent } from 'src/shared/components';
 
 @Component({
   selector: 'onboarding-page',

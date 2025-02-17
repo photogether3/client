@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostApi, PostType } from 'src/entities/post';
-import { BottomSheetService, ButtonComponent, TagComponent } from 'src/shared/components';
+import { BottomSheetService, ButtonComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { PostActionComponent } from './ui/post-action';
 import { HeaderWidget } from 'src/widgets/header';
+import { TagComponent } from 'src/entities/category';
 
 @Component({
   selector: 'post-detail-page',
