@@ -1,3 +1,6 @@
-<div class="max-w-lg mx-auto">
+<div class="relative max-w-lg mx-auto">
+  @if (isLoading()) {
+    <app-loading class="w-full h-full" />
+  }
   <router-outlet />
 </div>
