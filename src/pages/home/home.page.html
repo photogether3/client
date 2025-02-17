@@ -6,7 +6,7 @@
   <main class="flex flex-col flex-grow gap-4 px-4 py-4">
     <div class="grid grid-cols-2 gap-3">
       @for (collection of collectionList; track $index) {
-        <app-collection-card [images]="collection.imageUrls" [title]="collection.title" [category]="collection.category" [collectionId]="collection.collectionId" />
+        <app-collection-card [post]="collection" />
       }
       <app-button text="사진첩 생성하기" appearance="secondary" (click)="createCollection()" class="col-span-full" />
     </div>

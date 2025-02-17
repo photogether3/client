@@ -52,7 +52,7 @@
               (change)="selectCollection(collection.collectionId, $event)"
               [checked]="postCreateForm.value.collectionId === collection.collectionId"
               class="absolute z-20 w-6 h-6" />
-            <app-collection-card [title]="collection.title" [collectionId]="collection.collectionId" [category]="collection.category" [images]="collection.imageUrls" />
+            <app-collection-card [post]="collection" />
           </div>
         }
       </div>
