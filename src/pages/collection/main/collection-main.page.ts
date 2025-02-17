@@ -1,6 +1,7 @@
 import { Component, ElementRef, inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { PostApi, PostResDTO } from 'src/entities/post';
+import { CollectionApi, CollectionDetailResDTO } from 'src/entities/collection';
+import { PostApi, PostType } from 'src/entities/post';
 import { ButtonComponent, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 
@@ -13,7 +14,8 @@ export class CollectionMainPage implements OnInit {
   @ViewChild('grid') grid!: ElementRef<HTMLElement>;
   @ViewChildren('item') items!: QueryList<ElementRef<HTMLDivElement>>;
 
-  public collection: PostResDTO | undefined = undefined;
+  public collection: CollectionDetailResDTO | undefined = undefined;
+  public postList: PostType[] | undefined = undefined;
   public columnWidth = 150;
   public columnGap = 16;
   public rowGap = 16;
@@ -21,6 +23,7 @@ export class CollectionMainPage implements OnInit {
 
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly collectionApi = inject(CollectionApi);
   private readonly postApi = inject(PostApi);
   private resizeObserver: ResizeObserver | null = null;
 
@@ -30,8 +33,12 @@ export class CollectionMainPage implements OnInit {
     this.collectionId = this.route.snapshot.paramMap.get('id') as string;
     if (!this.collectionId) return;
 
-    this.postApi.getCollection(this.collectionId).subscribe((res) => {
+    this.collectionApi.getCollection(this.collectionId).subscribe((res) => {
       this.collection = res;
+    });
+
+    this.postApi.getCollection(this.collectionId).subscribe((res) => {
+      this.postList = res?.items;
 
       this.items.changes.subscribe(() => {
         if (this.items.length > 0) {
@@ -60,7 +67,7 @@ export class CollectionMainPage implements OnInit {
   // 게시물 상세 페이지 이동
   goPage(postId: string) {
     this.router.navigateByUrl(`post/${postId}`, {
-      state: { collectionId: this.collection?.items[0].collection.collectionId },
+      state: { collectionId: this.collection?.collectionId },
     });
   }
 

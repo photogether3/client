@@ -2,10 +2,9 @@
   <!-- header -->
   <header class="sticky top-0 z-10 flex items-center w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
     <button class="text-xl font-bold"><</button>
-    <!-- TODO 사진첩 상세 조회로 변경 -->
-    @if (collection && collection.items.length > 0) {
-      <span class="text-xl font-bold">{{ collection.items[0].collection.title }}</span>
-      <app-tag [appearance]="'outline'" [tagName]="collection.items[0].category.name" size="m" class="ml-auto" />
+    @if (collection) {
+      <span class="text-xl font-bold">{{ collection.title }}</span>
+      <app-tag [appearance]="'outline'" [tagName]="collection.category.name" size="m" class="ml-auto" />
     }
   </header>
 
@@ -17,7 +16,7 @@
 
   <!-- main -->
   <main #grid class="pt-4">
-    @for (post of collection?.items || []; track $index) {
+    @for (post of postList || []; track $index) {
       <div #item (click)="goPage(post.postId)" class="bg-white rounded-lg shadow-lg cursor-pointer hover:shadow-2xl">
         <img [src]="post.imageUrl" [alt]="post.title" class="rounded-t-lg" />
         <div class="">
