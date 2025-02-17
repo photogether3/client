@@ -7,11 +7,12 @@ import { ProfileDTO, UserApi } from 'src/entities/user';
 import { ButtonComponent, ModalService, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { PasswordUpdateDialog } from '../ui';
+import { HeaderWidget } from 'src/widgets/header';
 
 @Component({
   selector: 'profile-page',
   templateUrl: './profile.page.html',
-  imports: [TagComponent, ButtonComponent, FooterWidget],
+  imports: [TagComponent, ButtonComponent, FooterWidget, HeaderWidget],
 })
 export class ProfilePage {
   public profile: (ProfileDTO & { image: string; tags: CategoriesDTO[] }) | undefined = undefined;

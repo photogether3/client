@@ -4,11 +4,12 @@ import { PostApi, PostType } from 'src/entities/post';
 import { BottomSheetService, ButtonComponent, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { PostActionComponent } from './ui/post-action';
+import { HeaderWidget } from 'src/widgets/header';
 
 @Component({
   selector: 'post-detail-page',
   templateUrl: './post-detail.page.html',
-  imports: [ButtonComponent, FooterWidget, TagComponent],
+  imports: [ButtonComponent, FooterWidget, TagComponent, HeaderWidget],
 })
 export class PostDetailPage {
   public collectionId: string | undefined = undefined;

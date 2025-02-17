@@ -7,11 +7,12 @@ import { UserApi } from 'src/entities/user';
 import { BottomSheetService, ButtonComponent, ModalReactiveService, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { CategoriesUpdateDialog } from '../ui';
+import { HeaderWidget } from 'src/widgets/header';
 
 @Component({
   selector: 'profile-update-page',
   templateUrl: './profile-update.page.html',
-  imports: [TagComponent, ButtonComponent, FooterWidget, ReactiveFormsModule, JsonPipe],
+  imports: [TagComponent, ButtonComponent, FooterWidget, ReactiveFormsModule, JsonPipe, HeaderWidget],
 })
 export class ProfileUpdatePage {
   public profileUpdateForm!: FormGroup;

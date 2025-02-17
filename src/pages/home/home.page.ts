@@ -6,11 +6,12 @@ import { UserApi } from 'src/entities/user';
 import { ButtonComponent, IconComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { CollectionCardComponent } from './components';
+import { HeaderWidget } from 'src/widgets/header';
 
 @Component({
   selector: 'home-page',
   templateUrl: './home.page.html',
-  imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule],
+  imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule, HeaderWidget],
 })
 export class HomePage {
   public nickname: string = '';

@@ -1,12 +1,11 @@
 <div class="flex flex-col min-h-screen border-x bg-secondary5">
   <!-- header -->
-  <header class="sticky top-0 z-10 flex items-center justify-between w-full px-4 py-5 bg-white border-b shadow-sm">
-    <div>
-      <button class="mr-3 text-xl font-bold"><</button>
-      <span class="text-xl font-bold">게시물 생성</span>
-    </div>
-    <span>{{ step() }}/2</span>
-  </header>
+  <app-header title="게시물 생성">
+    <span rightContent class="flex">
+      <span class="font-bold">{{ step() }}</span>
+      /2
+    </span>
+  </app-header>
 
   <!-- main -->
   <div class="flex-1 w-full px-4 py-6">

@@ -1,12 +1,10 @@
 <div class="flex flex-col min-h-screen border-x bg-secondary5">
   <!-- header -->
-  <header class="sticky top-0 z-10 flex items-center w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
-    <button class="text-xl font-bold"><</button>
-    @if (collection) {
-      <span class="text-xl font-bold">{{ collection.title }}</span>
-      <app-tag [appearance]="'outline'" [tagName]="collection.category.name" size="m" class="ml-auto" />
-    }
-  </header>
+  @if (collection) {
+    <app-header [title]="collection.title">
+      <app-tag rightContent [appearance]="'outline'" [tagName]="collection.category.name" size="m" class="ml-auto" />
+    </app-header>
+  }
 
   <div class="grid grid-cols-3 gap-3 p-4 bg-white border-b">
     <app-button text="사진첩 삭제" appearance="secondary" />

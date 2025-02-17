@@ -5,11 +5,12 @@ import { CategoriesDTO, CategoryApi } from 'src/entities/category';
 import { ButtonComponent, ModalReactiveService, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { ActivatedRoute } from '@angular/router';
+import { HeaderWidget } from 'src/widgets/header';
 
 @Component({
   selector: 'app-collection-update',
   templateUrl: './collection-update.page.html',
-  imports: [FooterWidget, ButtonComponent, TagComponent, ReactiveFormsModule],
+  imports: [FooterWidget, ButtonComponent, TagComponent, ReactiveFormsModule, HeaderWidget],
 })
 export class CollectionUpdatePage implements OnInit {
   public collectionId: string | undefined = undefined;

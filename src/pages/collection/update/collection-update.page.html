@@ -1,9 +1,6 @@
 <div class="flex flex-col min-h-screen border-x bg-secondary5">
   <!-- header -->
-  <header class="sticky top-0 z-10 flex items-center w-full gap-3 px-4 py-5 bg-white border-b shadow-sm">
-    <button class="text-xl font-bold"><</button>
-    <span class="text-xl font-bold">사진첩 수정</span>
-  </header>
+  <app-header title="사진첩 수정" />
 
   <!-- main -->
   <form [formGroup]="collectionUpdateForm" class="flex flex-col flex-1 gap-4 p-4">

@@ -4,11 +4,12 @@ import { CollectionApi } from 'src/entities/collection';
 import { CategoriesDTO, CategoryApi } from 'src/entities/category';
 import { ButtonComponent, ModalReactiveService, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
+import { HeaderWidget } from 'src/widgets/header';
 
 @Component({
   selector: 'app-collection-create',
   templateUrl: './collection-create.page.html',
-  imports: [FooterWidget, ButtonComponent, TagComponent, ReactiveFormsModule],
+  imports: [FooterWidget, ButtonComponent, TagComponent, ReactiveFormsModule, HeaderWidget],
 })
 export class CollectionCreatePage implements OnInit {
   public categoryList: CategoriesDTO[] = [];

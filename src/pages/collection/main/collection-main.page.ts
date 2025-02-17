@@ -4,11 +4,12 @@ import { CollectionApi, CollectionDetailResDTO } from 'src/entities/collection';
 import { PostApi, PostType } from 'src/entities/post';
 import { ButtonComponent, TagComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
+import { HeaderWidget } from 'src/widgets/header';
 
 @Component({
   selector: 'app-collection-main',
   templateUrl: './collection-main.page.html',
-  imports: [TagComponent, FooterWidget, ButtonComponent, RouterLink],
+  imports: [TagComponent, FooterWidget, ButtonComponent, RouterLink, HeaderWidget],
 })
 export class CollectionMainPage implements OnInit {
   @ViewChild('grid') grid!: ElementRef<HTMLElement>;

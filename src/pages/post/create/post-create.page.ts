@@ -6,11 +6,12 @@ import { PostApi } from 'src/entities/post';
 import { CollectionCardComponent } from 'src/pages/home';
 import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
+import { HeaderWidget } from 'src/widgets/header';
 
 @Component({
   selector: 'post-create-page',
   templateUrl: './post-create.page.html',
-  imports: [ButtonComponent, FooterWidget, ReactiveFormsModule, JsonPipe, CollectionCardComponent],
+  imports: [ButtonComponent, FooterWidget, ReactiveFormsModule, JsonPipe, CollectionCardComponent, HeaderWidget],
 })
 export class PostCreatePage {
   public step = signal<number>(1);
