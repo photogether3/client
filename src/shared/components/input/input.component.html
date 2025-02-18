@@ -1,0 +1,19 @@
+<label class="flex flex-col gap-2">
+  @if (label()) {
+    <span>{{ label() }}</span>
+  }
+  @switch (type()) {
+    @case ('input') {
+      <input [type]="inputType()" [value]="value" (input)="onInput($event)" [placeholder]="placeholder()" [disabled]="isDisabled" [class]="computedClass()" />
+    }
+    @case ('textarea') {
+      <textarea
+        [value]="value"
+        (input)="onInput($event)"
+        [placeholder]="placeholder()"
+        [disabled]="isDisabled"
+        rows="15"
+        class="p-4 border border-gray-400 rounded-lg resize-none"></textarea>
+    }
+  }
+</label>
