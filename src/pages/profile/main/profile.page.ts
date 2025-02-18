@@ -15,7 +15,7 @@ import { HeaderWidget } from 'src/widgets/header';
   imports: [TagComponent, ButtonComponent, FooterWidget, HeaderWidget],
 })
 export class ProfilePage {
-  public profile: (ProfileDTO & { image: string; tags: CategoriesDTO[] }) | undefined = undefined;
+  public profile: (ProfileDTO & { tags: CategoriesDTO[] }) | undefined = undefined;
 
   private readonly router = inject(Router);
   private readonly modalService = inject(ModalService);
@@ -30,7 +30,6 @@ export class ProfilePage {
     }).subscribe(({ profile, tags }) => {
       this.profile = {
         ...profile,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHe6hYgyoH_DbL5N_2MWuG3jEwtw2lD7N4Zw&s',
         tags: tags,
       };
     });

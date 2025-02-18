@@ -2,6 +2,7 @@ export type ProfileDTO = {
   id: string;
   nickname: string;
   email: string;
+  imageUrl: string | null;
   bio: string | null;
   updatedAt: Date;
   createdAt: Date;
