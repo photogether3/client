@@ -3,14 +3,14 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserApi } from 'src/entities/user';
 import { PasswordUpdateType } from 'src/entities/user/model/user.type';
-import { ButtonComponent } from 'src/shared/components';
+import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
 import { CustomValidators } from 'src/shared/validators';
 
 @Component({
   selector: 'password-update-dialog',
   templateUrl: './password-update-dialog.component.html',
-  imports: [ReactiveFormsModule, ButtonComponent, JsonPipe],
+  imports: [ReactiveFormsModule, ButtonComponent, JsonPipe, InputComponent],
 })
 export class PasswordUpdateDialog {
   public passwordUpdateForm!: FormGroup;

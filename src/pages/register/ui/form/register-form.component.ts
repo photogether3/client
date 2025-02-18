@@ -3,14 +3,14 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { AuthApi, RegisterFormType } from 'src/entities/auth';
 import { UserApi } from 'src/entities/user';
-import { ButtonComponent } from 'src/shared/components';
+import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
 import { CustomValidators } from 'src/shared/validators';
 
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
-  imports: [ReactiveFormsModule, ButtonComponent],
+  imports: [ReactiveFormsModule, ButtonComponent, InputComponent],
 })
 export class RegisterFormComponent {
   public signUpForm!: FormGroup<RegisterFormType>;

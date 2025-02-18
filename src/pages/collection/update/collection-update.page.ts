@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CollectionApi } from 'src/entities/collection';
 import { CategoriesDTO, CategoryApi, TagComponent } from 'src/entities/category';
-import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
+import { ButtonComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { ActivatedRoute } from '@angular/router';
 import { HeaderWidget } from 'src/widgets/header';
@@ -10,7 +10,7 @@ import { HeaderWidget } from 'src/widgets/header';
 @Component({
   selector: 'app-collection-update',
   templateUrl: './collection-update.page.html',
-  imports: [FooterWidget, ButtonComponent, TagComponent, ReactiveFormsModule, HeaderWidget],
+  imports: [FooterWidget, ButtonComponent, TagComponent, ReactiveFormsModule, HeaderWidget, InputComponent],
 })
 export class CollectionUpdatePage implements OnInit {
   public collectionId: string | undefined = undefined;

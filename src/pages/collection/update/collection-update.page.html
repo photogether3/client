@@ -4,10 +4,7 @@
 
   <!-- main -->
   <form [formGroup]="collectionUpdateForm" class="flex flex-col flex-1 gap-4 p-4">
-    <label class="flex flex-col gap-2">
-      <span>사진첩 제목</span>
-      <input type="text" formControlName="title" placeholder="사진첩 제목을 입력해주세요." formControlName="title" />
-    </label>
+    <app-input formControlName="title" label="사진첩 제목" placeholder="사진첩 제목을 입력해주세요." />
     <label class="flex flex-col flex-1 gap-2">
       <span>관심사 선택</span>
       <div class="flex flex-wrap flex-1 w-full gap-2 p-3 bg-white border rounded-lg">

@@ -1,6 +1,7 @@
 <div class="flex flex-col min-h-screen gap-5 p-4 bg-secondary5">
   <div class="flex justify-between">
     <button (click)="setStep(1)" class="text-xl font-bold"><</button>
+    <!-- TOOD step 1,2가 있는 것 상태관리 -->
     <span>
       <span class="font-bold">{{ activeStep() }}</span>
       /2
@@ -14,14 +15,8 @@
     </div>
 
     <form [formGroup]="initForm">
-      <div class="flex flex-col gap-1">
-        <label for="nickname">닉네임</label>
-        <input id="nickname" type="text" placeholder="닉네임을 입력해주세요." formControlName="nickname" />
-      </div>
-      <div class="flex flex-col gap-1 mt-2">
-        <label for="bio">자기소개</label>
-        <textarea name="bio" id="bio" placeholder="내 소개를 입력해주세요." formControlName="bio" rows="10" class="p-4 border border-black rounded-lg resize-none"></textarea>
-      </div>
+      <app-input label="닉네임" placeholder="닉네임을 입력해주세요." formControlName="nickname" />
+      <app-input type="textarea" label="자기소개" placeholder="내 소개를 입력해주세요." formControlName="bio" />
     </form>
 
     <app-button text="다음으로" (click)="setStep(2)" />

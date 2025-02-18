@@ -19,14 +19,8 @@
             <p>사진을 선택해주세요.</p>
           </div>
         }
-        <label class="flex flex-col gap-2">
-          <span>게시물 제목</span>
-          <input type="text" placeholder="게시물 제목을 입력해주세요." formControlName="title" />
-        </label>
-        <label class="flex flex-col gap-2">
-          <span>게시물 내용</span>
-          <textarea placeholder="게시물 내용을 입력해주세요." formControlName="content" rows="10" class="p-4 border border-black rounded-lg resize-none"></textarea>
-        </label>
+        <app-input label="게시물 제목" placeholder="게시물 제목을 입력해주세요." formControlName="title" />
+        <app-input type="textarea" label="게시물 내용" placeholder="게시물 내용을 입력해주세요." formControlName="content" />
 
         <div formArrayName="metadataStringify">
           <span class="block mb-3">사진내용</span>
@@ -37,7 +31,7 @@
                 <input formControlName="isPublic" type="checkbox" class="w-6 h-6" />
                 <span class="block text-sm">노출</span>
               </div>
-              <input formControlName="content" type="text" class="flex-1" />
+              <app-input formControlName="content" class="flex-1" />
             </div>
           }
         </div>

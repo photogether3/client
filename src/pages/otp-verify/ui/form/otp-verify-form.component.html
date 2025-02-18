@@ -1,4 +1,5 @@
 <form [formGroup]="otpForm" class="flex flex-col gap-4">
+  <!-- TODO input 컴포넌트로 마이그레이션 -->
   <input type="string" minlength="6" formControlName="otp" class="w-full" />
   @if (getErrorMessage()) {
     <p class="mt-1 ml-1 text-xs text-red-600">{{ getErrorMessage() }}</p>

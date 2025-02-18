@@ -1,9 +1,9 @@
 <form [formGroup]="loginForm" class="flex flex-col h-full gap-2">
-  <input type="text" formControlName="email" placeholder="이메일(example@gmail.com)" />
+  <app-input formControlName="email" placeholder="이메일(example@gmail.com)" />
   @if (getErrorMessage('email')) {
     <p class="ml-1 text-xs text-red-600">{{ getErrorMessage('email') }}</p>
   }
-  <input type="password" formControlName="password" placeholder="비밀번호" />
+  <app-input inputType="password" formControlName="password" placeholder="비밀번호" />
   @if (getErrorMessage('password')) {
     <p class="ml-1 text-xs text-red-600">{{ getErrorMessage('password') }}</p>
   }

@@ -4,12 +4,12 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular
 import { Router } from '@angular/router';
 import { CategoriesDTO, CategoryApi, TagComponent } from 'src/entities/category';
 import { UserApi } from 'src/entities/user';
-import { ButtonComponent } from 'src/shared/components';
+import { ButtonComponent, InputComponent } from 'src/shared/components';
 
 @Component({
   selector: 'onboarding-page',
   templateUrl: './onboarding.page.html',
-  imports: [ReactiveFormsModule, ButtonComponent, TagComponent, JsonPipe, CommonModule],
+  imports: [ReactiveFormsModule, ButtonComponent, TagComponent, JsonPipe, CommonModule, InputComponent],
 })
 export class OnboardingPage {
   public initForm!: FormGroup;

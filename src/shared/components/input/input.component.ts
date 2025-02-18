@@ -19,7 +19,7 @@ export class InputComponent implements ControlValueAccessor {
   public type = input<'input' | 'textarea'>('input');
   public inputType = input<'text' | 'password' | 'number' | 'email'>('text');
   public placeholder = input<string>('');
-  public size = input<InputProps['size']>('lg');
+  public size = input<InputProps['size']>('md');
   public computedClass = computed(() => {
     return twMerge(inputVariants({ size: this.size() }));
   });

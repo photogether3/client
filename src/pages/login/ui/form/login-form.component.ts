@@ -2,13 +2,13 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthApi, AuthService, LoginFormType } from 'src/entities/auth';
-import { ButtonComponent } from 'src/shared/components';
+import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
 
 @Component({
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
-  imports: [ReactiveFormsModule, ButtonComponent],
+  imports: [ReactiveFormsModule, ButtonComponent, InputComponent],
 })
 export class LoginFormComponent {
   public loginForm!: FormGroup<LoginFormType>;
@@ -58,6 +58,7 @@ export class LoginFormComponent {
     });
   }
 
+  // TODO input 컴포넌트에서 에러 메시지 처리
   getErrorMessage(controlName: keyof LoginFormType): string | null {
     const control = this.loginForm.get(controlName);
 
