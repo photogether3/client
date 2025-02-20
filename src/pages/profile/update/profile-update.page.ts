@@ -74,7 +74,7 @@ export class ProfileUpdatePage {
 
   updateProfile() {
     const { nickname, bio } = this.profileUpdateForm.value;
-    const categoryIds = this.profileUpdateForm.get('categories')?.value.map((category: CategoriesDTO) => category.categoryId);
+    const categoryIds = this.profileUpdateForm.get('categories')?.value.map((category: CategoriesDTO) => category.id);
     const updateProfileDTO = { nickname, bio, categoryIds: JSON.stringify(categoryIds) };
 
     this.userApi.updateProfile(updateProfileDTO).subscribe(() => {

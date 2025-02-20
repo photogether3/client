@@ -19,14 +19,14 @@ export class CategoriesUpdateDialog {
     this.categoryApi.fetchCategories().subscribe((res) => {
       this.categoryList = res.map((category) => ({
         ...category,
-        selected: categoryArray.some((fav: CategoriesDTO) => fav.categoryId === category.categoryId),
+        selected: categoryArray.some((fav: CategoriesDTO) => fav.id === category.id),
       }));
     });
   }
 
   // 태그 토글
-  toggleCategory(categoryId: string) {
-    const category = this.categoryList.find((category) => category.categoryId === categoryId);
+  toggleCategory(categoryId: number) {
+    const category = this.categoryList.find((category) => category.id === categoryId);
 
     if (category) {
       category.selected = !category.selected;
@@ -35,7 +35,7 @@ export class CategoriesUpdateDialog {
 
   // 태그 선택 완료
   completed() {
-    const updatedCategories = this.categoryList.filter((category) => category.selected).map((category) => ({ categoryId: category.categoryId, name: category.name }));
+    const updatedCategories = this.categoryList.filter((category) => category.selected).map((category) => ({ categoryId: category.id, name: category.name }));
     this.bottomSheetService.close(updatedCategories);
   }
 }

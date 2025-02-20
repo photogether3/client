@@ -41,8 +41,8 @@ export class OnboardingPage {
     this.activeStep.set(step);
   }
 
-  toggleCategory(categoryId: string) {
-    const index = this.categoryFormArray.value.findIndex((id: string) => id === categoryId);
+  toggleCategory(categoryId: number) {
+    const index = this.categoryFormArray.value.findIndex((id: number) => id === categoryId);
 
     if (index === -1) {
       this.categoryFormArray.push(this.fb.control(categoryId));

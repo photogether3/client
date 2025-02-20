@@ -1,7 +1,7 @@
 <div class="flex flex-col min-h-screen gap-5 p-4 bg-secondary5">
   <div class="flex justify-between">
     <button (click)="setStep(1)" class="text-xl font-bold"><</button>
-    <!-- TOOD step 1,2가 있는 것 상태관리 -->
+    <!-- TODO step 1,2가 있는 것 상태관리 -->
     <span>
       <span class="font-bold">{{ activeStep() }}</span>
       /2
@@ -31,12 +31,11 @@
         <app-tag
           [tagName]="category.name"
           size="m"
-          [appearance]="categoryFormArray.value.includes(category.categoryId) ? 'primary' : 'outline'"
-          (click)="toggleCategory(category.categoryId)"
+          [appearance]="categoryFormArray.value.includes(category.id) ? 'primary' : 'outline'"
+          (click)="toggleCategory(category.id)"
           class="cursor-pointer" />
       }
     </div>
-    <app-button text="+ 주제 제안하기" appearance="secondary" />
 
     <p>선택한 주제는 나중에 다시 수정할 수 있어요!</p>
     <app-button text="사진첩 덜어내러 가기" (click)="submit()" />
