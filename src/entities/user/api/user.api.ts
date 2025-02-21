@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/shared/environments';
 import { skipAuth } from 'src/shared/interceptors';
-import { ProfileDTO, UpdatePasswordDTO, UpdateProfileDTO } from '../model';
+import { ProfileGetDTO, UpdatePasswordDTO, UpdateProfileDTO } from '../model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,8 +19,8 @@ export class UserApi {
   }
 
   // 내 프로필 조회
-  getProfile(): Observable<ProfileDTO> {
-    return this.http.get<ProfileDTO>(`${environment.serverUrl}/v1/users/me`);
+  getProfile(): Observable<ProfileGetDTO> {
+    return this.http.get<ProfileGetDTO>(`${environment.serverUrl}/v1/users/me`);
   }
 
   // 프로필 수정 (온보딩, 프로필 수정 페이지)
@@ -29,7 +29,7 @@ export class UserApi {
   }
 
   // 비밀번호 변경 (프로필 페이지)
-  updatePassword(updatedPassword: UpdatePasswordDTO): Observable<ProfileDTO> {
-    return this.http.patch<ProfileDTO>(`${environment.serverUrl}/v1/users/me/password`, updatedPassword);
+  updatePassword(updatedPassword: UpdatePasswordDTO): Observable<ProfileGetDTO> {
+    return this.http.patch<ProfileGetDTO>(`${environment.serverUrl}/v1/users/me/password`, updatedPassword);
   }
 }

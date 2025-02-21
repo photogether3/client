@@ -1,5 +1,5 @@
-export type ProfileDTO = {
-  id: string;
+export type ProfileGetDTO = {
+  id: number;
   nickname: string;
   email: string;
   imageUrl: string | null;
