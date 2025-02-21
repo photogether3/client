@@ -26,7 +26,8 @@ export class CollectionFormComponent implements OnInit {
 
   public submitForm = output<FormGroup>();
   public mode = input.required<string>();
-  public initForm = input<any>();
+  title = input<string>('');
+  categoryId = input<number>();
   public categoryList: CategoriesDTO[] = [];
   public form!: FormGroup<FormControls<CollectionFormType>>;
 
@@ -42,8 +43,11 @@ export class CollectionFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.mode() === 'update' && this.initForm()) {
-      this.form.patchValue(this.initForm());
+    if (this.mode() === 'update' && this.title() && this.categoryId()) {
+      this.form.patchValue({
+        title: this.title(),
+        categoryId: this.categoryId(),
+      });
     }
   }
   // 카테고리 클릭 시
