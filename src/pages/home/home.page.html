@@ -5,20 +5,28 @@
   <!-- main -->
   <main class="flex flex-col flex-grow gap-4 px-4 py-4">
     <div class="grid grid-cols-2 gap-3">
-      @for (collection of collectionList; track $index) {
+      @for (collection of myCollections.default; track $index) {
         <app-collection-card [post]="collection" />
+      } @empty {
+        <div class="col-span-full h-[140px] rounded-[12px] border border-black bg-white p-4">생성된 사진첩이 없습니다!</div>
       }
       <app-button text="사진첩 생성하기" appearance="secondary" (click)="createCollection()" class="col-span-full" />
     </div>
 
     <section>
       <h4 class="font-bold">미분류</h4>
-      <div class="h-[140px] rounded-[12px] border border-black bg-white"></div>
+      @if (myCollections.uncategorized) {
+        <app-collection-card [post]="myCollections.uncategorized" />
+      }
+      <!-- <div class="h-[140px] rounded-[12px] border border-black bg-white"></div> -->
     </section>
 
     <section>
       <h4 class="font-bold">휴지통</h4>
-      <div class="h-[140px] rounded-[12px] border border-black bg-white"></div>
+      @if (myCollections.trash) {
+        <app-collection-card [post]="myCollections.trash" />
+      }
+      <!-- <div class="h-[140px] rounded-[12px] border border-black bg-white"></div> -->
     </section>
   </main>
 
