@@ -2,7 +2,7 @@
   <!-- header -->
   @if (collection) {
     <app-header [title]="collection.title">
-      <app-tag rightContent [appearance]="'outline'" [tagName]="collection.category.name" size="m" class="ml-auto" />
+      <app-tag rightContent [appearance]="'outline'" [tagName]="collection.category?.name || ''" size="m" class="ml-auto" />
     </app-header>
   }
 

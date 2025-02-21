@@ -86,7 +86,7 @@ export class PostCreatePage {
     this.step.set(2);
   }
 
-  selectCollection(collectionId: string, event: Event) {
+  selectCollection(collectionId: number, event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
 
     if (isChecked) {

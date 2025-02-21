@@ -1,3 +1,4 @@
+import { CategoriesDTO } from 'src/entities/category';
 import { CollectionType } from './collection.type';
 
 // home 페이지에서 사용
@@ -13,10 +14,7 @@ export type CollectionDetailResDTO = {
   collectionId: string;
   title: string;
   postCount: number;
-  category: {
-    categoryId: string;
-    name: string;
-  };
+  category: CategoriesDTO | null;
 };
 
 export type CollectionReqDTO = {
