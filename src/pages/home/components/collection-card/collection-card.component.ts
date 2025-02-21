@@ -20,7 +20,7 @@ export class CollectionCardComponent {
     const url = this.router.url;
 
     if (url.includes('home')) {
-      this.router.navigateByUrl('collection/' + this.post().collectionId);
+      this.router.navigateByUrl('collection/' + this.post().id);
     } else {
       return;
     }
