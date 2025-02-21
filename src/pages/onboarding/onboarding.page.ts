@@ -2,14 +2,16 @@ import { CommonModule, JsonPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { CategoriesDTO, CategoryApi, TagComponent } from 'src/entities/category';
 import { UserApi } from 'src/entities/user';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
+import { HeaderWidget } from 'src/widgets/header';
 
 @Component({
   selector: 'onboarding-page',
   templateUrl: './onboarding.page.html',
-  imports: [ReactiveFormsModule, ButtonComponent, TagComponent, JsonPipe, CommonModule, InputComponent],
+  imports: [ReactiveFormsModule, ButtonComponent, TagComponent, JsonPipe, CommonModule, InputComponent, HeaderWidget],
 })
 export class OnboardingPage {
   public initForm!: FormGroup;
@@ -29,7 +31,8 @@ export class OnboardingPage {
     this.initForm = this.fb.group({
       nickname: '',
       bio: '',
-      categoryIds: this.fb.array([]),
+      categoryIds: this.fb.array<number[]>([]),
+      file: null,
     });
 
     this.categoryApi.fetchCategories().subscribe((res) => {
@@ -52,9 +55,14 @@ export class OnboardingPage {
   }
 
   submit() {
-    const { nickname, bio, categoryIds } = this.initForm.value;
-    const updateProfileDTO = { nickname, bio, categoryIds: JSON.stringify(categoryIds) };
-    this.userApi.updateProfile(updateProfileDTO).subscribe(() => {
+    const { nickname, bio, file, categoryIds } = this.initForm.value;
+    const updateProfileDTO = { nickname, bio, file };
+    const updateCategoryDTO = { categoryIds };
+
+    forkJoin({
+      profile: this.userApi.updateProfile(updateProfileDTO),
+      favCategories: this.categoryApi.updateFavCategories(updateCategoryDTO),
+    }).subscribe(() => {
       this.router.navigateByUrl('/home');
     });
   }

@@ -1,44 +1,45 @@
-<div class="flex flex-col min-h-screen gap-5 p-4 bg-secondary5">
-  <div class="flex justify-between">
-    <button (click)="setStep(1)" class="text-xl font-bold"><</button>
-    <!-- TODO step 1,2가 있는 것 상태관리 -->
-    <span>
+<div class="min-h-screen bg-secondary5">
+  <!-- TODO step 1,2가 있는 것 상태관리 -->
+  <app-header>
+    <p rightContent class="flex items-center">
       <span class="font-bold">{{ activeStep() }}</span>
       /2
-    </span>
-  </div>
+    </p>
+  </app-header>
 
-  @if (activeStep() === 1) {
-    <div>
-      <p class="text-lg font-bold">내 정보를 입력해주세요.</p>
-      <p>회원님에 대해서 알려주세요.</p>
-    </div>
+  <section class="flex flex-col gap-5 px-4 pt-4">
+    @if (activeStep() === 1) {
+      <div>
+        <p class="text-lg font-bold">내 정보를 입력해주세요.</p>
+        <p>회원님에 대해서 알려주세요.</p>
+      </div>
 
-    <form [formGroup]="initForm">
-      <app-input label="닉네임" placeholder="닉네임을 입력해주세요." formControlName="nickname" />
-      <app-input type="textarea" label="자기소개" placeholder="내 소개를 입력해주세요." formControlName="bio" />
-    </form>
+      <form [formGroup]="initForm">
+        <app-input label="닉네임" placeholder="닉네임을 입력해주세요." formControlName="nickname" />
+        <app-input type="textarea" label="자기소개" placeholder="내 소개를 입력해주세요." formControlName="bio" />
+      </form>
 
-    <app-button text="다음으로" (click)="setStep(2)" />
-  } @else {
-    <div>
-      <p class="text-lg font-bold">내 피드에 관리하고 싶은 관심주제</p>
-      <p>선택한 주제에 대한 사진첩을 만드실 수 있습니다.</p>
-    </div>
+      <app-button text="다음으로" (click)="setStep(2)" />
+    } @else {
+      <div>
+        <p class="text-lg font-bold">내 피드에 관리하고 싶은 관심주제</p>
+        <p>선택한 주제에 대한 사진첩을 만드실 수 있습니다.</p>
+      </div>
 
-    <div class="flex flex-wrap w-full gap-2 p-3 bg-white border rounded-lg">
-      @for (category of categoryList; track $index) {
-        <app-tag
-          [tagName]="category.name"
-          size="m"
-          [appearance]="categoryFormArray.value.includes(category.id) ? 'primary' : 'outline'"
-          (click)="toggleCategory(category.id)"
-          class="cursor-pointer" />
-      }
-    </div>
+      <div class="flex flex-wrap w-full gap-2 p-3 bg-white border rounded-lg">
+        @for (category of categoryList; track $index) {
+          <app-tag
+            [tagName]="category.name"
+            size="m"
+            [appearance]="categoryFormArray.value.includes(category.id) ? 'primary' : 'outline'"
+            (click)="toggleCategory(category.id)"
+            class="block cursor-pointer" />
+        }
+      </div>
 
-    <p>선택한 주제는 나중에 다시 수정할 수 있어요!</p>
-    <app-button text="사진첩 덜어내러 가기" (click)="submit()" />
-  }
-  {{ initForm.value | json }}
+      <p>선택한 주제는 나중에 다시 수정할 수 있어요!</p>
+      <app-button text="사진첩 덜어내러 가기" (click)="submit()" />
+    }
+    {{ initForm.value | json }}
+  </section>
 </div>

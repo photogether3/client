@@ -4,3 +4,7 @@ export type CategoriesDTO = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type CategoryUpdateDTO = {
+  categoryIds: number[];
+};
