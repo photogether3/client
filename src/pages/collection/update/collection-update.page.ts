@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionApi } from 'src/entities/collection';
@@ -6,28 +6,30 @@ import { ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 import { CollectionFormComponent } from '../ui';
+import { CategoriesDTO } from 'src/entities/category';
 
 @Component({
   selector: 'app-collection-update',
   templateUrl: './collection-update.page.html',
   imports: [FooterWidget, CollectionFormComponent, HeaderWidget],
 })
-export class CollectionUpdatePage implements OnInit {
-  public collectionId?: string;
-  public collection?: { title: string; categoryId: number };
+export class CollectionUpdatePage {
+  collectionId?: string;
+  collection = signal<{ title: string; category: CategoriesDTO } | null>(null);
+  isCollectionLoaded = computed(() => this.collection() !== null);
 
   private readonly route = inject(ActivatedRoute);
   private readonly collectionApi = inject(CollectionApi);
   private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly router = inject(Router);
 
-  constructor() {}
-
-  ngOnInit(): void {
+  constructor() {
     this.collectionId = this.route.snapshot.paramMap.get('id') as string;
 
     this.collectionApi.getCollection(this.collectionId).subscribe((res) => {
-      this.collection = { title: res.title, categoryId: res.category!.id };
+      if (!res || !res.category) return;
+
+      this.collection.set({ title: res.title, category: res.category });
     });
   }
 

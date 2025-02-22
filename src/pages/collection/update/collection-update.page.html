@@ -1,5 +1,7 @@
 <div class="flex flex-col min-h-screen border-x bg-secondary5">
   <app-header title="사진첩 수정" />
-  <app-collection-form mode="update" [title]="collection!.title" [categoryId]="collection!.categoryId" (submitForm)="updateCollection($event)" />
+  @if (isCollectionLoaded()) {
+    <app-collection-form mode="update" [title]="collection()!.title" [category]="collection()!.category" (submitForm)="updateCollection($event)" />
+  }
   <app-footer class="sticky bottom-0 mt-auto" />
 </div>
