@@ -38,7 +38,7 @@
       </div>
 
       <p>선택한 주제는 나중에 다시 수정할 수 있어요!</p>
-      <app-button text="사진첩 덜어내러 가기" (click)="submit()" />
+      <app-profile-update-button buttonText="사진첩 덜어내러 가기" [form]="initForm" (handleButton)="updateProfile()" />
     }
     {{ initForm.value | json }}
   </section>

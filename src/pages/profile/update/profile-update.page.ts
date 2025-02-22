@@ -2,22 +2,25 @@ import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
-import { CategoriesDTO, CategoryApi, TagComponent } from 'src/entities/category';
+import { CategoriesGetDTO, CategoryApi, TagComponent } from 'src/entities/category';
 import { UserApi } from 'src/entities/user';
 import { BottomSheetService, ButtonComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { CategoriesUpdateDialog } from '../ui';
 import { HeaderWidget } from 'src/widgets/header';
+import { Router } from '@angular/router';
+import { ProfileUpdateButton } from 'src/widgets/porfile-update-button';
 
 @Component({
   selector: 'profile-update-page',
   templateUrl: './profile-update.page.html',
-  imports: [TagComponent, ButtonComponent, FooterWidget, ReactiveFormsModule, JsonPipe, HeaderWidget, InputComponent],
+  imports: [TagComponent, ButtonComponent, FooterWidget, ReactiveFormsModule, JsonPipe, HeaderWidget, InputComponent, ProfileUpdateButton],
 })
 export class ProfileUpdatePage {
   public profileUpdateForm!: FormGroup;
 
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
   private readonly userApi = inject(UserApi);
   private readonly categoryApi = inject(CategoryApi);
   private readonly bottomSheetService = inject(BottomSheetService);
@@ -37,14 +40,14 @@ export class ProfileUpdatePage {
 
     forkJoin({
       profile: this.userApi.getProfile(),
-      tags: this.categoryApi.fetchFavCategories(),
-    }).subscribe(({ profile, tags }) => {
+      categories: this.categoryApi.fetchFavCategories(),
+    }).subscribe(({ profile, categories }) => {
       this.profileUpdateForm.patchValue({
         nickname: profile.nickname,
         bio: profile.bio,
       });
 
-      tags.forEach((tag) => this.categoryArray.push(this.fb.control(tag)));
+      categories.forEach((category) => this.categoryArray.push(this.fb.control(category)));
     });
   }
 
@@ -68,25 +71,19 @@ export class ProfileUpdatePage {
       if (!res) return;
 
       this.categoryArray.clear();
-      res.forEach((category: CategoriesDTO) => this.categoryArray.push(this.fb.control(category)));
+      res.forEach((category: CategoriesGetDTO) => this.categoryArray.push(this.fb.control(category)));
     });
   }
 
   updateProfile() {
-    const { nickname, bio } = this.profileUpdateForm.value;
-    const categoryIds = this.profileUpdateForm.get('categories')?.value.map((category: CategoriesDTO) => category.id);
-    const updateProfileDTO = { nickname, bio, categoryIds: JSON.stringify(categoryIds) };
-
-    this.userApi.updateProfile(updateProfileDTO).subscribe(() => {
-      const modalData = {
-        title: '프로필 편집 완료',
-        subTitle: '프로필 편집이 완료되었습니다.',
-        content: '확인 버튼을 누르시면 홈 화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
-        buttons: ['확인'],
-      };
-      this.modalReactiveService.open(modalData).subscribe((buttonText) => {
-        console.log('선택된 버튼:', buttonText);
-      });
+    const modalData = {
+      title: '프로필 편집 완료',
+      subTitle: '프로필 편집이 완료되었습니다.',
+      content: '확인 버튼을 누르시면 홈 화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
+      buttons: ['확인'],
+    };
+    this.modalReactiveService.open(modalData).subscribe(() => {
+      this.router.navigateByUrl('/profile');
     });
   }
 }
