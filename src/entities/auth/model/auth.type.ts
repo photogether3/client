@@ -7,8 +7,8 @@ export type RegisterFormType = {
 };
 
 export type LoginFormType = {
-  email: FormControl<string>;
-  password: FormControl<string>;
+  email: string;
+  password: string;
 };
 
 export type OtpFormType = {

@@ -1,18 +1,17 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthApi, AuthService, LoginFormType } from 'src/entities/auth';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
+import { BaseForm } from 'src/shared/lib';
 
 @Component({
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
   imports: [ReactiveFormsModule, ButtonComponent, InputComponent],
 })
-export class LoginFormComponent {
-  public loginForm!: FormGroup<LoginFormType>;
-
+export class LoginFormComponent extends BaseForm<LoginFormType> {
   private authApi = inject(AuthApi);
   private router = inject(Router);
   private readonly errorMessages: Record<string, Record<string, string>> = {
@@ -27,7 +26,11 @@ export class LoginFormComponent {
   };
 
   constructor() {
-    this.loginForm = new FormGroup<LoginFormType>({
+    super();
+  }
+
+  protected initForm() {
+    this.form = this.fb.group({
       email: new FormControl('', {
         validators: [Validators.required, Validators.email],
         updateOn: 'change',
@@ -42,7 +45,7 @@ export class LoginFormComponent {
   }
 
   onLogin() {
-    const loginDTO = this.loginForm.getRawValue();
+    const loginDTO = this.getRawValue();
 
     this.authApi.login(loginDTO).subscribe((res) => {
       if (res) {
@@ -60,7 +63,7 @@ export class LoginFormComponent {
 
   // TODO input 컴포넌트에서 에러 메시지 처리
   getErrorMessage(controlName: keyof LoginFormType): string | null {
-    const control = this.loginForm.get(controlName);
+    const control = this.form.get(controlName);
 
     if (control?.invalid) {
       if (control.hasError('required') && !control.touched) {
