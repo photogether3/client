@@ -26,8 +26,8 @@ export class CollectionFormComponent implements OnInit {
 
   public submitForm = output<FormGroup>();
   public mode = input.required<string>();
-  title = input.required<string>();
-  category = input.required<CategoriesGetDTO>();
+  title = input<string>();
+  category = input<CategoriesGetDTO>();
   public form!: FormGroup<FormControls<CollectionFormType>>;
 
   constructor() {
