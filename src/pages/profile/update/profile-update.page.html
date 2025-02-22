@@ -15,8 +15,8 @@
     </form>
 
     <div class="flex gap-2">
-      @for (tag of categoryArray.value; track $index) {
-        <app-tag [tagName]="tag.name" appearance="outline" size="s" />
+      @for (category of categoryArray.value; track $index) {
+        <app-tag [tagName]="category.name" appearance="outline" size="s" />
       }
     </div>
 

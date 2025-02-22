@@ -1,4 +1,4 @@
-import { CategoriesDTO } from 'src/entities/category';
+import { CategoriesGetDTO } from 'src/entities/category';
 
 export type PostReqDto = {
   collectionId: string;
@@ -40,7 +40,7 @@ export type PostType = {
   imageUrl: string;
   createdAt: Date;
   updatedAt: Date;
-  category: CategoriesDTO | null;
+  category: CategoriesGetDTO | null;
   collection: {
     collectionId: string;
     title: string;

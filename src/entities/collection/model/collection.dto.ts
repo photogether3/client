@@ -1,4 +1,4 @@
-import { CategoriesDTO } from 'src/entities/category';
+import { CategoriesGetDTO } from 'src/entities/category';
 import { CollectionType } from './collection.type';
 
 // home 페이지에서 사용
@@ -14,7 +14,7 @@ export type CollectionDetailResDTO = {
   collectionId: string;
   title: string;
   postCount: number;
-  category: CategoriesDTO | null;
+  category: CategoriesGetDTO | null;
 };
 
 export type CollectionReqDTO = {

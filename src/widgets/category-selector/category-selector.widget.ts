@@ -1,5 +1,5 @@
 import { Component, inject, input, model, signal } from '@angular/core';
-import { CategoriesDTO, CategoryApi, TagComponent } from 'src/entities/category';
+import { CategoriesGetDTO, CategoryApi, TagComponent } from 'src/entities/category';
 
 @Component({
   selector: 'app-category-selector',
@@ -16,15 +16,15 @@ export class CategorySelectorWidget {
   private readonly categoryApi = inject(CategoryApi);
 
   isMultiSelect = input<boolean>(true);
-  selectedCategoryList = model<CategoriesDTO[]>([]);
-  categoryList = signal<(CategoriesDTO & { selected: boolean })[]>([]);
+  selectedCategoryList = model<CategoriesGetDTO[]>([]);
+  categoryList = signal<(CategoriesGetDTO & { selected: boolean })[]>([]);
 
   constructor() {
     this.categoryApi.fetchCategories().subscribe((res) => {
       this.categoryList.set(
         res.map((category) => ({
           ...category,
-          selected: this.selectedCategoryList().some((fav: CategoriesDTO) => fav.id === category.id),
+          selected: this.selectedCategoryList().some((fav: CategoriesGetDTO) => fav.id === category.id),
         })),
       );
     });

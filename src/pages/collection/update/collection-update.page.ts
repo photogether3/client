@@ -6,7 +6,7 @@ import { ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 import { CollectionFormComponent } from '../ui';
-import { CategoriesDTO } from 'src/entities/category';
+import { CategoriesGetDTO } from 'src/entities/category';
 
 @Component({
   selector: 'app-collection-update',
@@ -15,7 +15,7 @@ import { CategoriesDTO } from 'src/entities/category';
 })
 export class CollectionUpdatePage {
   collectionId?: string;
-  collection = signal<{ title: string; category: CategoriesDTO } | null>(null);
+  collection = signal<{ title: string; category: CategoriesGetDTO } | null>(null);
   isCollectionLoaded = computed(() => this.collection() !== null);
 
   private readonly route = inject(ActivatedRoute);

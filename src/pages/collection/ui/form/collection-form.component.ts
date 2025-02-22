@@ -2,7 +2,7 @@ import { Component, inject, input, OnInit, output } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategorySelectorWidget } from 'src/widgets/category-selector';
 
-import { CategoriesDTO, TagComponent } from 'src/entities/category';
+import { CategoriesGetDTO, TagComponent } from 'src/entities/category';
 import { CollectionFormType, FormControls } from 'src/entities/collection';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 
@@ -27,7 +27,7 @@ export class CollectionFormComponent implements OnInit {
   public submitForm = output<FormGroup>();
   public mode = input.required<string>();
   title = input.required<string>();
-  category = input.required<CategoriesDTO>();
+  category = input.required<CategoriesGetDTO>();
   public form!: FormGroup<FormControls<CollectionFormType>>;
 
   constructor() {
@@ -47,7 +47,7 @@ export class CollectionFormComponent implements OnInit {
   }
 
   // 카테고리 클릭 시
-  toggleCategory(category: CategoriesDTO[]) {
+  toggleCategory(category: CategoriesGetDTO[]) {
     this.form.patchValue({ categoryId: category[0].id });
   }
 

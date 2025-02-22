@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CategoriesDTO } from 'src/entities/category';
+import { CategoriesGetDTO } from 'src/entities/category';
 import { BottomSheetService, ButtonComponent } from 'src/shared/components';
 import { CategorySelectorWidget } from 'src/widgets/category-selector';
 
@@ -20,7 +20,7 @@ export class CategoriesUpdateDialog {
 
   constructor() {}
 
-  updateSelectedCategories(updatedList: CategoriesDTO[]) {
+  updateSelectedCategories(updatedList: CategoriesGetDTO[]) {
     this.selectedCategoryList.set(updatedList);
   }
 

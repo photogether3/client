@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { AuthApi, AuthService } from 'src/entities/auth';
-import { CategoriesDTO, CategoryApi, TagComponent } from 'src/entities/category';
+import { CategoriesGetDTO, CategoryApi, TagComponent } from 'src/entities/category';
 import { ProfileGetDTO, UserApi } from 'src/entities/user';
 import { ButtonComponent, ModalService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
@@ -15,7 +15,7 @@ import { HeaderWidget } from 'src/widgets/header';
   imports: [TagComponent, ButtonComponent, FooterWidget, HeaderWidget],
 })
 export class ProfilePage {
-  public profile: (ProfileGetDTO & { tags: CategoriesDTO[] }) | undefined = undefined;
+  public profile: (ProfileGetDTO & { tags: CategoriesGetDTO[] }) | undefined = undefined;
 
   private readonly router = inject(Router);
   private readonly modalService = inject(ModalService);
@@ -32,6 +32,8 @@ export class ProfilePage {
         ...profile,
         tags: tags,
       };
+
+      console.log(this.profile);
     });
   }
 
