@@ -4,11 +4,7 @@
   <div class="grid grid-cols-2 gap-5 pb-5">
     @for (collection of collections; track $index) {
       <div class="">
-        <input
-          type="checkbox"
-          (change)="selectCollection(collection.collectionId, $event)"
-          [checked]="selectedCollectionId === collection.collectionId"
-          class="absolute z-20 w-6 h-6" />
+        <input type="checkbox" (change)="selectCollection(collection.id, $event)" [checked]="selectedCollectionId === collection.id" class="absolute z-20 w-6 h-6" />
         <app-collection-card [post]="collection" />
       </div>
     }

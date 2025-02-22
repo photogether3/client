@@ -12,7 +12,7 @@
           <img [src]="post.imageUrl" alt="임시 이미지" class="h-[485px] rounded-lg" />
 
           <div class="flex items-center justify-between px-2 pb-4 border-b border-b-gray-200">
-            <app-tag [tagName]="post.category.name" />
+            <app-tag [tagName]="post.category?.name" />
             <span>{{ post.collection.title }}</span>
           </div>
 

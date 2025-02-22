@@ -29,8 +29,8 @@ export type PostResDTO = {
 };
 
 export type PostMoveReqDTO = {
-  postIds: string[];
-  collectionId: string;
+  postIds: number[];
+  collectionId: number;
 };
 
 export type PostType = {

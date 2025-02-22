@@ -10,8 +10,8 @@ import { BottomSheetService, ButtonComponent } from 'src/shared/components';
   imports: [ButtonComponent, CollectionCardComponent],
 })
 export class PostMoveComponent {
-  public postId!: string;
-  public selectedCollectionId: string | undefined = undefined;
+  public postId!: number;
+  public selectedCollectionId?: number;
   public collections: CollectionType[] = [];
 
   private readonly bottomSheetService = inject(BottomSheetService);
@@ -26,7 +26,7 @@ export class PostMoveComponent {
     });
   }
 
-  selectCollection(collectionId: string, event: Event) {
+  selectCollection(collectionId: number, event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
 
     if (isChecked) {
