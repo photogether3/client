@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
-import { CategoriesDTO, CategoryApi, TagComponent } from 'src/entities/category';
+import { Component, inject, signal } from '@angular/core';
+import { CategoriesDTO } from 'src/entities/category';
 import { BottomSheetService, ButtonComponent } from 'src/shared/components';
+import { CategorySelectorWidget } from 'src/widgets/category-selector';
 
 @Component({
   selector: 'categories-update-dialog',
@@ -10,37 +11,21 @@ import { BottomSheetService, ButtonComponent } from 'src/shared/components';
       height: 100%;
     }
   `,
-  imports: [TagComponent, ButtonComponent],
+  imports: [CategorySelectorWidget, ButtonComponent],
 })
 export class CategoriesUpdateDialog {
-  public categoryList: (CategoriesDTO & { selected: boolean })[] = [];
-
   private readonly bottomSheetService = inject(BottomSheetService);
-  private readonly categoryApi = inject(CategoryApi);
 
-  constructor() {
-    const categoryArray = this.bottomSheetService.data;
+  selectedCategoryList = signal(this.bottomSheetService.data);
 
-    this.categoryApi.fetchCategories().subscribe((res) => {
-      this.categoryList = res.map((category) => ({
-        ...category,
-        selected: categoryArray.some((fav: CategoriesDTO) => fav.id === category.id),
-      }));
-    });
-  }
+  constructor() {}
 
-  // 태그 토글
-  toggleCategory(categoryId: number) {
-    const category = this.categoryList.find((category) => category.id === categoryId);
-
-    if (category) {
-      category.selected = !category.selected;
-    }
+  updateSelectedCategories(updatedList: CategoriesDTO[]) {
+    this.selectedCategoryList.set(updatedList);
   }
 
   // 태그 선택 완료
-  completed() {
-    const updatedCategories = this.categoryList.filter((category) => category.selected);
-    this.bottomSheetService.close(updatedCategories);
+  selectCategories() {
+    this.bottomSheetService.close(this.selectedCategoryList());
   }
 }

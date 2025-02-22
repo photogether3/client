@@ -2,16 +2,7 @@
   <app-input formControlName="title" label="사진첩 제목" placeholder="사진첩 제목을 입력해주세요." />
   <label class="flex flex-col flex-1 gap-2">
     <span>관심사 선택</span>
-    <div class="flex flex-wrap flex-1 w-full h-full gap-2 p-3 bg-white border rounded-lg">
-      @for (category of categoryList; track $index) {
-        <app-tag
-          [tagName]="category.name"
-          size="m"
-          [appearance]="form.get('categoryId')?.value === category.id ? 'primary' : 'outline'"
-          (click)="clickCategory(category.id)"
-          class="cursor-pointer" />
-      }
-    </div>
+    <app-category-selector [isMultiSelect]="false" [selectedCategoryList]="[category()]" (selectedCategoryListChange)="toggleCategory($event)" class="flex-1" />
   </label>
   <app-button [text]="mode() === 'create' ? '사진첩 생성하기' : '사진첩 수정하기'" [isDisabled]="form.invalid" (click)="onSubmit()" />
 </form>
