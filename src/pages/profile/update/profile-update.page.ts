@@ -17,14 +17,15 @@ import { ProfileUpdateButton } from 'src/widgets/porfile-update-button';
   imports: [TagComponent, ButtonComponent, FooterWidget, ReactiveFormsModule, JsonPipe, HeaderWidget, InputComponent, ProfileUpdateButton],
 })
 export class ProfileUpdatePage {
-  public profileUpdateForm!: FormGroup;
-
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly userApi = inject(UserApi);
   private readonly categoryApi = inject(CategoryApi);
   private readonly bottomSheetService = inject(BottomSheetService);
   private readonly modalReactiveService = inject(ModalReactiveService);
+
+  profileUpdateForm!: FormGroup;
+  previewUrl: string | ArrayBuffer | null | undefined = null;
 
   get categoryArray() {
     return this.profileUpdateForm.get('categories') as FormArray;
@@ -47,6 +48,7 @@ export class ProfileUpdatePage {
         bio: profile.bio,
       });
 
+      this.previewUrl = profile.imageUrl;
       categories.forEach((category) => this.categoryArray.push(this.fb.control(category)));
     });
   }
@@ -60,8 +62,11 @@ export class ProfileUpdatePage {
       this.profileUpdateForm.patchValue({ file });
 
       const reader = new FileReader();
+      reader.onload = (e) => {
+        this.previewUrl = e.target?.result;
+      };
+
       reader.readAsDataURL(file);
-      console.log(this.profileUpdateForm.value);
     }
   }
 
