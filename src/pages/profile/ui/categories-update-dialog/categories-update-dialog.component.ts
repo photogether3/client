@@ -5,6 +5,11 @@ import { BottomSheetService, ButtonComponent } from 'src/shared/components';
 @Component({
   selector: 'categories-update-dialog',
   templateUrl: './categories-update-dialog.component.html',
+  styles: `
+    :host {
+      height: 100%;
+    }
+  `,
   imports: [TagComponent, ButtonComponent],
 })
 export class CategoriesUpdateDialog {
@@ -35,7 +40,7 @@ export class CategoriesUpdateDialog {
 
   // 태그 선택 완료
   completed() {
-    const updatedCategories = this.categoryList.filter((category) => category.selected).map((category) => ({ categoryId: category.id, name: category.name }));
+    const updatedCategories = this.categoryList.filter((category) => category.selected);
     this.bottomSheetService.close(updatedCategories);
   }
 }

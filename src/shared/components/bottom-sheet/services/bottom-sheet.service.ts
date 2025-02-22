@@ -22,6 +22,7 @@ export class BottomSheetService {
     this.result$ = new Subject<any>();
 
     const overlayConfig = this.overlay.create({
+      height: '60vh',
       hasBackdrop: true,
       backdropClass: 'cdk-overlay-dark-backdrop',
       panelClass: 'cdk-overlay-panel',

@@ -1,6 +1,6 @@
 import { cva, VariantProps } from 'class-variance-authority';
 
-export const tagVariants = cva('inlie-flex items-center justify-center whitespace-nowrap', {
+export const tagVariants = cva('flex items-center justify-center whitespace-nowrap', {
   variants: {
     appearance: {
       primary: ['text-white', 'bg-primary50', 'hover:bg-primary60'],
