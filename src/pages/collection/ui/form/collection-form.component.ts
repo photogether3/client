@@ -1,10 +1,11 @@
-import { Component, inject, input, OnInit, output } from '@angular/core';
-import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, input, OnInit, output } from '@angular/core';
+import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategorySelectorWidget } from 'src/widgets/category-selector';
 
 import { CategoriesGetDTO, TagComponent } from 'src/entities/category';
-import { CollectionFormType, FormControls } from 'src/entities/collection';
+import { CollectionFormType } from 'src/entities/collection';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
+import { BaseForm } from 'src/shared/lib';
 
 @Component({
   selector: 'app-collection-form',
@@ -21,20 +22,14 @@ import { ButtonComponent, InputComponent } from 'src/shared/components';
   ],
   imports: [TagComponent, ReactiveFormsModule, InputComponent, ButtonComponent, CategorySelectorWidget],
 })
-export class CollectionFormComponent implements OnInit {
-  private readonly fb = inject(NonNullableFormBuilder);
-
-  public submitForm = output<FormGroup>();
-  public mode = input.required<string>();
+export class CollectionFormComponent extends BaseForm<CollectionFormType> implements OnInit {
+  submitForm = output<FormGroup>();
+  mode = input.required<string>();
   title = input<string>();
   category = input<CategoriesGetDTO>();
-  public form!: FormGroup<FormControls<CollectionFormType>>;
 
   constructor() {
-    this.form = this.fb.group({
-      title: ['', Validators.required],
-      categoryId: [0, Validators.required],
-    });
+    super();
   }
 
   ngOnInit(): void {
@@ -44,6 +39,13 @@ export class CollectionFormComponent implements OnInit {
         categoryId: this.category()?.id,
       });
     }
+  }
+
+  protected initForm() {
+    this.form = this.fb.group({
+      title: ['', Validators.required],
+      categoryId: [0, Validators.required],
+    });
   }
 
   // 카테고리 클릭 시
