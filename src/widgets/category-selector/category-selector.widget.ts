@@ -52,6 +52,9 @@ export class CategorySelectorWidget {
       }
     });
 
-    this.selectedCategoryList.set(this.categoryList().filter((category) => category.selected));
+    const updatedList = this.categoryList()
+      .filter((category) => category.selected)
+      .map(({ id, name }) => ({ id, name }));
+    this.selectedCategoryList.set(updatedList);
   }
 }
