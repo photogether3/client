@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 import { catchError, distinctUntilChanged, map, Observable, of, switchMap, timer } from 'rxjs';
 import { DuplicateEmailDTO } from 'src/entities/user';
+import { IAuthValidators } from 'src/shared/lib/interfaces/auth-validator';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthValidators {
+/** shared 레이어의 인터페이스를 구현 -> 인터페이스의 형식에 맞춰야함 */
+export class AuthValidators implements IAuthValidators {
   // 이메일 중복 검증
   checkDuplicateEmail(api: (email: string) => Observable<DuplicateEmailDTO>): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {

@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormControls } from './bade-form.type';
-import { AuthValidators } from 'src/entities/auth/custom-validators';
+import { AUTH_VALIDATORS } from './interfaces/auth-validator';
 
 export abstract class BaseForm<T> {
   form!: FormGroup<FormControls<T>>;
@@ -9,8 +9,12 @@ export abstract class BaseForm<T> {
   protected readonly fb = inject(FormBuilder);
   protected errorMessages: Partial<Record<string, Record<string, string>>> = {};
 
-  // TODO fsd 규칙에 맞추어 수정 => form 컴포넌트에서 하도록 해야 함
-  protected readonly authValidators = inject(AuthValidators);
+  /**
+   * DONE: fsd 규칙에 맞추어 수정됨.
+   * 인터페이스를 참조하고, 실제 사용되는 구현체는 app.config 파일에서 명시
+   * -> 런타임 시점에 구현체가 결정됨
+   */
+  protected readonly authValidators = inject(AUTH_VALIDATORS);
 
   constructor() {
     this.initForm();
