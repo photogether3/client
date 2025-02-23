@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 import { catchError, distinctUntilChanged, map, Observable, of, switchMap, timer } from 'rxjs';
+import { DuplicateEmailDTO } from 'src/entities/user';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CustomValidators {
+export class AuthValidators {
   // 이메일 중복 검증
-  checkDuplicateEmail(api: (email: string) => Observable<{ isDuplicated: boolean }>): AsyncValidatorFn {
+  checkDuplicateEmail(api: (email: string) => Observable<DuplicateEmailDTO>): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       if (!control.value || !control.dirty) {
         return of(null);
@@ -16,7 +17,7 @@ export class CustomValidators {
       return timer(600).pipe(
         distinctUntilChanged(),
         switchMap(() => api(control.value)),
-        map((res: { isDuplicated: boolean }) => (res.isDuplicated ? { duplicateEmail: true } : null)),
+        map((res: DuplicateEmailDTO) => (res.isDuplicated ? { duplicateEmail: true } : null)),
         catchError(() => of(null)),
       );
     };

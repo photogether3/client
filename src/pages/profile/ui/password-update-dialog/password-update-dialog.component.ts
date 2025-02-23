@@ -1,11 +1,11 @@
 import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthValidators } from 'src/entities/auth/custom-validators';
 import { UserApi } from 'src/entities/user';
 import { PasswordUpdateType } from 'src/entities/user/model/user.type';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
-import { CustomValidators } from 'src/shared/validators';
 
 @Component({
   selector: 'password-update-dialog',
@@ -16,7 +16,7 @@ export class PasswordUpdateDialog {
   public passwordUpdateForm!: FormGroup;
 
   private readonly fb = inject(FormBuilder);
-  private readonly customValidators = inject(CustomValidators);
+  private readonly authValidators = inject(AuthValidators);
   private readonly userApi = inject(UserApi);
 
   constructor() {
@@ -33,7 +33,7 @@ export class PasswordUpdateDialog {
       }),
       confirmPassword: new FormControl('', {
         validators: [Validators.required, Validators.pattern(PASSWORD_REGEX)],
-        asyncValidators: [this.customValidators.checkPasswordMatch()],
+        asyncValidators: [this.authValidators.checkPasswordMatch()],
         updateOn: 'change',
         nonNullable: true,
       }),

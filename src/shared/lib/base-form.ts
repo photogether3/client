@@ -1,13 +1,11 @@
 import { inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormControls } from './bade-form.type';
-import { CustomValidators } from '../validators';
 
 export abstract class BaseForm<T> {
   form!: FormGroup<FormControls<T>>;
 
   protected readonly fb = inject(FormBuilder);
-  protected readonly customValidators = inject(CustomValidators);
   protected errorMessages: Partial<Record<string, Record<string, string>>> = {};
 
   constructor() {

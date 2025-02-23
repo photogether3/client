@@ -22,3 +22,7 @@ export type UpdateProfileDTO = {
   bio: string;
   file: File | null;
 };
+
+export type DuplicateEmailDTO = {
+  isDuplicated: boolean;
+};

@@ -2,11 +2,11 @@ import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthApi, RegisterFormType } from 'src/entities/auth';
+import { AuthValidators } from 'src/entities/auth/custom-validators';
 import { UserApi } from 'src/entities/user';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
-import { CustomValidators } from 'src/shared/validators';
 
 @Component({
   selector: 'app-register-form',
@@ -17,7 +17,7 @@ export class RegisterFormComponent extends BaseForm<RegisterFormType> {
   private readonly authApi = inject(AuthApi);
   private readonly userApi = inject(UserApi);
   private readonly router = inject(Router);
-  private readonly customValidators = inject(CustomValidators);
+  private readonly authValidators = inject(AuthValidators);
 
   constructor() {
     super();
@@ -43,14 +43,14 @@ export class RegisterFormComponent extends BaseForm<RegisterFormType> {
     this.form = this.fb.group({
       email: new FormControl('', {
         validators: [Validators.required, Validators.email],
-        asyncValidators: [this.customValidators.checkDuplicateEmail((email) => this.userApi.checkDuplicatedEmail(email))],
+        asyncValidators: [this.authValidators.checkDuplicateEmail((email) => this.userApi.checkDuplicatedEmail(email))],
       }),
       password: new FormControl('', {
         validators: [Validators.required, Validators.pattern(PASSWORD_REGEX)],
       }),
       confirmPassword: new FormControl('', {
         validators: [Validators.required],
-        asyncValidators: [this.customValidators.checkPasswordMatch()],
+        asyncValidators: [this.authValidators.checkPasswordMatch()],
       }),
     });
   }
