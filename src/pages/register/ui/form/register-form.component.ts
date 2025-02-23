@@ -17,7 +17,6 @@ export class RegisterFormComponent extends BaseForm<RegisterFormType> {
   private readonly authApi = inject(AuthApi);
   private readonly userApi = inject(UserApi);
   private readonly router = inject(Router);
-  private readonly authValidators = inject(AuthValidators);
 
   constructor() {
     super();
