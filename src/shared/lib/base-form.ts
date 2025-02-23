@@ -1,13 +1,12 @@
 import { inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-
-export type FormControls<T> = {
-  [K in keyof T]: FormControl<T[K]>;
-};
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormControls } from './bade-form.type';
 
 export abstract class BaseForm<T> {
-  protected fb = inject(FormBuilder);
   form!: FormGroup<FormControls<T>>;
+
+  protected fb = inject(FormBuilder);
+  protected errorMessages: Partial<Record<string, Record<string, string>>> = {};
 
   constructor() {
     this.initForm();
@@ -21,5 +20,17 @@ export abstract class BaseForm<T> {
 
   getRawValue(): T {
     return this.form.getRawValue() as unknown as T;
+  }
+
+  // TODO input 컴포넌트에서 에러 메시지 처리
+  getErrorMessage(controlName: keyof T): string | null {
+    const control = this.form.get(controlName as string);
+
+    if (!control || !control.dirty || !this.errorMessages[controlName as string]) {
+      return null;
+    }
+
+    const firstErrorKey = Object.keys(control.errors || {})[0];
+    return this.errorMessages[controlName as string]?.[firstErrorKey] || null;
   }
 }
