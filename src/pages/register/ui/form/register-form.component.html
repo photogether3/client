@@ -1,6 +1,6 @@
-<form [formGroup]="signUpForm" class="flex flex-col h-full gap-2">
+<form [formGroup]="form" class="flex flex-col h-full gap-2">
   <app-input formControlName="email" placeholder="이메일(example@gmail.com)" />
-  @if (signUpForm.get('email')?.pending) {
+  @if (form.get('email')?.pending) {
     <span class="ml-1"> 로딩중 .. </span>
   }
   @if (getErrorMessage('email')) {
@@ -14,5 +14,5 @@
   @if (getErrorMessage('confirmPassword')) {
     <p class="ml-1 text-xs text-red-600">{{ getErrorMessage('confirmPassword') }}</p>
   }
-  <app-button text="가입하기" [isDisabled]="signUpForm.invalid" (click)="onRegister()" />
+  <app-button text="가입하기" [isDisabled]="!isValid()" (click)="onRegister()" />
 </form>

@@ -1,10 +1,4 @@
-import { FormControl } from '@angular/forms';
-import { CategoriesDTO } from 'src/entities/category';
-
-// TODO 나중에 form 공통 타입으로 분리 필요
-export type FormControls<T> = {
-  [K in keyof T]: FormControl<T[K]>;
-};
+import { CategoriesGetDTO } from 'src/entities/category';
 
 export type CollectionFormType = {
   title: string;
@@ -14,9 +8,15 @@ export type CollectionFormType = {
 export type CollectionType = {
   id: number;
   title: string;
-  type: 'UNCATEGORIZED' | 'TRASH' | 'DEFAULT';
-  category: CategoriesDTO | null;
+  type: CollectionTypeEnum;
+  category: CategoriesGetDTO | null;
   createdAt: Date;
   updatedAt: Date;
   imageUrls: string[];
 };
+
+export enum CollectionTypeEnum {
+  UNCATEGORIZED = 'UNCATEGORIZED',
+  TRASH = 'TRASH',
+  DEFAULT = 'DEFAULT',
+}
