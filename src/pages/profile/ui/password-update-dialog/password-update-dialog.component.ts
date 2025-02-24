@@ -33,7 +33,7 @@ export class PasswordUpdateDialog {
       }),
       confirmPassword: new FormControl('', {
         validators: [Validators.required, Validators.pattern(PASSWORD_REGEX)],
-        asyncValidators: [this.authValidators.checkPasswordMatch()],
+        asyncValidators: [this.authValidators.validateMatchingFields('password', 'confirmPassword')],
         updateOn: 'change',
         nonNullable: true,
       }),

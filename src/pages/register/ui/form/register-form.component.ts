@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthApi, RegisterFormType } from 'src/entities/auth';
@@ -7,16 +7,24 @@ import { UserApi } from 'src/entities/user';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
+import { VALIDATION_SERVICE } from 'src/shared/lib/validation.service';
 
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
   imports: [ReactiveFormsModule, ButtonComponent, InputComponent],
+  providers: [
+    {
+      provide: VALIDATION_SERVICE,
+      useClass: AuthValidators,
+    },
+  ],
 })
 export class RegisterFormComponent extends BaseForm<RegisterFormType> {
   private readonly authApi = inject(AuthApi);
   private readonly userApi = inject(UserApi);
   private readonly router = inject(Router);
+  private readonly authValidators = inject(VALIDATION_SERVICE);
 
   constructor() {
     super();
@@ -33,7 +41,7 @@ export class RegisterFormComponent extends BaseForm<RegisterFormType> {
       },
       confirmPassword: {
         required: '비밀번호 확인은 필수입니다.',
-        passwordMismatch: '비밀번호가 일치하지 않습니다.',
+        fieldMismatch: '비밀번호가 일치하지 않습니다.',
       },
     };
   }
@@ -42,14 +50,14 @@ export class RegisterFormComponent extends BaseForm<RegisterFormType> {
     this.form = this.fb.group({
       email: new FormControl('', {
         validators: [Validators.required, Validators.email],
-        asyncValidators: [this.authValidators.checkDuplicateEmail((email) => this.userApi.checkDuplicatedEmail(email))],
+        asyncValidators: [this.authValidators.asyncValidateField((email) => this.userApi.checkDuplicatedEmail(email))],
       }),
       password: new FormControl('', {
         validators: [Validators.required, Validators.pattern(PASSWORD_REGEX)],
       }),
       confirmPassword: new FormControl('', {
         validators: [Validators.required],
-        asyncValidators: [this.authValidators.checkPasswordMatch()],
+        asyncValidators: [this.authValidators.validateMatchingFields('password', 'confirmPassword')],
       }),
     });
   }
