@@ -1,30 +1,24 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { interval, Subscription, takeWhile } from 'rxjs';
 import { AuthApi, AuthService, OtpFormType } from 'src/entities/auth';
-import { ButtonComponent } from 'src/shared/components';
+import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { OTP_REGEX } from 'src/shared/const';
+import { BaseForm } from 'src/shared/lib';
 
 @Component({
   selector: 'otp-verify-form',
   templateUrl: './otp-verify-form.component.html',
-  imports: [ReactiveFormsModule, ButtonComponent],
+  imports: [ReactiveFormsModule, ButtonComponent, InputComponent],
 })
-export class OtpVerifyFormComponent implements OnInit, OnDestroy {
+export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnInit, OnDestroy {
   public email: string = '';
-  public otpForm!: FormGroup;
 
   private timeLeft = 300;
   private timerSubscription!: Subscription;
   private authApi = inject(AuthApi);
   private router = inject(Router);
-
-  private readonly errorMessages: Record<string, string> = {
-    required: 'otp인증은 필수입니다.',
-    pattern: '숫자만 입력해주세요.',
-    minlength: '최소 6글자입니다.',
-  };
 
   get formattedTime(): string {
     const minutes = Math.floor(this.timeLeft / 60);
@@ -33,15 +27,27 @@ export class OtpVerifyFormComponent implements OnInit, OnDestroy {
   }
 
   constructor() {
-    this.otpForm = new FormGroup<OtpFormType>({
-      otp: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(6), Validators.pattern(OTP_REGEX)],
-        updateOn: 'change',
-      }),
-    });
+    super();
+
+    this.errorMessages = {
+      otp: {
+        required: 'otp인증은 필수입니다.',
+        pattern: '숫자만 입력해주세요.',
+        minlength: '최소 6글자입니다.',
+        maxlength: '최대 6글자입니다.',
+      },
+    };
 
     const navigation = this.router.getCurrentNavigation();
     this.email = navigation?.extras?.state?.['email'] || null;
+  }
+
+  protected override initForm(): void {
+    this.form = this.fb.group({
+      otp: this.fb.control('', {
+        validators: [Validators.required, Validators.pattern(OTP_REGEX), Validators.minLength(6), Validators.maxLength(6)],
+      }),
+    });
   }
 
   ngOnInit() {
@@ -57,7 +63,7 @@ export class OtpVerifyFormComponent implements OnInit, OnDestroy {
   }
 
   onVerify() {
-    const otp = this.otpForm.getRawValue().otp;
+    const otp = this.getRawValue().otp;
 
     const formValue = {
       email: this.email,
@@ -70,21 +76,6 @@ export class OtpVerifyFormComponent implements OnInit, OnDestroy {
 
       this.router.navigateByUrl('/onboarding');
     });
-  }
-
-  getErrorMessage(): string | null {
-    const control = this.otpForm.get('otp');
-
-    if (control?.invalid) {
-      if (control.hasError('required') && !control.touched) {
-        return null;
-      }
-
-      const firstErrorKey = Object.keys(control.errors || {})[0];
-      return this.errorMessages[firstErrorKey] || null;
-    }
-
-    return null;
   }
 
   ngOnDestroy() {

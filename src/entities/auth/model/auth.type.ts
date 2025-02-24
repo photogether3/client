@@ -1,5 +1,3 @@
-import { FormControl } from '@angular/forms';
-
 export type RegisterFormType = {
   email: string;
   password: string;
@@ -12,7 +10,7 @@ export type LoginFormType = {
 };
 
 export type OtpFormType = {
-  otp: FormControl<number | null>;
+  otp: string;
 };
 
 export type JwtResource = {
