@@ -24,7 +24,6 @@ export class RegisterFormComponent extends BaseForm<RegisterFormType> {
   private readonly authApi = inject(AuthApi);
   private readonly userApi = inject(UserApi);
   private readonly router = inject(Router);
-  private readonly authValidators = inject(VALIDATION_SERVICE);
 
   constructor() {
     super();
@@ -50,14 +49,14 @@ export class RegisterFormComponent extends BaseForm<RegisterFormType> {
     this.form = this.fb.group({
       email: new FormControl('', {
         validators: [Validators.required, Validators.email],
-        asyncValidators: [this.authValidators.asyncValidateField((email) => this.userApi.checkDuplicatedEmail(email))],
+        asyncValidators: [this.validationService.asyncValidateField((email) => this.userApi.checkDuplicatedEmail(email))],
       }),
       password: new FormControl('', {
         validators: [Validators.required, Validators.pattern(PASSWORD_REGEX)],
       }),
       confirmPassword: new FormControl('', {
         validators: [Validators.required],
-        asyncValidators: [this.authValidators.validateMatchingFields('password', 'confirmPassword')],
+        asyncValidators: [this.validationService.validateMatchingFields('password', 'confirmPassword')],
       }),
     });
   }

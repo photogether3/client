@@ -7,6 +7,7 @@ export abstract class BaseForm<T> {
   form!: FormGroup<FormControls<T>>;
 
   protected readonly fb = inject(FormBuilder);
+  protected readonly validationService = inject(VALIDATION_SERVICE);
   protected errorMessages: Partial<Record<string, Record<string, string>>> = {};
 
   constructor() {
