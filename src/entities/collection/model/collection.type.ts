@@ -10,6 +10,7 @@ export type CollectionType = {
   title: string;
   type: CollectionTypeEnum;
   category: CategoriesGetDTO | null;
+  postCount: number;
   createdAt: Date;
   updatedAt: Date;
   imageUrls: string[];
