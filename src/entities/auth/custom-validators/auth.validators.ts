@@ -9,7 +9,7 @@ import { IValidationService } from 'src/shared/lib/validation.service';
 })
 export class AuthValidators implements IValidationService {
   // 이메일 중복 검증
-  asyncValidateField<DuplicateEmailDTO>(api: (email: string) => Observable<DuplicateEmailDTO>): AsyncValidatorFn {
+  asyncValidateField<T>(api: (value: string) => Observable<T>): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       if (!control.value || !control.dirty) {
         return of(null);
@@ -18,7 +18,7 @@ export class AuthValidators implements IValidationService {
       return timer(600).pipe(
         distinctUntilChanged(),
         switchMap(() => api(control.value)),
-        map((res: DuplicateEmailDTO) => (res ? { duplicateEmail: true } : null)),
+        map((res: any) => (res.isDuplicated ? { duplicateEmail: true } : null)),
         catchError(() => of(null)),
       );
     };
