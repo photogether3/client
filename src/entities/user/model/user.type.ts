@@ -11,7 +11,7 @@ export type ProfileType = {
 };
 
 export type PasswordUpdateType = {
-  currentPassword: FormControl<string>;
-  password: FormControl<string>;
-  confirmPassword: FormControl<string>;
+  currentPassword: string;
+  password: string;
+  confirmPassword: string;
 };
