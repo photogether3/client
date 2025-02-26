@@ -51,11 +51,6 @@ module.exports = {
         warning10: 'var(--color-warning10)',
         warning50: 'var(--color-warning50)',
         warning60: 'var(--color-warning60)',
-
-        success5: 'var(--color-success5)',
-        success10: 'var(--color-success10)',
-        success50: 'var(--color-success50)',
-        success60: 'var(--color-success60)',
       },
     },
   },
