@@ -20,8 +20,6 @@
       }
     </div>
 
-    {{ profileUpdateForm.value | json }}
-
     <div class="flex flex-col gap-2">
       <app-button text="관심태그 변경" width="full" (click)="updateCategory()" class="w-full" />
       <app-profile-update-button buttonText="프로필 편집 완료" [form]="profileUpdateForm" (handleButton)="updateProfile()" />

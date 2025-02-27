@@ -1,22 +1,20 @@
-import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { catchError, map, of } from 'rxjs';
 import { UserApi } from 'src/entities/user';
 import { PasswordUpdateType } from 'src/entities/user/model/user.type';
-import { ButtonComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
+import { ButtonComponent, InputComponent, ModalService } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
 
 @Component({
   selector: 'password-update-dialog',
   templateUrl: './password-update-dialog.component.html',
-  imports: [ReactiveFormsModule, ButtonComponent, JsonPipe, InputComponent],
+  imports: [ReactiveFormsModule, ButtonComponent, InputComponent],
 })
 export class PasswordUpdateDialog extends BaseForm<PasswordUpdateType> {
-  private readonly router = inject(Router);
   private readonly userApi = inject(UserApi);
-  private readonly modalReactiveService = inject(ModalReactiveService);
+  private readonly modalService = inject(ModalService);
 
   constructor() {
     super();
@@ -57,18 +55,14 @@ export class PasswordUpdateDialog extends BaseForm<PasswordUpdateType> {
     const { currentPassword, password } = this.getRawValue();
     const dto = { currentPassword, newPassword: password };
 
-    this.userApi.updatePassword(dto).subscribe((res) => {
-      if (!res) return;
-
-      const modalData = {
-        title: '비밀번호 변경 완료',
-        subTitle: '비밀번호 변경이 완료되었습니다.',
-        content: '확인 버튼을 누르시면 프로필 화면으로 돌아갑니다.',
-        buttons: ['확인'],
-      };
-      this.modalReactiveService.open(modalData).subscribe(() => {
-        this.router.navigateByUrl('/profile');
+    this.userApi
+      .updatePassword(dto)
+      .pipe(
+        map(() => true),
+        catchError(() => of(false)),
+      )
+      .subscribe((res) => {
+        this.modalService.close(res);
       });
-    });
   }
 }
