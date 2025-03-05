@@ -1,5 +1,5 @@
 import { Component, computed, input } from '@angular/core';
-import { ButtonProps, buttonVariants } from './button.styles';
+import { ButtonProps, buttonStyles } from './button.styles';
 import { twMerge } from 'tailwind-merge';
 
 @Component({
@@ -7,15 +7,15 @@ import { twMerge } from 'tailwind-merge';
   templateUrl: './button.component.html',
 })
 export class ButtonComponent {
-  public text = input.required();
-  public type = input<'button' | 'submit'>('button');
-  public isDisabled = input<boolean>(false);
-  public appearance = input<ButtonProps['appearance']>();
-  public size = input<ButtonProps['size']>();
-  public width = input<ButtonProps['width']>();
+  text = input.required();
+  type = input<'button' | 'submit'>('button');
+  isDisabled = input<boolean>(false);
+  appearance = input<ButtonProps['type']>();
+  size = input<ButtonProps['size']>();
+  width = input<ButtonProps['width']>();
 
-  public computedClass = computed(() => {
-    return twMerge(buttonVariants({ appearance: this.appearance(), size: this.size(), width: this.width() }));
+  computedClass = computed(() => {
+    return twMerge(buttonStyles({ type: this.appearance(), size: this.size(), width: this.width() }));
   });
 
   constructor() {}

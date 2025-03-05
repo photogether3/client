@@ -1,18 +1,20 @@
 import { cva, VariantProps } from 'class-variance-authority';
 
-export const buttonVariants = cva('flex items-center justify-center', {
+export const buttonStyles = cva('flex items-center justify-center rounded-full', {
   variants: {
-    appearance: {
-      primary: 'text-white bg-primary50 hover:bg-primary60 active:bg-primary70 disabled:bg-primary20',
-      accent: 'text-white bg-accent50 hover:bg-accent60 active:bg-accent70 disabled:bg-accent20',
-      secondary: 'text-white bg-secondary50 hover:bg-secondary60 active:bg-secondary70 disabled:bg-secondary20',
-      outline: 'text-black border border-base04 hover:text-white hover:bg-secondary60 active:text-white active:bg-secondary70 disabled:text-link-disabled',
+    type: {
+      primary: 'text-white bg-primary50 hover:bg-primary60 active:bg-primary70 disabled:bg-gray30 disabled:text-gray60',
+      secondary:
+        'text-primary60 border border-primary50 bg-primary5 hover:bg-primary20 active:bg-primary70 active:text-primary70 disabled:bg-gray30 disabled:border-gray40 disabled:text-gray60',
+      tertiary: 'text-white bg-secondary50 hover:bg-secondary60 active:bg-secondary70 disabled:bg-secondary20',
+      text: 'border border-base04 hover:text-white hover:bg-secondary60 active:text-white active:bg-secondary70 disabled:text-link-disabled',
     },
     size: {
-      l: 'text-base px-6 py-3 rounded-[12px]',
-      m: 'text-base px-4 py-2.5 rounded-[10px]',
-      s: 'text-sm px-3 py-1 rounded-[8px]',
-      xs: 'text-sm px-2 py-0.5 rounded-[6px]',
+      xl: 'text-body-l px-6 h-16',
+      lg: 'text-body-l px-5 h-14',
+      md: 'text-body-m px-4 h-12',
+      sm: 'text-body-s px-3 h-10',
+      xs: 'text-body-s px-2.5 h-8',
     },
     width: {
       full: 'w-full block',
@@ -20,10 +22,10 @@ export const buttonVariants = cva('flex items-center justify-center', {
     },
   },
   defaultVariants: {
-    appearance: 'primary',
-    size: 'm',
+    type: 'primary',
+    size: 'md',
     width: 'full',
   },
 });
 
-export type ButtonProps = VariantProps<typeof buttonVariants>;
+export type ButtonProps = VariantProps<typeof buttonStyles>;
