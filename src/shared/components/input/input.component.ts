@@ -1,7 +1,10 @@
 import { Component, computed, forwardRef, input } from '@angular/core';
-import { twMerge } from 'tailwind-merge';
-import { InputProps, inputVariants } from './input.styles';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+import { twMerge } from 'tailwind-merge';
+
+import { inputVariants } from './input.styles';
+import { IconComponent } from '../icon';
 
 @Component({
   selector: 'app-input',
@@ -13,19 +16,19 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       multi: true,
     },
   ],
+  imports: [IconComponent],
 })
 export class InputComponent implements ControlValueAccessor {
-  public label = input<string>('');
-  public type = input<'input' | 'textarea'>('input');
-  public inputType = input<'text' | 'password' | 'number' | 'email'>('text');
-  public placeholder = input<string>('');
-  public size = input<InputProps['size']>('md');
-  public computedClass = computed(() => {
-    return twMerge(inputVariants({ size: this.size() }));
+  label = input<string>('');
+  type = input<'input' | 'textarea'>('input');
+  inputType = input<'text' | 'password' | 'number' | 'email'>('text');
+  placeholder = input<string>('');
+  hasError = input<boolean>(false);
+  computedClass = computed(() => {
+    return twMerge(inputVariants({ state: this.hasError() ? 'error' : 'default' }));
   });
 
-  public value: string = '';
-  public isDisabled: boolean = false;
+  value: string = '';
 
   private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};
@@ -50,10 +53,5 @@ export class InputComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
-  }
-
-  // formControl disalbe() 상태 반영
-  setDisabledState(isDisabled: boolean): void {
-    this.isDisabled = isDisabled;
   }
 }

@@ -1,12 +1,14 @@
 import { cva, VariantProps } from 'class-variance-authority';
 
-// TODO input 디자인 시스템 나오면 수정 예정 (현재 임시)
-export const inputVariants = cva('rounded-[8px] border border-gray-400 px-4', {
+export const inputVariants = cva('border rounded-[8px] px-4 h-14 text-gray90 text-body-l placeholder:text-gray50 outline-none', {
   variants: {
-    size: {
-      lg: 'h-14 leading-14 text-lg',
-      md: 'h-12 leading-12 text-md',
-      sm: 'h-10 leading-10 text-sm',
+    state: {
+      default: 'bg-white border-gray70 focus:border-primary50 focus:border-2',
+      error: 'bg-white border-accent50 border-2',
+      disabled: 'bg-gray30 border-gray50 text-gray60',
+    },
+    defaultVariants: {
+      state: 'default',
     },
   },
 });

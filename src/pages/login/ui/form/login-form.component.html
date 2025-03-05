@@ -1,11 +1,15 @@
 <form [formGroup]="form" class="flex flex-col w-full h-full gap-4 mb-10">
-  <app-input formControlName="email" placeholder="포토게더 아이디" />
-  @if (getErrorMessage('email')) {
-    <p class="ml-1 text-xs text-red-600">{{ getErrorMessage('email') }}</p>
-  }
-  <app-input inputType="password" formControlName="password" placeholder="비밀번호" />
-  @if (getErrorMessage('password')) {
-    <p class="ml-1 text-xs text-red-600">{{ getErrorMessage('password') }}</p>
-  }
+  <div>
+    <app-input formControlName="email" placeholder="포토게더 아이디" [hasError]="!!getErrorMessage('email')" />
+    @if (getErrorMessage('email')) {
+      <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('email') }}</p>
+    }
+  </div>
+  <div>
+    <app-input inputType="password" formControlName="password" placeholder="비밀번호" [hasError]="!!getErrorMessage('password')" />
+    @if (getErrorMessage('password')) {
+      <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('password') }}</p>
+    }
+  </div>
 </form>
 <app-button text="로그인" [isDisabled]="!isValid()" (click)="onLogin()" />
