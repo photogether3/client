@@ -2,6 +2,7 @@ import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { AuthApi, AuthService, LoginFormType } from 'src/entities/auth';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
@@ -10,6 +11,11 @@ import { BaseForm } from 'src/shared/lib';
 @Component({
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
+  styles: `
+    :host {
+      width: 100%;
+    }
+  `,
   imports: [ReactiveFormsModule, ButtonComponent, InputComponent, JsonPipe],
 })
 export class LoginFormComponent extends BaseForm<LoginFormType> {

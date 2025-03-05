@@ -1,12 +1,19 @@
-<section class="flex flex-col min-h-screen gap-5 px-4 py-5 bg-secondary5">
-  <div class="mb-10">
-    <h1 class="text-3xl font-bold">사진첩 덜어내기</h1>
-    <p class="mt-1">캡쳐사진 "사진첩 덜어내기"를 통해 정리해보세요! 🧹</p>
+<section class="flex flex-col items-center justify-between min-h-screen p-10 bg-white">
+  <div class="mb-15">
+    <h1>
+      <app-icon name="logo-xl" />
+    </h1>
+    <p class="mt-5 font-normal text-body-m text-gray70">
+      구매하기 위한 캡처한 사진 <br />
+      포토게더를 통해 정리해보세요!
+    </p>
   </div>
 
-  <app-login-form />
+  <div class="flex flex-col items-center w-full gap-5">
+    <app-login-form />
+    <app-button text="이메일 회원가입" (click)="goRegisterPage()" class="w-full" />
+    <a routerLink="/otp/verify" class="text-sm underline text-primary60">비밀번호 찾기</a>
+  </div>
 
-  <a routerLink="/otp/verify" class="text-sm text-center text-gray-400 underline">비밀번호 찾기</a>
-
-  <a routerLink="/register" class="mt-auto block rounded-[10px] bg-blue-500 px-5 py-[10px] text-center text-white disabled:bg-opacity-50">이메일 회원가입</a>
+  <p class="py-5 font-bold text-body-s text-primary60">로그인 후에 서비스 이용이 가능합니다.</p>
 </section>
