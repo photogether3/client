@@ -4,12 +4,15 @@
   }
   @switch (type()) {
     @case ('input') {
-      <div class="flex items-center gap-1">
-        <app-icon name="info" class="text-primary50" />
-        <p class="text-detail text-gray70">
-          <ng-content />
-        </p>
-      </div>
+      @if (info()) {
+        <div class="flex items-center gap-1">
+          <!-- <app-icon name="info" class="text-primary50" /> -->
+          <p class="text-detail text-gray70">
+            {{ info() }}
+          </p>
+        </div>
+      }
+
       <input [type]="inputType()" [value]="value" (input)="onInput($event)" [placeholder]="placeholder()" [class]="computedClass()" />
     }
     @case ('textarea') {

@@ -23,7 +23,9 @@ export class InputComponent implements ControlValueAccessor {
   type = input<'input' | 'textarea'>('input');
   inputType = input<'text' | 'password' | 'number' | 'email'>('text');
   placeholder = input<string>('');
+  info = input<string>('');
   hasError = input<boolean>(false);
+
   computedClass = computed(() => {
     return twMerge(inputVariants({ state: this.hasError() ? 'error' : 'default' }));
   });
