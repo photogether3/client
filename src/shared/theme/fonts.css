@@ -1,0 +1,57 @@
+@font-face {
+  font-family: '42dot Sans', sans-serif;
+  src: url('/public/assets/fonts/42dotSans-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: '42dot Sans', sans-serif;
+  src: url('/public/assets/fonts/42dotSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: '42dot Sans', sans-serif;
+  src: url('/public/assets/fonts/42dotSans-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: '42dot Sans', sans-serif;
+  src: url('/public/assets/fonts/42dotSans-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: '42dot Sans', sans-serif;
+  src: url('/public/assets/fonts/42dotSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: '42dot Sans', sans-serif;
+  src: url('/public/assets/fonts/42dotSans-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-family: '42dot Sans', sans-serif, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR',
+    'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+}
+
+html,
+body {
+  font-family: var(--font-family);
+}

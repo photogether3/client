@@ -2,6 +2,18 @@ module.exports = {
   content: ['./src/**/*.{html,ts}'],
   theme: {
     extend: {
+      fontSize: {
+        'display-l': ['40px', { lineHeight: '150%' }],
+        'display-m': ['36px', { lineHeight: '150%' }],
+        'display-s': ['32px', { lineHeight: '150%' }],
+        'title-l': ['26px', { lineHeight: '150%' }],
+        'title-m': ['24px', { lineHeight: '150%' }],
+        'title-s': ['22px', { lineHeight: '150%' }],
+        'body-l': ['20px', { lineHeight: '150%' }],
+        'body-m': ['18px', { lineHeight: '150%' }],
+        'body-s': ['16px', { lineHeight: '150%' }],
+        detail: ['14px', { lineHeight: '150%' }],
+      },
       colors: {
         primary5: 'var(--color-primary5)',
         primary10: 'var(--color-primary10)',

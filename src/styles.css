@@ -6,3 +6,6 @@
 
 /* 변수 설정 */
 @import 'shared/theme/variants.css';
+
+/* 폰트 설정 */
+@import 'shared/theme/fonts.css';
