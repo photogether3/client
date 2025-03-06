@@ -1,4 +1,5 @@
 import { cva, VariantProps } from 'class-variance-authority';
+import { extendTailwindMerge } from 'tailwind-merge';
 
 export const buttonStyles = cva('flex items-center justify-center rounded-full', {
   variants: {
@@ -29,3 +30,11 @@ export const buttonStyles = cva('flex items-center justify-center rounded-full',
 });
 
 export type ButtonProps = VariantProps<typeof buttonStyles>;
+
+export const customTwMerge = extendTailwindMerge({
+  extend: {
+    classGroups: {
+      'font-size': [{ text: ['display-l', 'display-m', 'display-s', 'title-l', 'title-m', 'title-s', 'body-l', 'body-m', 'body-s', 'detail'] }],
+    },
+  },
+});

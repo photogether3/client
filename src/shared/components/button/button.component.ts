@@ -1,6 +1,5 @@
 import { Component, computed, input } from '@angular/core';
-import { ButtonProps, buttonStyles } from './button.styles';
-import { twMerge } from 'tailwind-merge';
+import { ButtonProps, buttonStyles, customTwMerge } from './button.styles';
 
 @Component({
   selector: 'app-button',
@@ -15,7 +14,7 @@ export class ButtonComponent {
   width = input<ButtonProps['width']>();
 
   computedClass = computed(() => {
-    return twMerge(buttonStyles({ type: this.appearance(), size: this.size(), width: this.width() }));
+    return customTwMerge(buttonStyles({ type: this.appearance(), size: this.size(), width: this.width() }));
   });
 
   constructor() {}
