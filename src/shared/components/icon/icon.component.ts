@@ -7,8 +7,9 @@ import { SvgIconComponent } from 'angular-svg-icon';
   imports: [SvgIconComponent],
 })
 export class IconComponent {
-  public name = input.required();
-  public styleClass = input<string>();
+  name = input.required();
+  size = input<number>();
+  color = input<string>();
 
   constructor() {}
 }
