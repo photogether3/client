@@ -15,8 +15,9 @@ import { IconComponent } from 'src/shared/components';
   imports: [IconComponent, RouterLink],
 })
 export class HeaderWidget {
-  public title = input<string>('');
-  public hasBackButton = input<boolean>(true);
+  title = input<string>('');
+  hasLogo = input<boolean>(false);
+  hasBackButton = input<boolean>(true);
 
   constructor() {}
 
