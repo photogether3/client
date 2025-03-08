@@ -1,12 +1,14 @@
-import { Component, ElementRef, inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, QueryList, Type, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TagComponent } from 'src/entities/category';
 import { CollectionApi, CollectionDetailResDTO } from 'src/entities/collection';
 import { PostApi, PostType } from 'src/entities/post';
-import { IconComponent, SearchBarComponent } from 'src/shared/components';
+import { BottomSheetService, IconComponent, SearchBarComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
+
+import { ActionButtonsComponent } from '../ui';
 
 @Component({
   selector: 'app-collection-main',
@@ -18,6 +20,7 @@ export class CollectionMainPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly collectionApi = inject(CollectionApi);
   private readonly postApi = inject(PostApi);
+  private readonly bottomSheetService = inject(BottomSheetService);
   private resizeObserver: ResizeObserver | null = null;
 
   @ViewChild('grid') grid!: ElementRef<HTMLElement>;
@@ -200,7 +203,8 @@ export class CollectionMainPage implements OnInit {
     }
   }
 
-  openBottomSheet() {
-    // TODO 바텀시트 열기
+  async openBottomSheet() {
+    const result = await this.bottomSheetService.open(ActionButtonsComponent as Type<Component>);
+    console.log('📌 바텀시트가 닫히면서 반환된 값:', result);
   }
 }
