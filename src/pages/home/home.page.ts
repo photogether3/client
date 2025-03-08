@@ -1,28 +1,32 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
+
 import { filter, forkJoin, switchMap, tap } from 'rxjs';
+
 import { CategoryApi } from 'src/entities/category';
 import { CollectionApi, CollectionType } from 'src/entities/collection';
 import { UserApi } from 'src/entities/user';
-import { ButtonComponent, IconComponent } from 'src/shared/components';
+import { ButtonComponent, IconComponent, SearchBarComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
+
 import { CollectionCardComponent } from './components';
 
 @Component({
   selector: 'home-page',
   templateUrl: './home.page.html',
-  imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule, HeaderWidget],
+  imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule, HeaderWidget, SearchBarComponent],
 })
 export class HomePage implements OnInit {
-  public nickname: string = '';
-  public collectionList: CollectionType[] = [];
-
   private readonly router = inject(Router);
   private readonly userApi = inject(UserApi);
   private readonly categoryApi = inject(CategoryApi);
   private readonly collectionApi = inject(CollectionApi);
+
+  nickname: string = '';
+  collectionList: CollectionType[] = [];
+  searchValue = signal<string>('');
 
   get myCollections() {
     return {
