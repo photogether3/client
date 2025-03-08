@@ -64,6 +64,9 @@ module.exports = {
         warning50: 'var(--color-warning50)',
         warning60: 'var(--color-warning60)',
       },
+      boxShadow: {
+        custom: '2px 4px 8px 0 rgba(0,0,0,0.15)',
+      },
     },
   },
   plugins: ['prettier-plugin-tailwindcss'],
