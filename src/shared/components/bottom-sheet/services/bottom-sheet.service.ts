@@ -1,35 +1,39 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { inject, Injectable, Type } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Component, inject, Injectable, signal, Type } from '@angular/core';
+import { BottomSheetLayout } from '../ui';
 
 @Injectable({
   providedIn: 'root',
 })
-export class BottomSheetService {
-  public data?: any;
-
-  private result$?: Subject<any>;
-  private overlayRef: OverlayRef | null = null;
+export class BottomSheetService<T, R> {
   private overlay = inject(Overlay);
 
-  open<T>(component: Type<T>, data?: any) {
+  isOpen = signal(false);
+  component = signal<Type<Component> | null>(null);
+  data = signal<T | undefined>(undefined);
+
+  private overlayRef: OverlayRef | null = null;
+  private resultResolver: ((result: R) => void) | null = null;
+
+  open(component: Type<Component>, data?: T): Promise<R> {
     if (this.overlayRef) {
       this.close();
     }
 
-    this.data = data;
-    this.result$ = new Subject<any>();
+    this.isOpen.set(true);
+    this.component.set(component);
+    this.data.set(data);
 
     const overlayConfig = this.overlay.create({
-      height: '60vh',
+      maxHeight: '60vh',
       hasBackdrop: true,
       backdropClass: 'cdk-overlay-dark-backdrop',
       panelClass: 'cdk-overlay-panel',
       positionStrategy: this.overlay.position().global().centerHorizontally().bottom('0px'),
     });
 
-    const portal = new ComponentPortal(component);
+    const portal = new ComponentPortal(BottomSheetLayout);
     overlayConfig.attach(portal);
 
     this.overlayRef = overlayConfig;
@@ -37,19 +41,25 @@ export class BottomSheetService {
       this.close();
     });
 
-    return this.result$.asObservable();
+    return new Promise<R>((resolve) => {
+      this.resultResolver = resolve;
+    });
   }
 
-  close(result?: any) {
+  close(result?: R) {
     if (this.overlayRef) {
-      this.result$?.next(result);
-      this.result$?.complete();
-
       this.overlayRef.detach();
       this.overlayRef.dispose();
       this.overlayRef = null;
 
-      this.result$ = undefined;
+      this.isOpen.set(false);
+      this.component.set(null);
+      this.data.set(undefined);
+
+      if (this.resultResolver) {
+        this.resultResolver(result as R);
+        this.resultResolver = null;
+      }
     }
   }
 }
