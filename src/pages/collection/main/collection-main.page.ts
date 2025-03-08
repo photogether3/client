@@ -1,36 +1,39 @@
 import { Component, ElementRef, inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { TagComponent } from 'src/entities/category';
 import { CollectionApi, CollectionDetailResDTO } from 'src/entities/collection';
 import { PostApi, PostType } from 'src/entities/post';
-import { ButtonComponent } from 'src/shared/components';
+import { IconComponent, SearchBarComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 
 @Component({
   selector: 'app-collection-main',
   templateUrl: './collection-main.page.html',
-  imports: [TagComponent, FooterWidget, ButtonComponent, RouterLink, HeaderWidget],
+  imports: [TagComponent, FooterWidget, HeaderWidget, IconComponent, SearchBarComponent],
 })
 export class CollectionMainPage implements OnInit {
-  @ViewChild('grid') grid!: ElementRef<HTMLElement>;
-  @ViewChildren('item') items!: QueryList<ElementRef<HTMLDivElement>>;
-
-  public collection: CollectionDetailResDTO | undefined = undefined;
-  public postList: PostType[] | undefined = undefined;
-  public columnWidth = 150;
-  public columnGap = 16;
-  public rowGap = 16;
-  public collectionId: string | undefined = undefined;
-
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly collectionApi = inject(CollectionApi);
   private readonly postApi = inject(PostApi);
   private resizeObserver: ResizeObserver | null = null;
 
+  @ViewChild('grid') grid!: ElementRef<HTMLElement>;
+  @ViewChildren('item') items!: QueryList<ElementRef<HTMLElement>>;
+
+  collection: CollectionDetailResDTO | undefined = undefined;
+  postList: PostType[] | undefined = undefined;
+  // TODO 마소니 레이아웃 간격, 너비 수정
+  columnWidth = 150;
+  columnGap = 10;
+  rowGap = 10;
+  collectionId: string | undefined = undefined;
+
   constructor() {}
 
+  // TODO 사진첩 내부 마소니 레이아웃 리펙토링
   ngOnInit(): void {
     this.collectionId = this.route.snapshot.paramMap.get('id') as string;
     if (!this.collectionId) return;
@@ -115,7 +118,7 @@ export class CollectionMainPage implements OnInit {
       // Position the brick
       this.setElementStyle(brick, {
         position: 'absolute',
-        width: `${this.columnWidth}px`,
+        // width: `${this.columnWidth}px`,
         left: `${posX}px`,
         top: `${posY}px`,
         transition: 'transform 0.3s ease',
@@ -195,5 +198,9 @@ export class CollectionMainPage implements OnInit {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }
+  }
+
+  openBottomSheet() {
+    // TODO 바텀시트 열기
   }
 }

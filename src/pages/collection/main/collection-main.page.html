@@ -1,30 +1,34 @@
-<div class="flex flex-col min-h-screen border-x bg-secondary5">
-  <!-- header -->
+<div class="flex flex-col min-h-screen border-x bg-gray10">
   @if (collection) {
     <app-header [title]="collection.title">
-      <app-tag rightContent [appearance]="'outline'" [tagName]="collection.category?.name || ''" size="m" class="ml-auto" />
+      <button rightContent (click)="openBottomSheet()">
+        <app-icon name="more" />
+      </button>
     </app-header>
   }
 
-  <div class="grid grid-cols-3 gap-3 p-4 bg-white border-b">
-    <app-button text="사진첩 삭제" appearance="secondary" />
-    <app-button text="사진첩 수정" appearance="secondary" (click)="goUpdatePage()" />
-    <app-button text="사진첩 정리" appearance="secondary" />
-  </div>
-
-  <!-- main -->
-  <main #grid class="pt-4">
-    @for (post of postList || []; track $index) {
-      <div #item (click)="goPage(post.postId)" class="bg-white rounded-lg shadow-lg cursor-pointer hover:shadow-2xl">
-        <img [src]="post.imageUrl" [alt]="post.title" class="rounded-t-lg" />
-        <div class="">
-          <span class="text-lg font-bold">{{ post.title }}</span>
-          <p class="text-sm line-clamp-2">{{ post.content }}</p>
-        </div>
-      </div>
-    }
+  <main class="flex flex-col gap-5 px-4 mt-5">
+    <app-search-bar />
+    <div class="flex items-center justify-between">
+      <app-tag [tagName]="collection?.category?.name" appearance="primary" />
+      <p class="font-bold text-body-s">
+        <span class="text-primary60">{{ postList?.length }}</span>
+        개의 게시물
+      </p>
+    </div>
+    <section #grid>
+      @for (post of postList || []; track $index) {
+        <!-- TODO 게시물 카드 컴포넌트 분리 필요 -->
+        <figure #item (click)="goPage(post.postId)" class="shadow-custom cursor-pointer rounded-[12px] bg-white p-2 hover:ring-1 hover:ring-primary50">
+          <figcaption class="w-full">
+            <span class="block w-full font-bold truncate text-body-s">{{ post.title }}</span>
+            <p class="line-clamp-2 text-detail text-gray50">{{ post.content }}</p>
+          </figcaption>
+          <img [src]="post.imageUrl" [alt]="post.title" class="mt-2 w-full rounded-[12px]" />
+        </figure>
+      }
+    </section>
   </main>
 
-  <!-- footer -->
-  <app-footer class="sticky bottom-0 mt-auto" />
+  <app-footer />
 </div>
