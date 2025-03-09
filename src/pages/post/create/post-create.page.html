@@ -12,7 +12,7 @@
         <input type="file" (change)="upload($event)" />
         <div class="shadow-custom flex h-[485px] items-center justify-center rounded-[8px] border bg-white">
           @if (previewUrl) {
-            <img [src]="previewUrl" alt="임시 이미지" class="shadow-custom h-[485px] rounded-[8px]" />
+            <img [src]="previewUrl" alt="임시 이미지" class="shadow-custom h-[485px] w-full rounded-[8px]" />
           } @else {
             <p>사진을 선택해주세요.</p>
           }

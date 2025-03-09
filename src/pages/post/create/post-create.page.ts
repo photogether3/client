@@ -48,7 +48,7 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
 
   protected override initForm(): void {
     this.form = this.fb.group({
-      collectionId: this.fb.control(''),
+      collectionId: this.fb.control(0),
       title: this.fb.control(''),
       content: this.fb.control(''),
       metadataStringify: this.fb.array<FormGroup<FormControls<ImgContentType>>>([]),
@@ -108,13 +108,13 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
   }
 
   // =============== STEP2 ===============
-  selectCollection(collectionId: string | undefined, event: Event) {
+  selectCollection(collectionId: number | undefined, event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
 
     if (isChecked) {
       this.form.patchValue({ collectionId });
     } else {
-      this.form.patchValue({ collectionId: '' });
+      this.form.patchValue({ collectionId: null });
     }
   }
 

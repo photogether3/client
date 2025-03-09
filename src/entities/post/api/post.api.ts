@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { delay, map, Observable, of, tap } from 'rxjs';
 import { environment } from 'src/shared/environments';
-import { PostMoveReqDTO, PostReqDto, PostResDTO, PostType, UpdatePostDTO } from '../model';
+import { PostMoveReqDTO, PostReqDto, PostResDTO, PostType, PostUpdateFormType, UpdatePostDTO } from '../model';
 
 @Injectable({ providedIn: 'root' })
 export class PostApi {
@@ -309,8 +309,8 @@ export class PostApi {
   }
 
   // 게시물 수정
-  updatePost(postId: number, updatePostDTO: UpdatePostDTO) {
-    return this.http.put<UpdatePostDTO>(`${environment.serverUrl}/v1/posts/${postId}`, updatePostDTO);
+  updatePost(postId: number, updatePostDTO: PostUpdateFormType) {
+    return this.http.put<PostUpdateFormType>(`${environment.serverUrl}/v1/posts/${postId}`, updatePostDTO);
   }
 
   // 게시물 삭제

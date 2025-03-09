@@ -6,6 +6,13 @@ export type PostCreateFormType = {
   file: File;
 };
 
+export type PostUpdateFormType = {
+  postId: number;
+  title: string;
+  content: string;
+  metadataStringify: ImgContentType[];
+};
+
 export type ImgContentType = {
   isPublic: boolean;
   content: string;
