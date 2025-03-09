@@ -2,21 +2,24 @@
   @if (label()) {
     <span class="font-normal text-body-s">{{ label() }}</span>
   }
+
+  @if (info()) {
+    <div class="flex items-center gap-1">
+      @if (hasInfoIcon()) {
+        <app-icon name="info" [size]="16" class="text-primary50" />
+      }
+      <p class="text-detail text-gray70">
+        {{ info() }}
+      </p>
+    </div>
+  }
+
   @switch (type()) {
     @case ('input') {
-      @if (info()) {
-        <div class="flex items-center gap-1">
-          <!-- <app-icon name="info" class="text-primary50" /> -->
-          <p class="text-detail text-gray70">
-            {{ info() }}
-          </p>
-        </div>
-      }
-
       <input [type]="inputType()" [value]="value" (input)="onInput($event)" [placeholder]="placeholder()" [class]="computedClass()" />
     }
     @case ('textarea') {
-      <textarea [value]="value" (input)="onInput($event)" [placeholder]="placeholder()" rows="15" class="p-4 border border-gray-400 rounded-lg resize-none"></textarea>
+      <textarea [value]="value" (input)="onInput($event)" [placeholder]="placeholder()" [class]="computedClass()"></textarea>
     }
   }
 </label>

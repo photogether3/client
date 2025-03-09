@@ -25,9 +25,10 @@ export class InputComponent implements ControlValueAccessor {
   placeholder = input<string>('');
   info = input<string>('');
   hasError = input<boolean>(false);
+  hasInfoIcon = input<boolean>(false);
 
   computedClass = computed(() => {
-    return twMerge(inputVariants({ state: this.hasError() ? 'error' : 'default' }));
+    return twMerge(inputVariants({ type: this.type(), state: this.hasError() ? 'error' : 'default' }));
   });
 
   value: string = '';

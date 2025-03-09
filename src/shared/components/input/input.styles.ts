@@ -1,7 +1,11 @@
 import { cva, VariantProps } from 'class-variance-authority';
 
-export const inputVariants = cva('border rounded-[8px] px-4 h-14 text-gray90 text-body-l placeholder:text-gray50 outline-none', {
+export const inputVariants = cva('border rounded-[8px] px-4 text-gray90 text-body-l placeholder:text-gray50 outline-none', {
   variants: {
+    type: {
+      input: 'h-14',
+      textarea: 'py-2 resize-none min-h-[144px]',
+    },
     state: {
       default: 'bg-white border-gray70 focus:border-primary50 focus:border-2',
       error: 'bg-white border-accent50 border-2',
