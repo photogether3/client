@@ -1,61 +1,67 @@
-<div class="flex flex-col min-h-screen border-x bg-secondary5">
-  <!-- header -->
+<div class="flex flex-col min-h-screen border-x bg-gray10">
   <app-header title="게시물 생성">
-    <span rightContent class="flex">
-      <span class="font-bold">{{ step() }}</span>
+    <span rightContent class="flex text-body-m text-gray90">
+      <span class="font-bold text-primary60">{{ step() }}</span>
       /2
     </span>
   </app-header>
 
-  <!-- main -->
   <div class="flex-1 w-full px-4 py-6">
     @if (step() === 1) {
-      <form [formGroup]="postCreateForm" class="flex flex-col gap-5">
+      <form [formGroup]="form" class="flex flex-col gap-5">
         <input type="file" (change)="upload($event)" />
-        @if (previewUrl) {
-          <img [src]="previewUrl" alt="임시 이미지" class="h-[485px] rounded-lg" />
-        } @else {
-          <div class="flex h-[485px] items-center justify-center rounded-lg border bg-gray20">
+        <div class="shadow-custom flex h-[485px] items-center justify-center rounded-[8px] border bg-white">
+          @if (previewUrl) {
+            <img [src]="previewUrl" alt="임시 이미지" class="shadow-custom h-[485px] rounded-[8px]" />
+          } @else {
             <p>사진을 선택해주세요.</p>
-          </div>
-        }
-        <app-input label="게시물 제목" placeholder="게시물 제목을 입력해주세요." formControlName="title" />
-        <app-input type="textarea" label="게시물 내용" placeholder="게시물 내용을 입력해주세요." formControlName="content" />
+          }
+        </div>
+        <app-input label="게시물 제목" placeholder="게시물 제목을 입력해주세요." info="게시물 제목은 추후에 변경이 가능합니다." [hasInfoIcon]="true" formControlName="title" />
+        <app-input type="textarea" label="게시물 내용" placeholder="게시물 내용을 입력해주세요." info="게시물에 대한 간단한 메모를 남겨주세요." formControlName="content" />
 
         <div formArrayName="metadataStringify">
-          <span class="block mb-3">사진내용</span>
-
-          @for (imgContent of metadataArray.controls; track $index) {
-            <div [formGroup]="imgContent" class="flex gap-3 mb-3 last-of-type:mb-0">
-              <div>
-                <input formControlName="isPublic" type="checkbox" class="w-6 h-6" />
-                <span class="block text-sm">노출</span>
-              </div>
-              <app-input formControlName="content" class="flex-1" />
+          <p class="mb-2 text-body-s">사진내용</p>
+          <div class="min-w-full rounded-[12px]">
+            <div class="flex rounded-t-[12px] border border-gray40 bg-primary5 font-bold text-primary70">
+              <span class="px-2.5 py-2">노출</span>
+              <span class="flex-1 px-1 py-2">텍스트</span>
+              <span class="px-2.5 py-2">링크</span>
             </div>
-          }
+            @for (imgContent of metadataArray.controls; track $index) {
+              <div
+                [formGroup]="imgContent"
+                class="[&>div]:typo-body-s border-b-gray-30 [&>div]:text-body_s flex items-center border-b bg-white px-2.5 hover:cursor-pointer hover:bg-gray5 [&>td]:border-b [&>td]:border-b-gray30 [&>td]:px-4 [&>td]:py-3 [&>td]:text-left">
+                <div class="py-2">
+                  <input type="checkbox" formControlName="isPublic" />
+                </div>
+                <div class="flex-1 px-2.5 py-2">
+                  <app-input formControlName="content" class="flex-1" />
+                </div>
+                <div (click)="toggleLink($index)" class="py-2">
+                  <app-icon
+                    [name]="metadataArray.at($index).value.hasLink ? 'link' : 'no-link'"
+                    [size]="20"
+                    [class]="metadataArray.at($index).value.hasLink ? 'text-primary50' : 'text-gray50'" />
+                </div>
+              </div>
+            }
+          </div>
         </div>
         <app-button text="다음 단계로" width="full" (click)="updateState()" />
       </form>
     } @else {
+      <!-- STEP2 -->
       <div class="grid grid-cols-2 gap-5 pb-5">
         @for (collection of collections; track $index) {
-          <div class="">
-            <input
-              type="checkbox"
-              (change)="selectCollection(collection.id, $event)"
-              [checked]="postCreateForm.value.collectionId === collection.id"
-              class="absolute z-20 w-6 h-6" />
+          <!-- <div class="">
+            <input type="checkbox" (change)="selectCollection(collection.id, $event)" [checked]="form.value.collectionId === collection.id" class="absolute z-20 w-6 h-6" />
             <app-collection-card [post]="collection" />
-          </div>
+          </div> -->
         }
       </div>
       <app-button text="선택한 사진첩에 저장" width="full" (click)="createCollection()" class="mt-5" />
     }
   </div>
-
-  <!-- footer -->
-  {{ postCreateForm.value | json }}
-
   <app-footer class="sticky bottom-0 mt-auto" />
 </div>

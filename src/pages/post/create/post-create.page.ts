@@ -1,41 +1,34 @@
-import { JsonPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
 import { CollectionApi, CollectionType } from 'src/entities/collection';
-import { PostApi } from 'src/entities/post';
+import { ImgContentType, PostApi, PostCreateFormType } from 'src/entities/post';
 import { CollectionCardComponent } from 'src/pages/home';
-import { ButtonComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
+import { ButtonComponent, IconComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
+import { BaseForm, FormControls } from 'src/shared/lib';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 
 @Component({
   selector: 'post-create-page',
   templateUrl: './post-create.page.html',
-  imports: [ButtonComponent, FooterWidget, ReactiveFormsModule, JsonPipe, CollectionCardComponent, HeaderWidget, InputComponent],
+  imports: [ButtonComponent, FooterWidget, ReactiveFormsModule, CollectionCardComponent, HeaderWidget, InputComponent, IconComponent],
 })
-export class PostCreatePage {
-  public step = signal<number>(1);
-  public previewUrl: string | ArrayBuffer | null | undefined = null;
-  public postCreateForm!: FormGroup;
-  public collections: CollectionType[] = [];
-
-  private readonly fb = inject(FormBuilder);
+export class PostCreatePage extends BaseForm<PostCreateFormType> {
   private readonly postApi = inject(PostApi);
   private readonly collectionApi = inject(CollectionApi);
   private readonly modalReactiveService = inject(ModalReactiveService);
 
+  step = signal<number>(1);
+  previewUrl: string | ArrayBuffer | null | undefined = null;
+  collections: CollectionType[] = [];
+
   get metadataArray(): FormArray<FormGroup> {
-    return this.postCreateForm.get('metadataStringify') as FormArray<FormGroup>;
+    return this.form.get('metadataStringify') as FormArray<FormGroup>;
   }
 
   constructor() {
-    this.postCreateForm = this.fb.group({
-      collectionId: '',
-      title: '',
-      content: '',
-      metadataStringify: this.fb.array([]),
-      file: '',
-    });
+    super();
 
     this.initializeMetadata();
 
@@ -44,16 +37,23 @@ export class PostCreatePage {
     });
   }
 
-  ngOnInit(): void {}
+  protected override initForm(): void {
+    this.form = this.fb.group({
+      collectionId: this.fb.control(''),
+      title: this.fb.control(''),
+      content: this.fb.control(''),
+      metadataStringify: this.fb.array<FormGroup<FormControls<ImgContentType>>>([]),
+      file: this.fb.control<File | null>(null),
+    });
+  }
 
-  // 사진 업로드
+  // =============== STEP1 ===============
   upload(event: Event) {
     const input = event.target as HTMLInputElement;
 
     if (input.files && input.files[0]) {
       const file = input.files[0];
-      this.postCreateForm.patchValue({ file });
-      console.log(this.postCreateForm.value);
+      this.form.patchValue({ file });
       const reader = new FileReader();
 
       reader.onload = (e) => {
@@ -64,40 +64,53 @@ export class PostCreatePage {
     }
   }
 
-  initializeMetadata() {
-    const initialImages = Array.from({ length: 4 }, (_, i) => ({
-      content: `(임시) 사진내용 ${i + 1}`,
-      isPublic: false,
-    }));
-
-    initialImages.forEach((img) => this.addMetadata(img.content, img.isPublic));
+  toggleLink(index: number) {
+    const control = this.metadataArray.at(index);
+    if (control) {
+      control.patchValue({
+        hasLink: !control.value.hasLink,
+      });
+    }
   }
 
-  addMetadata(content: string = '', isPublic: boolean = false) {
+  updateState() {
+    console.log(this.form.value);
+    this.step.set(2);
+  }
+
+  private addMetadata(content: string = '', isPublic: boolean = false, hasLink: boolean = false) {
     const metadataGroup = this.fb.group({
       content: [content],
       isPublic: [isPublic],
+      hasLink: [hasLink],
     });
 
     this.metadataArray.push(metadataGroup);
   }
 
-  updateState() {
-    this.step.set(2);
+  private initializeMetadata() {
+    const initialImages = Array.from({ length: 4 }, (_, i) => ({
+      content: `(임시) 사진내용 ${i + 1}`,
+      isPublic: false,
+      hasLink: false,
+    }));
+
+    initialImages.forEach((img) => this.addMetadata(img.content, img.isPublic, img.hasLink));
   }
 
-  selectCollection(collectionId: number, event: Event) {
+  // =============== STEP2 ===============
+  selectCollection(collectionId: string, event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
 
     if (isChecked) {
-      this.postCreateForm.patchValue({ collectionId });
+      this.form.patchValue({ collectionId });
     } else {
-      this.postCreateForm.patchValue({ collectionId: '' });
+      this.form.patchValue({ collectionId: '' });
     }
   }
 
   createCollection() {
-    const dto = this.postCreateForm.getRawValue();
+    const dto = this.getRawValue();
     console.log(dto);
 
     this.postApi.createPost(dto).subscribe(() => {
