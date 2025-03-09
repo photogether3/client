@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { CollectionApi, CollectionType } from 'src/entities/collection';
@@ -20,8 +20,13 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
   private readonly modalReactiveService = inject(ModalReactiveService);
 
   step = signal<number>(1);
+  collections = signal<CollectionType[]>([]);
   previewUrl: string | ArrayBuffer | null | undefined = null;
-  collections: CollectionType[] = [];
+  myCollections = computed(() => ({
+    default: this.collections()?.filter((collection) => collection.type === 'DEFAULT'),
+    uncategorized: this.collections()?.find((collection) => collection.type === 'UNCATEGORIZED'),
+    trash: this.collections()?.find((collection) => collection.type === 'TRASH'),
+  }));
 
   get metadataArray(): FormArray<FormGroup> {
     return this.form.get('metadataStringify') as FormArray<FormGroup>;
@@ -33,7 +38,11 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
     this.initializeMetadata();
 
     this.collectionApi.getCollections().subscribe((res) => {
-      this.collections = res.items;
+      // this.collections.set(res.items);
+      this.collections.set(res);
+      this.form.patchValue({
+        collectionId: this.myCollections().uncategorized?.id,
+      });
     });
   }
 
@@ -99,7 +108,7 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
   }
 
   // =============== STEP2 ===============
-  selectCollection(collectionId: string, event: Event) {
+  selectCollection(collectionId: string | undefined, event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
 
     if (isChecked) {
@@ -113,16 +122,16 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
     const dto = this.getRawValue();
     console.log(dto);
 
-    this.postApi.createPost(dto).subscribe(() => {
-      const modalData = {
-        title: '게시물 생성 완료',
-        subTitle: '게시물 생성이 완료되었습니다.',
-        content: '확인 버튼을 누르시면 홈 화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
-        buttons: ['확인'],
-      };
-      this.modalReactiveService.open(modalData).subscribe((buttonText) => {
-        console.log('선택된 버튼:', buttonText);
-      });
-    });
+    // this.postApi.createPost(dto).subscribe(() => {
+    //   const modalData = {
+    //     title: '게시물 생성 완료',
+    //     subTitle: '게시물 생성이 완료되었습니다.',
+    //     content: '확인 버튼을 누르시면 홈 화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
+    //     buttons: ['확인'],
+    //   };
+    //   this.modalReactiveService.open(modalData).subscribe((buttonText) => {
+    //     console.log('선택된 버튼:', buttonText);
+    //   });
+    // });
   }
 }
