@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
@@ -12,7 +13,7 @@ import { HeaderWidget } from 'src/widgets/header';
 @Component({
   selector: 'post-create-page',
   templateUrl: './post-create.page.html',
-  imports: [ButtonComponent, FooterWidget, ReactiveFormsModule, CollectionCardComponent, HeaderWidget, InputComponent, IconComponent],
+  imports: [ButtonComponent, FooterWidget, ReactiveFormsModule, CollectionCardComponent, HeaderWidget, InputComponent, IconComponent, CommonModule],
 })
 export class PostCreatePage extends BaseForm<PostCreateFormType> {
   private readonly postApi = inject(PostApi);
@@ -38,7 +39,6 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
     this.initializeMetadata();
 
     this.collectionApi.getCollections().subscribe((res) => {
-      // this.collections.set(res.items);
       this.collections.set(res);
       this.form.patchValue({
         collectionId: this.myCollections().uncategorized?.id,

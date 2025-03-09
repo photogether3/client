@@ -56,13 +56,15 @@
       <div class="grid grid-cols-2 gap-5">
         @for (collection of collections(); track $index) {
           @if (collection.type === 'DEFAULT') {
-            <div class="relative">
+            <div (click)="checkboxRef.click()" class="relative">
               <input
+                #checkboxRef
                 type="checkbox"
                 (change)="selectCollection(collection.id, $event)"
                 [checked]="form.value.collectionId === collection.id"
                 class="absolute z-20 w-6 h-6 left-2 top-2" />
               <app-collection-card [post]="collection" />
+              <div [ngClass]="form.value.collectionId !== collection.id ? 'bg-black/20' : 'border border-primary50'" class="absolute inset-0 z-10 rounded-[12px]"></div>
             </div>
           }
         }
