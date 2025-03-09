@@ -1,5 +1,5 @@
 export type PostCreateFormType = {
-  collectionId: string;
+  collectionId: number;
   title: string;
   content: string;
   metadataStringify: ImgContentType[];

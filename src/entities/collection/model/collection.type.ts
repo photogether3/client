@@ -6,7 +6,7 @@ export type CollectionFormType = {
 };
 
 export type CollectionType = {
-  id: string;
+  id: number;
   title: string;
   type: CollectionTypeEnum;
   category: CategoriesGetDTO | null;

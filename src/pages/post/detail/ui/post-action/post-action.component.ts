@@ -3,7 +3,6 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { PostApi } from 'src/entities/post';
 import { BottomSheetService, ButtonComponent, ModalReactiveService } from 'src/shared/components';
-import { PostMoveComponent } from '../post-move';
 
 @Component({
   selector: 'post-action',
@@ -12,7 +11,7 @@ import { PostMoveComponent } from '../post-move';
 })
 export class PostActionComponent {
   public collectionId: string | undefined = undefined;
-  public postId: string | undefined = undefined;
+  public postId: number | undefined = undefined;
 
   private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly bottomSheetService = inject(BottomSheetService);
@@ -20,7 +19,7 @@ export class PostActionComponent {
   private readonly router = inject(Router);
 
   constructor() {
-    const { collectionId, postId } = this.bottomSheetService.data;
+    const { collectionId, postId } = this.bottomSheetService.data();
     this.collectionId = collectionId;
     this.postId = postId;
 
@@ -42,19 +41,7 @@ export class PostActionComponent {
 
   // 게시물 이동
   movePost() {
-    this.bottomSheetService.close();
-    this.bottomSheetService.open(PostMoveComponent, this.postId).subscribe((res) => {
-      if (res === 'success') {
-        const modalData = {
-          title: '게시물 이동 완료',
-          subTitle: '게시물 이동이 완료되었습니다.',
-          content: '확인 버튼을 누르시면 홈화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
-          buttons: ['확인'],
-        };
-
-        this.modalReactiveService.open(modalData).subscribe();
-      }
-    });
+    this.bottomSheetService.close('move');
   }
 
   // 게시물 삭제
@@ -70,8 +57,8 @@ export class PostActionComponent {
     this.modalReactiveService.open(modalData).subscribe((buttonText) => {
       console.log('선택된 버튼:', buttonText);
 
-      if (buttonText === '확인') {
-        this.postApi.deletePost([this.postId as string]).subscribe(() => {
+      if (buttonText === '확인' && this.postId) {
+        this.postApi.deletePost([this.postId]).subscribe(() => {
           const modalData = {
             title: '게시물 삭제 완료',
             subTitle: '게시물 삭제가 완료되었습니다.',
