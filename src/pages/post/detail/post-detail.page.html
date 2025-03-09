@@ -10,7 +10,7 @@
       @if (post) {
         <div class="flex flex-col gap-5">
           <div class="shadow-custom rounded-[8px] bg-white px-4 py-5">
-            <img [src]="post.imageUrl" alt="임시 이미지" class="h-[485px] rounded-[8px]" />
+            <img [src]="post.imageUrl" alt="임시 이미지" class="h-[485px] w-full rounded-[8px]" />
           </div>
 
           <section class="mb-5 rounded-[8px] bg-white px-4 py-5">
@@ -27,7 +27,7 @@
               <p class="text-detail">{{ post.content }}</p>
             </div>
 
-            <div class="flex flex-col gap-2.5 py-5">
+            <div class="flex flex-col gap-2.5 pt-5">
               <span class="font-bold text-body-s">사진 내용</span>
               <ul class="flex flex-col gap-2.5">
                 @for (imgContent of post.metadataList; track $index) {

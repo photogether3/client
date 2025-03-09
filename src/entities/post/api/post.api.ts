@@ -27,11 +27,11 @@ export class PostApi {
       metadataList: [
         {
           content: 'Colligo ipsa cilicium confugo. Temeritas vulticulus audio decet. Bestia tremo tergeo curatio carus celebrer vis teres pecto.',
-          isPublic: 0,
+          isPublic: true,
         },
         {
           content: 'Vilis tersus xiphias tergum quia tum cetera. Sulum armarium conscendo sui villa vulgaris certus soleo tracto. Cicuta absconditus antepono conicio.',
-          isPublic: 0,
+          isPublic: true,
         },
       ],
     },
@@ -56,7 +56,7 @@ export class PostApi {
         },
         {
           content: 'Sopor denego defungo celebrer vindico aperio porro. Subiungo talio ut amoveo utroque sed aufero demulceo. Pauci depereo temeritas.',
-          isPublic: 0,
+          isPublic: true,
         },
       ],
     },
@@ -78,7 +78,7 @@ export class PostApi {
       metadataList: [
         {
           content: 'Veritas velum ratione. Acervus amplus quasi acervus calco tunc ter tener utrimque. Illum cum quae stillicidium celo certus.',
-          isPublic: 0,
+          isPublic: true,
         },
         {
           content: 'Valeo sonitus voluptatem vestrum cunabula cavus defetiscor auctus balbus. Contabesco abstergo vergo cornu arcesso tandem cruentus. Dicta votum apto speculum.',
@@ -104,11 +104,11 @@ export class PostApi {
         {
           content:
             'Stella degusto cubitum conscendo audio subiungo maxime. Decumbo somniculosus non somniculosus summopere vita termes supplanto. Canis vestrum utrimque callide carmen subnecto.',
-          isPublic: 0,
+          isPublic: true,
         },
         {
           content: 'Amoveo comitatus cunabula depereo dolorem suffragium. Ceno averto curis absque uter socius studio adnuo comis. Culpa distinctio reprehenderit capitulus.',
-          isPublic: 0,
+          isPublic: true,
         },
       ],
     },
@@ -129,7 +129,7 @@ export class PostApi {
       metadataList: [
         {
           content: 'Aegrus alias solum ex. Cruciamentum ceno certus. Suggero ex voluptatem tempora tamdiu stabilis.',
-          isPublic: 0,
+          isPublic: true,
         },
         {
           content: 'Doloremque viriliter tam campana impedit aequus ulciscor sono. Deleo conscendo decens triumphus cruentus. Tenuis adeptio conatus adulescens sollicito atavus.',
@@ -159,7 +159,7 @@ export class PostApi {
         },
         {
           content: 'Conculco talio arcus suscipio provident suus adsum et. Cohibeo tantum cimentarius civitas. Cras acidus dolor usque repudiandae audentia decretum volup.',
-          isPublic: 0,
+          isPublic: true,
         },
       ],
     },
@@ -181,12 +181,12 @@ export class PostApi {
         {
           content:
             'Ipsum contigo laudantium aequus thema. Dolor arcesso bestia confero cuppedia optio cado repudiandae admiratio paens. Dignissimos creator antiquus comparo acquiro comitatus.',
-          isPublic: 0,
+          isPublic: true,
         },
         {
           content:
             'Audacia solium aranea summa repellat voluptate. Magnam defungo coaegresco crapula traho utilis demum trepide terra sapiente. Vindico acceptus volaticus coruscus benigne vero crudelis creber.',
-          isPublic: 0,
+          isPublic: true,
         },
       ],
     },
@@ -211,7 +211,7 @@ export class PostApi {
         },
         {
           content: 'Valeo apto volubilis adversus autem carbo benigne. Uxor adopto ver capillus. Caelestis cernuus cognomen atqui timidus sortitus quo vel confugo.',
-          isPublic: 0,
+          isPublic: true,
         },
       ],
     },
@@ -232,12 +232,12 @@ export class PostApi {
       metadataList: [
         {
           content: 'Laboriosam delectatio spectaculum corrupti. Dolorem celer suppono. Umerus claro auditor decor via.',
-          isPublic: 0,
+          isPublic: true,
         },
         {
           content:
             'Solitudo caterva adficio cura solium creber ventus quod. Aequitas celebrer peccatus amiculum. Voluntarius pectus ascit aliquid convoco urbs provident synagoga arbor.',
-          isPublic: 0,
+          isPublic: true,
         },
       ],
     },
@@ -258,11 +258,11 @@ export class PostApi {
       metadataList: [
         {
           content: 'Accusantium beatae pauci amplexus tubineus calcar tenuis. Solium assentator tredecim harum. Tergeo apparatus cruciamentum uterque dolor valeo.',
-          isPublic: 0,
+          isPublic: true,
         },
         {
           content: 'Acceptus venio sed. Quam catena claudeo desparatus quam celo corrupti curis testimonium comminor. Aedificium tremo talus suffoco aestas tui alius.',
-          isPublic: 1,
+          isPublic: false,
         },
       ],
     },

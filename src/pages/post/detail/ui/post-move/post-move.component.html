@@ -1,13 +1,39 @@
-<!-- TODO 바텀시트 공통 레이아웃 분리 -->
-<div class="flex w-[32rem] flex-col gap-4 rounded-t-lg bg-white p-8">
-  <!-- TODO 공통 컴포넌트로 분리 (게시물 생성 페이지, 게시물 이동 바텀시트) -->
-  <div class="grid grid-cols-2 gap-5 pb-5">
-    @for (collection of collections; track $index) {
-      <div class="">
-        <input type="checkbox" (change)="selectCollection(collection.id, $event)" [checked]="selectedCollectionId === collection.id" class="absolute z-20 w-6 h-6" />
+<!-- TODO 공통 컴포넌트로 분리 (게시물 생성 페이지, 게시물 이동 바텀시트) -->
+<div class="flex flex-col gap-5">
+  <div class="grid grid-cols-2 gap-5">
+    @for (collection of myCollections().default; track $index) {
+      <div (click)="checkboxRef.click()" class="relative">
+        <input #checkboxRef type="checkbox" (change)="selectCollection(collection.id, $event)" [checked]="selectedCollectionId() === collection.id" class="absolute z-20 w-6 h-6" />
         <app-collection-card [post]="collection" />
+        <div [ngClass]="selectedCollectionId() !== collection.id ? 'bg-black/20' : 'border border-primary50'" class="absolute inset-0 z-10 rounded-[12px]"></div>
       </div>
     }
   </div>
+  <section class="col-span-full">
+    <h4 class="mb-2.5 text-body-s font-bold text-gray90">정리가 필요한 사진첩</h4>
+    <div class="shadow-custom divide-y divide-gray30 rounded-[12px] bg-white p-4 text-detail">
+      <!-- 미분류 -->
+      <div class="flex items-center justify-between pb-2 cursor-pointer">
+        <div class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            (change)="selectCollection(myCollections().uncategorized!.id, $event)"
+            [checked]="selectedCollectionId() === myCollections().uncategorized!.id"
+            class="w-6 h-6" />
+          <span class="font-bold">미분류</span>
+        </div>
+        <span class="text-gray50">{{ myCollections().uncategorized?.postCount }}개 사진</span>
+      </div>
+
+      <!-- 휴지통 -->
+      <div class="flex items-center justify-between pt-2 cursor-pointer">
+        <div class="flex items-center gap-2">
+          <input type="checkbox" (change)="selectCollection(myCollections().trash?.id, $event)" [checked]="selectedCollectionId() === myCollections().trash?.id" class="w-6 h-6" />
+          <span class="font-bold">휴지통</span>
+        </div>
+        <span class="text-gray50">{{ myCollections().trash?.postCount }}개 사진</span>
+      </div>
+    </div>
+  </section>
   <app-button text="선택 폴더로 이동" (click)="movePost()" />
 </div>

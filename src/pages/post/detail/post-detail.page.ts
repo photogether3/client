@@ -1,13 +1,13 @@
 import { Component, inject, Type } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { PostApi, PostType } from 'src/entities/post';
-import { BottomSheetService, ButtonComponent, IconComponent } from 'src/shared/components';
-import { FooterWidget } from 'src/widgets/footer';
-import { PostActionComponent } from './ui/post-action';
-import { HeaderWidget } from 'src/widgets/header';
 import { TagComponent } from 'src/entities/category';
-import { ActionButtonsComponent } from 'src/pages/collection';
+import { PostApi, PostType } from 'src/entities/post';
+import { BottomSheetService, ButtonComponent, IconComponent, ModalReactiveService } from 'src/shared/components';
+import { FooterWidget } from 'src/widgets/footer';
+import { HeaderWidget } from 'src/widgets/header';
+import { PostMoveComponent } from './ui';
+import { PostActionComponent } from './ui/post-action';
 
 @Component({
   selector: 'post-detail-page',
@@ -19,6 +19,7 @@ export class PostDetailPage {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly postApi = inject(PostApi);
+  private readonly modalReactiveService = inject(ModalReactiveService);
 
   collectionId: string | undefined = undefined;
   post: PostType | undefined = undefined;
@@ -30,6 +31,7 @@ export class PostDetailPage {
     if (this.collectionId) {
       this.postApi.getPost(this.collectionId, Number(postId)).subscribe((res) => {
         this.post = res;
+        console.log(this.post);
       });
     }
   }
@@ -45,7 +47,22 @@ export class PostDetailPage {
     };
     console.log(data);
 
-    const result = await this.bottomSheetService.open(ActionButtonsComponent as Type<Component>, data);
+    const result = await this.bottomSheetService.open(PostActionComponent as Type<Component>, data);
     console.log('📌 바텀시트가 닫히면서 반환된 값:', result);
+
+    // 게시물 이동
+    if (result === 'move') {
+      const response = await this.bottomSheetService.open(PostMoveComponent as Type<Component>, this.post?.id);
+      if (response === 'success') {
+        const modalData = {
+          title: '게시물 이동 완료',
+          subTitle: '게시물 이동이 완료되었습니다.',
+          content: '확인 버튼을 누르시면 홈화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
+          buttons: ['확인'],
+        };
+
+        this.modalReactiveService.open(modalData).subscribe();
+      }
+    }
   }
 }
