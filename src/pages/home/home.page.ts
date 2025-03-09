@@ -30,9 +30,9 @@ export class HomePage implements OnInit {
 
   get myCollections() {
     return {
-      default: this.collectionList.filter((collection) => collection.type === 'DEFAULT'),
-      uncategorized: this.collectionList.find((collection) => collection.type === 'UNCATEGORIZED'),
-      trash: this.collectionList.find((collection) => collection.type === 'TRASH'),
+      default: this.collectionList?.filter((collection) => collection.type === 'DEFAULT'),
+      uncategorized: this.collectionList?.find((collection) => collection.type === 'UNCATEGORIZED'),
+      trash: this.collectionList?.find((collection) => collection.type === 'TRASH'),
     };
   }
 
@@ -58,7 +58,7 @@ export class HomePage implements OnInit {
       )
       .subscribe(({ profile, collections }) => {
         this.nickname = profile.nickname;
-        this.collectionList = collections.items;
+        this.collectionList = collections;
       });
   }
 
