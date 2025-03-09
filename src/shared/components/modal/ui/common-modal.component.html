@@ -1,10 +1,16 @@
-<div class="flex max-w-[374px] flex-col gap-5 rounded-[12px] bg-white p-10">
-  <div class="flex justify-between">
-    <h6 class="font-bold">{{ data.title }}</h6>
-    <button (click)="close()">X</button>
+<div class="flex max-w-[358px] flex-col gap-5 rounded-[12px] border border-[#c6c6c6] bg-white p-10">
+  <div class="flex items-center justify-between">
+    <h6 class="font-bold text-body-m">{{ data.title }}</h6>
+    <button (click)="close()">
+      <app-icon name="close" />
+    </button>
   </div>
-  <strong>{{ data.subTitle }}</strong>
-  <p>{{ data.content }}</p>
+
+  <div>
+    <p class="mb-2.5 text-body-l font-bold">{{ data.subTitle }}</p>
+    <p class="text-body-m">{{ data.content }}</p>
+  </div>
+
   <div class="flex items-center gap-4">
     @for (buttonText of data.buttons; track $index) {
       <app-button [text]="buttonText" (click)="close(buttonText)" class="flex-1" />
