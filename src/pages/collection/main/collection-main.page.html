@@ -19,7 +19,7 @@
     <section #grid>
       @for (post of postList || []; track $index) {
         <!-- TODO 게시물 카드 컴포넌트 분리 필요 -->
-        <figure #item (click)="goPage(post.postId)" class="shadow-custom cursor-pointer rounded-[12px] bg-white p-2 hover:ring-1 hover:ring-primary50">
+        <figure #item (click)="goPage(post.id)" class="shadow-custom cursor-pointer rounded-[12px] bg-white p-2 hover:ring-1 hover:ring-primary50">
           <figcaption class="w-full">
             <span class="block w-full font-bold truncate text-body-s">{{ post.title }}</span>
             <p class="line-clamp-2 text-detail text-gray50">{{ post.content }}</p>

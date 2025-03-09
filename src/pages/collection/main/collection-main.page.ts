@@ -46,7 +46,7 @@ export class CollectionMainPage implements OnInit {
     });
 
     this.postApi.getCollection(this.collectionId).subscribe((res) => {
-      this.postList = res?.items;
+      this.postList = res;
 
       this.items.changes.subscribe(() => {
         if (this.items.length > 0) {
@@ -73,9 +73,9 @@ export class CollectionMainPage implements OnInit {
   }
 
   // 게시물 상세 페이지 이동
-  goPage(postId: string) {
+  goPage(postId: number) {
     this.router.navigateByUrl(`post/${postId}`, {
-      state: { collectionId: this.collection?.collectionId },
+      state: { collectionId: this.collection?.id },
     });
   }
 

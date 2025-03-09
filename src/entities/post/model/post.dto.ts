@@ -34,12 +34,10 @@ export type PostMoveReqDTO = {
 };
 
 export type PostType = {
-  postId: string;
+  id: number;
   title: string;
   content: string;
   imageUrl: string;
-  createdAt: Date;
-  updatedAt: Date;
   category: CategoriesGetDTO | null;
   collection: {
     collectionId: string;

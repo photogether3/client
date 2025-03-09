@@ -1,36 +1,43 @@
-<div class="flex flex-col min-h-screen border-x bg-secondary5">
-  <!-- header -->
+<div class="flex flex-col min-h-screen border-x bg-gray10">
   <app-header [title]="post?.title ?? ''">
-    <button rightContent (click)="openBottomSheet()" class="text-lg font-bold">...</button>
+    <button rightContent (click)="openBottomSheet()" class="text-lg font-bold">
+      <app-icon name="more" />
+    </button>
   </app-header>
 
-  <!-- main -->
-  <main class="flex-1 w-full px-4 py-6">
+  <main class="flex-1 w-full px-4 py-5">
     @defer {
       @if (post) {
-        <div class="flex flex-col gap-5 bg-white">
-          <img [src]="post.imageUrl" alt="임시 이미지" class="h-[485px] rounded-lg" />
-
-          <div class="flex items-center justify-between px-2 pb-4 border-b border-b-gray-200">
-            <app-tag [tagName]="post.category?.name" />
-            <span>{{ post.collection.title }}</span>
+        <div class="flex flex-col gap-5">
+          <div class="shadow-custom rounded-[8px] bg-white px-4 py-5">
+            <img [src]="post.imageUrl" alt="임시 이미지" class="h-[485px] rounded-[8px]" />
           </div>
 
-          <div class="flex flex-col gap-2 px-2">
-            <span class="text-lg font-bold">게시물 내용</span>
-            <div>{{ post.content }}</div>
-          </div>
+          <section class="mb-5 rounded-[8px] bg-white px-4 py-5">
+            <div class="flex items-center justify-between pb-4 border-b border-b-gray40">
+              <app-tag [tagName]="post.category?.name" />
+              <p class="flex items-center gap-2">
+                <app-icon name="folder" />
+                <span class="font-bold text-detail text-gray90">{{ post.collection.title }}</span>
+              </p>
+            </div>
 
-          <div class="flex flex-col gap-2 px-2">
-            <span class="text-lg font-bold">사진내용</span>
-            <ul>
-              @for (imgContent of post.metadataList; track $index) {
-                @if (imgContent.isPublic) {
-                  <li class="list-disc list-inside">{{ imgContent.content }}</li>
+            <div class="flex flex-col gap-2.5 border-b border-b-gray40 py-5 text-gray90">
+              <span class="font-bold text-body-s">게시물 내용</span>
+              <p class="text-detail">{{ post.content }}</p>
+            </div>
+
+            <div class="flex flex-col gap-2.5 py-5">
+              <span class="font-bold text-body-s">사진 내용</span>
+              <ul class="flex flex-col gap-2.5">
+                @for (imgContent of post.metadataList; track $index) {
+                  @if (imgContent.isPublic) {
+                    <li class="list-disc list-inside text-detail">{{ imgContent.content }}</li>
+                  }
                 }
-              }
-            </ul>
-          </div>
+              </ul>
+            </div>
+          </section>
         </div>
       }
     } @loading {
@@ -39,6 +46,5 @@
     <app-button text="목록으로 돌아가기" width="full" (click)="goPage()" />
   </main>
 
-  <!-- footer -->
   <app-footer class="sticky bottom-0 mt-auto" />
 </div>
