@@ -1,9 +1,12 @@
+import { environment } from 'src/shared/environments';
 import { JwtResource } from '../model';
 
 export class AuthService {
   private accessToken: string | null = null;
   private expiresIn: number | null = null;
   private refreshTokenKey = 'RT';
+  private accessTokenKey = 'AT';
+  private expiresInKey = 'EXP';
 
   private static instance: AuthService;
   private constructor() {}
@@ -17,6 +20,11 @@ export class AuthService {
   }
 
   getAccessToken(): string | null {
+    if (!environment.production) {
+      const accessToken = localStorage.getItem(this.accessTokenKey);
+      return accessToken;
+    }
+
     return this.accessToken;
   }
 
@@ -25,6 +33,10 @@ export class AuthService {
   }
 
   getExpiresIn(): number | null {
+    if (!environment.production) {
+      return Number(localStorage.getItem(this.expiresInKey));
+    }
+
     return this.expiresIn;
   }
 
@@ -34,6 +46,11 @@ export class AuthService {
     this.expiresIn = expiresIn;
 
     if (refreshToken) {
+      if (!environment.production) {
+        localStorage.setItem(this.accessTokenKey, accessToken);
+        localStorage.setItem(this.expiresInKey, expiresIn.toString());
+      }
+
       localStorage.setItem(this.refreshTokenKey, refreshToken);
     }
   }
