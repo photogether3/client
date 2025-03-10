@@ -1,10 +1,10 @@
-<section class="h-full bg-white border rounded-lg">
-  <div class="flex flex-wrap gap-2 p-2">
+<section class="h-full rounded-[8px] border border-gray90 bg-white p-5">
+  <div class="flex flex-wrap gap-4">
     @for (category of categoryList(); track $index) {
       <app-tag
-        [appearance]="category.selected ? 'primary' : 'outline'"
+        [type]="category.selected ? 'solid' : 'outline'"
         [tagName]="category.name"
-        size="s"
+        size="lg"
         (click)="toggleCategory(category.id)"
         class="inline-flex w-auto cursor-pointer" />
     }

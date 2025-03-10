@@ -9,7 +9,7 @@
     }
   </div>
   @if (post().type === 'DEFAULT') {
-    <app-tag [tagName]="post().category?.name || ''" [appearance]="'primary'" />
+    <app-tag [tagName]="post().category?.name || ''" type="solid" />
   }
   <div class="text-center">
     <h4 class="font-bold text-detail text-gray90">{{ post().title }}</h4>

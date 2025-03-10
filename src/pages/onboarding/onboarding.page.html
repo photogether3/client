@@ -30,8 +30,8 @@
         @for (category of categoryList; track $index) {
           <app-tag
             [tagName]="category.name"
-            size="m"
-            [appearance]="categoryFormArray.value.includes(category.id) ? 'primary' : 'outline'"
+            size="md"
+            [type]="categoryFormArray.value.includes(category.id) ? 'solid' : 'outline'"
             (click)="toggleCategory(category.id)"
             class="block cursor-pointer" />
         }

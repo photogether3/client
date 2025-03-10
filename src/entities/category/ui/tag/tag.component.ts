@@ -1,7 +1,8 @@
-import { twMerge } from 'tailwind-merge';
 import { Component, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { TagProps, tagVariants } from './tag.styles';
+import { customTwMerge } from 'src/shared/components/button/button.styles';
 
 @Component({
   selector: 'app-tag',
@@ -14,11 +15,13 @@ import { TagProps, tagVariants } from './tag.styles';
   imports: [CommonModule],
 })
 export class TagComponent {
-  public tagName = input.required();
-  public size = input<TagProps['size']>();
-  public appearance = input<TagProps['appearance']>();
+  tagName = input.required();
+  size = input<TagProps['size']>();
+  type = input<TagProps['type']>();
 
-  public computedClass = computed(() => {
-    return twMerge(tagVariants({ appearance: this.appearance(), size: this.size() }));
+  computedClass = computed(() => {
+    return customTwMerge(tagVariants({ type: this.type(), size: this.size() }));
   });
 }
+
+// TODO customTwMerge shared로 분리해야 함
