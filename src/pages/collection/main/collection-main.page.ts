@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnInit, QueryList, Type, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, QueryList, signal, Type, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TagComponent } from 'src/entities/category';
@@ -8,12 +8,12 @@ import { BottomSheetService, IconComponent, SearchBarComponent } from 'src/share
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 
-import { ActionButtonsComponent } from '../ui';
+import { ActionButtonsComponent, PostCardComponent } from '../ui';
 
 @Component({
   selector: 'app-collection-main',
   templateUrl: './collection-main.page.html',
-  imports: [TagComponent, FooterWidget, HeaderWidget, IconComponent, SearchBarComponent],
+  imports: [TagComponent, FooterWidget, HeaderWidget, IconComponent, SearchBarComponent, PostCardComponent],
 })
 export class CollectionMainPage implements OnInit {
   private readonly router = inject(Router);
@@ -33,6 +33,7 @@ export class CollectionMainPage implements OnInit {
   columnGap = 10;
   rowGap = 10;
   collectionId: string | undefined = undefined;
+  isEditMode = signal<boolean>(false);
 
   constructor() {}
 
@@ -77,11 +78,6 @@ export class CollectionMainPage implements OnInit {
     this.router.navigateByUrl(`post/${postId}`, {
       state: { collectionId: this.collection?.id },
     });
-  }
-
-  // 사진첩 수정 페이지 이동
-  goUpdatePage() {
-    this.router.navigateByUrl(`collection/update/${this.collectionId}`);
   }
 
   positionAllItems() {
@@ -206,5 +202,11 @@ export class CollectionMainPage implements OnInit {
   async openBottomSheet() {
     const result = await this.bottomSheetService.open(ActionButtonsComponent as Type<Component>);
     console.log('📌 바텀시트가 닫히면서 반환된 값:', result);
+
+    if (result === 'update') {
+      this.router.navigateByUrl(`collection/update/${this.collectionId}`);
+    } else if (result === 'organize') {
+      this.isEditMode.set(true);
+    }
   }
 }
