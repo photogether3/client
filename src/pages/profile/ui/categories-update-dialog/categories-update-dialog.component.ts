@@ -16,7 +16,7 @@ import { CategorySelectorWidget } from 'src/widgets/category-selector';
 export class CategoriesUpdateDialog {
   private readonly bottomSheetService = inject(BottomSheetService);
 
-  selectedCategoryList = signal(this.bottomSheetService.data);
+  selectedCategoryList = signal(this.bottomSheetService.data());
 
   constructor() {}
 

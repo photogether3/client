@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, Type } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { CategoriesGetDTO, CategoryApi, TagComponent } from 'src/entities/category';
@@ -70,14 +70,12 @@ export class ProfileUpdatePage {
     }
   }
 
-  updateCategory() {
+  async updateCategory() {
     const categoryArray = this.categoryArray.value;
-    this.bottomSheetService.open(CategoriesUpdateDialog, categoryArray).subscribe((res) => {
-      if (!res) return;
+    const result = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, categoryArray);
 
-      this.categoryArray.clear();
-      res.forEach((category: CategoriesGetDTO) => this.categoryArray.push(this.fb.control(category)));
-    });
+    this.categoryArray.clear();
+    result.forEach((category: CategoriesGetDTO) => this.categoryArray.push(this.fb.control(category)));
   }
 
   updateProfile() {
