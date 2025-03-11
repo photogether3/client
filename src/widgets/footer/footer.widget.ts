@@ -6,6 +6,15 @@ import { IconComponent } from 'src/shared/components';
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.widget.html',
+  styles: [
+    `
+      :host {
+        position: sticky;
+        bottom: 0;
+        z-index: 40;
+      }
+    `,
+  ],
   imports: [IconComponent, RouterLink],
 })
 export class FooterWidget {

@@ -3,7 +3,7 @@ import { cva, VariantProps } from 'class-variance-authority';
 export const tagVariants = cva('flex items-center justify-center whitespace-nowrap rounded-[4px] px-2', {
   variants: {
     type: {
-      outline: 'border border-secondary50 text-secondary60',
+      outline: 'border border-secondary50 text-secondary60 bg-white',
       solid: 'bg-secondary50 text-white',
       solidPastel: 'bg-secondary5 text-secondary60',
     },
