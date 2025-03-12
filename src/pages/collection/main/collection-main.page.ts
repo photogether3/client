@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TagComponent } from 'src/entities/category';
 import { CollectionApi, CollectionDetailResDTO } from 'src/entities/collection';
 import { PostApi, PostType } from 'src/entities/post';
-import { BottomSheetService, IconComponent, SearchBarComponent } from 'src/shared/components';
+import { BottomSheetService, ButtonComponent, IconComponent, SearchBarComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 
@@ -13,7 +13,7 @@ import { ActionButtonsComponent, PostCardComponent } from '../ui';
 @Component({
   selector: 'app-collection-main',
   templateUrl: './collection-main.page.html',
-  imports: [TagComponent, FooterWidget, HeaderWidget, IconComponent, SearchBarComponent, PostCardComponent],
+  imports: [TagComponent, FooterWidget, HeaderWidget, IconComponent, SearchBarComponent, PostCardComponent, ButtonComponent],
 })
 export class CollectionMainPage implements OnInit {
   private readonly router = inject(Router);
@@ -33,7 +33,8 @@ export class CollectionMainPage implements OnInit {
   columnGap = 10;
   rowGap = 10;
   collectionId: string | undefined = undefined;
-  isEditMode = signal<boolean>(false);
+  isEditMode = signal<boolean>(true);
+  selectedPostId = signal<number | undefined>(undefined);
 
   constructor() {}
 
@@ -71,6 +72,10 @@ export class CollectionMainPage implements OnInit {
     });
 
     this.resizeObserver.observe(this.grid.nativeElement);
+  }
+
+  onSelect(postId: number | undefined) {
+    this.selectedPostId.set(postId);
   }
 
   // 게시물 상세 페이지 이동

@@ -1,25 +1,52 @@
-<div class="flex flex-col min-h-screen border-x bg-gray10">
+<div class="flex min-h-screen flex-col border-x bg-gray10">
   @if (collection) {
     <app-header [title]="collection.title">
-      <button rightContent (click)="openBottomSheet()">
-        <app-icon name="more" />
-      </button>
+      @if (!isEditMode()) {
+        <button rightContent (click)="openBottomSheet()">
+          <app-icon name="more" />
+        </button>
+      } @else {
+        <app-tag rightContent [tagName]="collection.category?.name" type="solid" />
+      }
     </app-header>
   }
 
-  <main class="flex flex-col gap-5 px-4 mt-5">
-    <app-search-bar />
+  <main class="mt-5 flex flex-col gap-5 px-4">
+    @if (!isEditMode()) {
+      <app-search-bar />
+    } @else {
+      <div class="grid grid-cols-2 gap-2">
+        <app-button text="게시물 삭제" appearance="tertiary" size="md" />
+        <app-button text="게시물 이동" size="md" />
+      </div>
+    }
     <div class="flex items-center justify-between">
-      <app-tag [tagName]="collection?.category?.name" appearance="primary" />
-      <p class="font-bold text-body-s">
-        <span class="text-primary60">{{ postList?.length }}</span>
-        개의 게시물
-      </p>
+      @if (!isEditMode()) {
+        <app-tag [tagName]="collection?.category?.name" appearance="primary" />
+        <p class="text-body-s font-bold">
+          <span class="text-primary60">{{ postList?.length }}</span>
+          개의 게시물
+        </p>
+      } @else {
+        <div class="flex items-center gap-2">
+          <input type="checkbox" class="size-6" />
+          <span class="text-body-s font-bold text-gray90">전체선택</span>
+        </div>
+        <p class="text-body-s font-bold">
+          <span class="text-primary60">{{ '999' }}</span>
+          개 선택됨
+        </p>
+      }
     </div>
     <section #grid>
       @for (post of postList || []; track $index) {
         <div #item>
-          <app-post-card (click)="isEditMode() ? null : goPage(post.id)" [post]="post" [isCheckable]="isEditMode() ? true : false" />
+          <app-post-card
+            (click)="isEditMode() ? onSelect(post.id) : goPage(post.id)"
+            [post]="post"
+            [isCheckable]="isEditMode() ? true : false"
+            [selectedPostId]="selectedPostId()"
+            (postSelected)="onSelect($event)" />
         </div>
       }
     </section>

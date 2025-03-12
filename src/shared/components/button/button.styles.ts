@@ -7,7 +7,7 @@ export const buttonStyles = cva('flex items-center justify-center rounded-full',
       primary: 'text-white bg-primary50 hover:bg-primary60 active:bg-primary70 disabled:bg-gray30 disabled:text-gray60',
       secondary:
         'text-primary60 border border-primary50 bg-primary5 hover:bg-primary20 active:bg-primary70 active:text-primary70 disabled:bg-gray30 disabled:border-gray40 disabled:text-gray60',
-      tertiary: 'text-white bg-secondary50 hover:bg-secondary60 active:bg-secondary70 disabled:bg-secondary20',
+      tertiary: 'text-secondary90 border border-gray90 bg-white active:bg-gray10 disabled:border-gray40 disabled:bg-gray30 disabled:text-gray60',
       text: 'border border-base04 hover:text-white hover:bg-secondary60 active:text-white active:bg-secondary70 disabled:text-link-disabled',
     },
     size: {

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, input, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, input, output, viewChild } from '@angular/core';
+
 import { PostType } from 'src/entities/post';
 
 @Component({
@@ -11,20 +12,25 @@ export class PostCardComponent {
   post = input.required<PostType>();
   isCheckable = input<boolean>(false);
 
-  selectedPostId = signal<number | undefined>(undefined);
+  selectedPostId = input<number | undefined>();
+  postSelected = output<number | undefined>();
+
   checkboxRef = viewChild.required<ElementRef<HTMLInputElement>>('checkboxRef');
 
   constructor() {}
 
-  onSelect(postId: number | undefined, event: Event) {
-    const isChecked = (event.target as HTMLInputElement).checked;
+  onCheckboxClick(event: Event) {
+    event.stopPropagation();
 
-    if (isChecked) {
-      this.selectedPostId.set(postId);
+    if (this.selectedPostId() === this.post().id) {
+      this.postSelected.emit(undefined);
+    } else {
+      this.postSelected.emit(this.post().id);
     }
   }
 
   onContainerClick() {
     this.checkboxRef().nativeElement.click();
+    console.log('클릭');
   }
 }
