@@ -33,7 +33,7 @@
           <span class="text-body-s font-bold text-gray90">전체선택</span>
         </div>
         <p class="text-body-s font-bold">
-          <span class="text-primary60">{{ '999' }}</span>
+          <span class="text-primary60">{{ selectedPostIds().length }}</span>
           개 선택됨
         </p>
       }
@@ -41,12 +41,7 @@
     <section #grid>
       @for (post of postList || []; track $index) {
         <div #item>
-          <app-post-card
-            (click)="isEditMode() ? onSelect(post.id) : goPage(post.id)"
-            [post]="post"
-            [isCheckable]="isEditMode() ? true : false"
-            [selectedPostId]="selectedPostId()"
-            (postSelected)="onSelect($event)" />
+          <app-post-card [post]="post" [isCheckable]="isEditMode()" (postSelected)="onSelect($event)" />
         </div>
       }
     </section>

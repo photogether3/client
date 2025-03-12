@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnInit, QueryList, signal, Type, ViewChild, ViewChildren } from '@angular/core';
+import { Component, effect, ElementRef, inject, OnInit, QueryList, signal, Type, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TagComponent } from 'src/entities/category';
@@ -33,10 +33,15 @@ export class CollectionMainPage implements OnInit {
   columnGap = 10;
   rowGap = 10;
   collectionId: string | undefined = undefined;
-  isEditMode = signal<boolean>(true);
-  selectedPostId = signal<number | undefined>(undefined);
 
-  constructor() {}
+  isEditMode = signal<boolean>(true);
+  selectedPostIds = signal<number[]>([]);
+
+  constructor() {
+    effect(() => {
+      console.log(this.selectedPostIds());
+    });
+  }
 
   // TODO 사진첩 내부 마소니 레이아웃 리펙토링
   ngOnInit(): void {
@@ -74,15 +79,15 @@ export class CollectionMainPage implements OnInit {
     this.resizeObserver.observe(this.grid.nativeElement);
   }
 
-  onSelect(postId: number | undefined) {
-    this.selectedPostId.set(postId);
-  }
+  onSelect(updatedId: number) {
+    const currentIds = this.selectedPostIds();
+    const index = currentIds.indexOf(updatedId);
 
-  // 게시물 상세 페이지 이동
-  goPage(postId: number) {
-    this.router.navigateByUrl(`post/${postId}`, {
-      state: { collectionId: this.collection?.id },
-    });
+    if (index !== -1) {
+      this.selectedPostIds.set(currentIds.filter((id) => id !== updatedId));
+    } else {
+      this.selectedPostIds.set([...currentIds, updatedId]);
+    }
   }
 
   positionAllItems() {

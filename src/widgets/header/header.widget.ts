@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+
 import { IconComponent } from 'src/shared/components';
 
 @Component({
@@ -9,10 +9,10 @@ import { IconComponent } from 'src/shared/components';
     :host {
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 40;
     }
   `,
-  imports: [IconComponent, RouterLink],
+  imports: [IconComponent],
 })
 export class HeaderWidget {
   title = input<string>('');

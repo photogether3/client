@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, input, output, viewChild } from '@angular/core';
+import { Component, ElementRef, inject, input, output, viewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { PostType } from 'src/entities/post';
 
@@ -9,11 +10,11 @@ import { PostType } from 'src/entities/post';
   imports: [CommonModule],
 })
 export class PostCardComponent {
+  private readonly router = inject(Router);
+
   post = input.required<PostType>();
   isCheckable = input<boolean>(false);
-
-  selectedPostId = input<number | undefined>();
-  postSelected = output<number | undefined>();
+  postSelected = output<number>();
 
   checkboxRef = viewChild.required<ElementRef<HTMLInputElement>>('checkboxRef');
 
@@ -21,16 +22,16 @@ export class PostCardComponent {
 
   onCheckboxClick(event: Event) {
     event.stopPropagation();
-
-    if (this.selectedPostId() === this.post().id) {
-      this.postSelected.emit(undefined);
-    } else {
-      this.postSelected.emit(this.post().id);
-    }
+    this.postSelected.emit(this.post().id);
   }
 
   onContainerClick() {
-    this.checkboxRef().nativeElement.click();
-    console.log('클릭');
+    if (this.isCheckable()) {
+      this.checkboxRef().nativeElement.click();
+    } else {
+      this.router.navigateByUrl(`post/${this.post().id}`, {
+        state: { collectionId: this.post().collection.collectionId },
+      });
+    }
   }
 }
