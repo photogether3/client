@@ -1,12 +1,13 @@
 import { CategoriesGetDTO } from 'src/entities/category';
 
 export type PostReqDto = {
-  collectionId: string;
+  collectionId: number;
   title: string;
   content: string;
   metadataStringify: {
     content: string;
     isPublic: boolean;
+    hasLink: boolean;
   }[];
   file: File;
 };

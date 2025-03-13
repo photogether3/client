@@ -122,16 +122,16 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
     const dto = this.getRawValue();
     console.log(dto);
 
-    // this.postApi.createPost(dto).subscribe(() => {
-    //   const modalData = {
-    //     title: '게시물 생성 완료',
-    //     subTitle: '게시물 생성이 완료되었습니다.',
-    //     content: '확인 버튼을 누르시면 홈 화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
-    //     buttons: ['확인'],
-    //   };
-    //   this.modalReactiveService.open(modalData).subscribe((buttonText) => {
-    //     console.log('선택된 버튼:', buttonText);
-    //   });
-    // });
+    this.postApi.createPost(dto).subscribe(() => {
+      const modalData = {
+        title: '게시물 생성 완료',
+        subTitle: '게시물 생성이 완료되었습니다.',
+        content: '확인 버튼을 누르시면 홈 화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
+        buttons: ['확인'],
+      };
+      this.modalReactiveService.open(modalData).subscribe((buttonText) => {
+        console.log('선택된 버튼:', buttonText);
+      });
+    });
   }
 }
