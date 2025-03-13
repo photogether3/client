@@ -30,7 +30,7 @@ export class PostCardComponent {
       this.checkboxRef().nativeElement.click();
     } else {
       this.router.navigateByUrl(`post/${this.post().id}`, {
-        state: { collectionId: this.post().collection.collectionId },
+        state: { collectionId: this.post().collectionId },
       });
     }
   }

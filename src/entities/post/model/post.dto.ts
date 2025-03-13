@@ -40,6 +40,7 @@ export type PostType = {
   content: string;
   imageUrl: string;
   category: CategoriesGetDTO | null;
+  collectionId: number;
   collection: {
     collectionId: string;
     title: string;
