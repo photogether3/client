@@ -16,7 +16,7 @@ export class PostMoveComponent {
   private readonly collectionApi = inject(CollectionApi);
   private readonly postApi = inject(PostApi);
 
-  postId!: number;
+  postIds: number[] = [];
   collections = signal<CollectionType[]>([]);
   myCollections = computed(() => ({
     default: this.collections()?.filter((collection) => collection.type === 'DEFAULT'),
@@ -26,7 +26,7 @@ export class PostMoveComponent {
   selectedCollectionId = signal<number | undefined>(this.myCollections().uncategorized?.id);
 
   constructor() {
-    this.postId = this.bottomSheetService.data();
+    this.postIds = [...this.bottomSheetService.data()];
 
     this.collectionApi.getCollections().subscribe((res) => {
       this.collections.set(res);
@@ -43,7 +43,7 @@ export class PostMoveComponent {
 
   movePost() {
     const postMoveDTO = {
-      postIds: [this.postId],
+      postIds: [...this.postIds],
       collectionId: this.selectedCollectionId(),
     } as PostMoveReqDTO;
 

@@ -4,11 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TagComponent } from 'src/entities/category';
 import { CollectionApi, CollectionDetailResDTO } from 'src/entities/collection';
 import { PostApi, PostType } from 'src/entities/post';
-import { BottomSheetService, ButtonComponent, IconComponent, SearchBarComponent } from 'src/shared/components';
+import { BottomSheetService, ButtonComponent, IconComponent, ModalReactiveService, SearchBarComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 
 import { ActionButtonsComponent, PostCardComponent } from '../ui';
+import { PostMoveComponent } from 'src/pages/post';
 
 @Component({
   selector: 'app-collection-main',
@@ -21,6 +22,7 @@ export class CollectionMainPage implements OnInit {
   private readonly collectionApi = inject(CollectionApi);
   private readonly postApi = inject(PostApi);
   private readonly bottomSheetService = inject(BottomSheetService);
+  private readonly modalReactiveService = inject(ModalReactiveService);
   private resizeObserver: ResizeObserver | null = null;
 
   @ViewChild('grid') grid!: ElementRef<HTMLElement>;
@@ -34,7 +36,7 @@ export class CollectionMainPage implements OnInit {
   rowGap = 10;
   collectionId: string | undefined = undefined;
 
-  isEditMode = signal<boolean>(true);
+  isEditMode = signal<boolean>(false);
   selectedPostIds = signal<number[]>([]);
 
   constructor() {
@@ -206,6 +208,21 @@ export class CollectionMainPage implements OnInit {
   ngOnDestroy() {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
+    }
+  }
+
+  // 게시물 이동
+  async postMove() {
+    const response = await this.bottomSheetService.open(PostMoveComponent as Type<Component>, this.selectedPostIds());
+    if (response === 'success') {
+      const modalData = {
+        title: '게시물 이동 완료',
+        subTitle: '게시물 이동이 완료되었습니다.',
+        content: '확인 버튼을 누르시면 홈화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
+        buttons: ['확인'],
+      };
+
+      this.modalReactiveService.open(modalData).subscribe();
     }
   }
 

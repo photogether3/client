@@ -1,4 +1,4 @@
-<div class="flex min-h-screen flex-col border-x bg-gray10">
+<div class="flex flex-col min-h-screen border-x bg-gray10">
   @if (collection) {
     <app-header [title]="collection.title">
       @if (!isEditMode()) {
@@ -11,28 +11,28 @@
     </app-header>
   }
 
-  <main class="mt-5 flex flex-col gap-5 px-4">
+  <main class="flex flex-col gap-5 px-4 mt-5">
     @if (!isEditMode()) {
       <app-search-bar />
     } @else {
       <div class="grid grid-cols-2 gap-2">
         <app-button text="게시물 삭제" appearance="tertiary" size="md" />
-        <app-button text="게시물 이동" size="md" />
+        <app-button text="게시물 이동" size="md" (click)="postMove()" />
       </div>
     }
     <div class="flex items-center justify-between">
       @if (!isEditMode()) {
         <app-tag [tagName]="collection?.category?.name" appearance="primary" />
-        <p class="text-body-s font-bold">
+        <p class="font-bold text-body-s">
           <span class="text-primary60">{{ postList?.length }}</span>
           개의 게시물
         </p>
       } @else {
         <div class="flex items-center gap-2">
           <input type="checkbox" class="size-6" />
-          <span class="text-body-s font-bold text-gray90">전체선택</span>
+          <span class="font-bold text-body-s text-gray90">전체선택</span>
         </div>
-        <p class="text-body-s font-bold">
+        <p class="font-bold text-body-s">
           <span class="text-primary60">{{ selectedPostIds().length }}</span>
           개 선택됨
         </p>
