@@ -16,7 +16,7 @@
       <app-search-bar />
     } @else {
       <div class="grid grid-cols-2 gap-2">
-        <app-button text="게시물 삭제" appearance="tertiary" size="md" />
+        <app-button text="게시물 삭제" appearance="tertiary" size="md" (click)="postDelete()" />
         <app-button text="게시물 이동" size="md" (click)="postMove()" />
       </div>
     }

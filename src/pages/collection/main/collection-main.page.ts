@@ -226,6 +226,32 @@ export class CollectionMainPage implements OnInit {
     }
   }
 
+  postDelete() {
+    const modalData = {
+      title: '게시물 삭제',
+      subTitle: '선택하신 게시물을 삭제합니다.',
+      content: '삭제 버튼을 누르시면 해당 게시물이 삭제됩니다. 이 작업은 되돌릴 수 없습니다. 삭제를 원하시지 않을 경우 취소를 눌러주세요.',
+      buttons: ['취소', '확인'],
+    };
+    this.modalReactiveService.open(modalData).subscribe((res) => {
+      if (res === '확인') {
+        this.postApi.deletePost(this.selectedPostIds()).subscribe((res) => {
+          console.log('게시물 삭제 api 전송 후 응답: ', res); //  null값 찍힘
+          const modalData = {
+            title: '게시물 삭제 완료',
+            subTitle: '게시물 삭제가 완료되었습니다.',
+            content: '확인버튼을 누르시면 홈 화면으로 돌아갑니다. 확인 버튼을 눌러주세요.',
+            buttons: ['확인'],
+          };
+
+          this.modalReactiveService.open(modalData).subscribe((res) => {
+            this.router.navigateByUrl('home');
+          });
+        });
+      }
+    });
+  }
+
   async openBottomSheet() {
     const result = await this.bottomSheetService.open(ActionButtonsComponent as Type<Component>);
     console.log('📌 바텀시트가 닫히면서 반환된 값:', result);
