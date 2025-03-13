@@ -1,4 +1,7 @@
-import { Component, inject, input, model, signal } from '@angular/core';
+import { afterNextRender, Component, inject, input, model, signal } from '@angular/core';
+
+import { Observable } from 'rxjs';
+
 import { CategoriesGetDTO, CategoryApi, TagComponent } from 'src/entities/category';
 
 @Component({
@@ -15,18 +18,15 @@ import { CategoriesGetDTO, CategoryApi, TagComponent } from 'src/entities/catego
 export class CategorySelectorWidget {
   private readonly categoryApi = inject(CategoryApi);
 
+  type = input.required<'all' | 'fav'>();
   isMultiSelect = input<boolean>(true);
   selectedCategoryList = model<CategoriesGetDTO[]>([]);
   categoryList = signal<(CategoriesGetDTO & { selected: boolean })[]>([]);
 
   constructor() {
-    this.categoryApi.fetchCategories().subscribe((res) => {
-      this.categoryList.set(
-        res.map((category) => ({
-          ...category,
-          selected: this.selectedCategoryList().some((fav: CategoriesGetDTO) => fav.id === category.id),
-        })),
-      );
+    afterNextRender(() => {
+      const apiMethod = this.type() === 'all' ? this.categoryApi.fetchCategories.bind(this.categoryApi) : this.categoryApi.fetchFavCategories.bind(this.categoryApi);
+      this.fetchCategoriesData(apiMethod);
     });
   }
 
@@ -56,5 +56,16 @@ export class CategorySelectorWidget {
       .filter((category) => category.selected)
       .map(({ id, name }) => ({ id, name }));
     this.selectedCategoryList.set(updatedList);
+  }
+
+  private fetchCategoriesData(apiMethod: () => Observable<CategoriesGetDTO[]>) {
+    apiMethod().subscribe((res) => {
+      this.categoryList.set(
+        res.map((category) => ({
+          ...category,
+          selected: this.selectedCategoryList().some((cat) => cat.id === category.id),
+        })),
+      );
+    });
   }
 }
