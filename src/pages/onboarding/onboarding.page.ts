@@ -1,55 +1,54 @@
-import { CommonModule, JsonPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CategoriesGetDTO, CategoryApi, TagComponent } from 'src/entities/category';
+
+import { CategoriesGetDTO, TagComponent } from 'src/entities/category';
+import { ProfileUpdateFormType } from 'src/entities/user/model/user.type';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
+import { BaseForm, FormControls } from 'src/shared/lib';
+import { CategorySelectorWidget } from 'src/widgets/category-selector';
 import { HeaderWidget } from 'src/widgets/header';
 import { ProfileUpdateButton } from 'src/widgets/porfile-update-button';
 
 @Component({
   selector: 'onboarding-page',
   templateUrl: './onboarding.page.html',
-  imports: [ReactiveFormsModule, ButtonComponent, TagComponent, JsonPipe, CommonModule, InputComponent, HeaderWidget, ProfileUpdateButton],
+  imports: [ReactiveFormsModule, ButtonComponent, TagComponent, CategorySelectorWidget, CommonModule, InputComponent, HeaderWidget, ProfileUpdateButton],
 })
-export class OnboardingPage {
-  public initForm!: FormGroup;
-  public activeStep = signal(1);
-  public categoryList: CategoriesGetDTO[] = [];
-
-  private fb = inject(FormBuilder);
-  private readonly categoryApi = inject(CategoryApi);
-  private readonly router = inject(Router);
+export class OnboardingPage extends BaseForm<ProfileUpdateFormType> {
+  // TODO 온보딩 페이지 파일 업로드 기능
+  activeStep = signal(1);
+  selectedCategoryList = signal<CategoriesGetDTO[]>([]);
 
   get categoryFormArray() {
-    return this.initForm.get('categoryIds') as FormArray;
+    return this.form.get('categoryIds') as FormArray;
   }
+  private readonly router = inject(Router);
 
   constructor() {
-    this.initForm = this.fb.group({
-      nickname: '',
-      bio: '',
-      categoryIds: this.fb.array<number[]>([]),
-      file: null,
-    });
-
-    this.categoryApi.fetchCategories().subscribe((res) => {
-      this.categoryList = res;
-    });
+    super();
   }
 
+  protected override initForm(): void {
+    this.form = this.fb.group({
+      nickname: new FormControl(''),
+      bio: new FormControl(''),
+      file: new FormControl(),
+      categoryIds: this.fb.array<FormGroup<FormControls<number>>>([]),
+    });
+  }
   setStep(step: number) {
     this.activeStep.set(step);
   }
 
-  toggleCategory(categoryId: number) {
-    const index = this.categoryFormArray.value.findIndex((id: number) => id === categoryId);
+  updateSelectedCategories(updatedList: CategoriesGetDTO[]) {
+    this.selectedCategoryList.set(updatedList);
 
-    if (index === -1) {
-      this.categoryFormArray.push(this.fb.control(categoryId));
-    } else {
-      this.categoryFormArray.removeAt(index);
-    }
+    const updatedCategoryControls = this.selectedCategoryList().map((category) => this.fb.control(category.id));
+
+    this.categoryFormArray.clear();
+    updatedCategoryControls.forEach((control) => this.categoryFormArray.push(control));
   }
 
   updateProfile() {

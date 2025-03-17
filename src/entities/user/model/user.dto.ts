@@ -4,8 +4,6 @@ export type ProfileGetDTO = {
   email: string;
   imageUrl: string | null;
   bio: string | null;
-  updatedAt: Date;
-  createdAt: Date;
 };
 
 export type UpdateNicknameDTO = {

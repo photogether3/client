@@ -1,13 +1,8 @@
-import { FormControl } from '@angular/forms';
-
-export type ProfileType = {
-  id: string;
+export type ProfileUpdateFormType = {
   nickname: string;
-  email: string;
-  createdAt: string;
-  tags: string[];
-  content: string;
-  image: string;
+  bio: string;
+  file: File | null;
+  categoryIds: number[];
 };
 
 export type PasswordUpdateType = {
