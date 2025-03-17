@@ -23,12 +23,14 @@ export class ProfileUpdateButton {
   handleButton = output<void>();
 
   updateProfile() {
-    const { nickname: nickname, bio, file, categoryIds } = this.form().value;
+    const { nickname, bio, file, categoryIds } = this.form().value;
     const updateProfileDTO = {
       nickname: nickname ?? '',
       bio: bio ?? '',
       file: file ?? null,
     };
+
+    console.log(updateProfileDTO);
 
     const updateCategoryDTO = {
       categoryIds: categoryIds ?? [],

@@ -13,10 +13,7 @@
         회원가입이 거의 완료되었습니다. <br />
         회원님에 대해서 알려주세요.
       </p>
-      <form [formGroup]="form" class="flex flex-col gap-5">
-        <app-input label="닉네임" info="닉네임은 추후에 변경이 가능합니다." [hasInfoIcon]="true" placeholder="닉네임을 입력해주세요." formControlName="nickname" />
-        <app-input type="textarea" label="자기소개" info="회원님에 대해서 알려주세요.(선택)" placeholder="내 소개를 입력해주세요." formControlName="bio" />
-      </form>
+      <app-profile-update-form />
       <app-button text="다음으로" (click)="setStep(2)" />
     } @else {
       <p class="text-gray70">
@@ -27,7 +24,7 @@
       <app-category-selector [isMultiSelect]="true" [selectedCategoryList]="selectedCategoryList()" (selectedCategoryListChange)="updateSelectedCategories($event)" />
 
       <p class="text-center">선택한 주제는 나중에 다시 수정할 수 있어요!</p>
-      <app-profile-update-button buttonText="사진첩 정리하러 가기" [form]="form" (handleButton)="updateProfile()" />
+      <!-- <app-profile-update-button buttonText="사진첩 정리하러 가기" [form]="form" (handleButton)="updateProfile()" /> -->
     }
   </section>
 </div>

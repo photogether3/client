@@ -5,6 +5,13 @@ export type ProfileUpdateFormType = {
   categoryIds: number[];
 };
 
+export type ProfileInitFormType = {
+  nickname: string;
+  bio: string;
+  imageUrl: string;
+  categoryIds: number[];
+};
+
 export type PasswordUpdateType = {
   currentPassword: string;
   password: string;
