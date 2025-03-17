@@ -1,8 +1,8 @@
 import { JsonPipe } from '@angular/common';
-import { Component, effect, input } from '@angular/core';
+import { Component, effect, input, output } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { ProfileUpdateFormType, ProfileInitFormType } from 'src/entities/user/model/user.type';
+import { ProfileInitFormType, ProfileUpdateFormType } from 'src/entities/user/model/user.type';
 import { IconComponent, InputComponent } from 'src/shared/components';
 import { BaseForm, FormControls } from 'src/shared/lib';
 
@@ -14,6 +14,7 @@ import { BaseForm, FormControls } from 'src/shared/lib';
 export class ProfileUpdateForm extends BaseForm<ProfileUpdateFormType> {
   previewUrl: string | ArrayBuffer | null | undefined = null;
   profileInitForm = input<Partial<ProfileInitFormType> | undefined>(undefined);
+  profileUpdatedForm = output<ProfileUpdateFormType>();
 
   get categoryIds() {
     return this.form.get('categoryIds') as FormArray;
@@ -37,6 +38,13 @@ export class ProfileUpdateForm extends BaseForm<ProfileUpdateFormType> {
       });
 
       this.previewUrl = this.profileInitForm()?.imageUrl;
+    });
+
+    // TODO 서비스로 빼기
+    // 자식 컴포넌트 profile-update-form의 form 정보를
+    // 부모 컴포넌트 profile-update-page에서 profile-update-button 컴포넌트에 전달하기 위함
+    this.form.valueChanges.subscribe(() => {
+      this.profileUpdatedForm.emit(this.getRawValue());
     });
   }
 

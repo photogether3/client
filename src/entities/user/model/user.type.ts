@@ -1,3 +1,4 @@
+// TODO 프로필 초기, 수정 form type 재정의
 export type ProfileUpdateFormType = {
   nickname: string;
   bio: string;

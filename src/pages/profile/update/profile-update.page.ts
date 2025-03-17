@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import { Component, inject, signal, Type } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -11,13 +12,13 @@ import { HeaderWidget } from 'src/widgets/header';
 import { ProfileUpdateButton } from 'src/widgets/porfile-update-button';
 import { ProfileUpdateForm } from 'src/widgets/profile-update-form';
 
-import { ProfileInitFormType } from 'src/entities/user/model/user.type';
+import { ProfileInitFormType, ProfileUpdateFormType } from 'src/entities/user/model/user.type';
 import { CategoriesUpdateDialog } from '../ui';
 
 @Component({
   selector: 'profile-update-page',
   templateUrl: './profile-update.page.html',
-  imports: [TagComponent, ButtonComponent, FooterWidget, ProfileUpdateForm, HeaderWidget, InputComponent, ProfileUpdateButton],
+  imports: [TagComponent, ButtonComponent, FooterWidget, ProfileUpdateForm, HeaderWidget, InputComponent, ProfileUpdateButton, JsonPipe],
 })
 export class ProfileUpdatePage {
   private readonly router = inject(Router);
@@ -31,6 +32,12 @@ export class ProfileUpdatePage {
     nickname: '',
     bio: '',
     imageUrl: '',
+    categoryIds: [],
+  });
+  updatedForm = signal<ProfileUpdateFormType>({
+    nickname: '',
+    bio: '',
+    file: null,
     categoryIds: [],
   });
 
@@ -69,5 +76,9 @@ export class ProfileUpdatePage {
     this.modalReactiveService.open(modalData).subscribe(() => {
       this.router.navigateByUrl('/profile');
     });
+  }
+
+  updateForm(updatedForm: ProfileUpdateFormType) {
+    this.updatedForm.set(updatedForm);
   }
 }

@@ -16,7 +16,7 @@ export class CategorySelectorWidget {
   private readonly categoryApi = inject(CategoryApi);
 
   isMultiSelect = input<boolean>(true);
-  selectedCategoryList = model<CategoriesGetDTO[]>([]);
+  selectedCategoryList = model<number[]>([]);
   categoryList = signal<(CategoriesGetDTO & { selected: boolean })[]>([]);
 
   constructor() {
@@ -24,7 +24,7 @@ export class CategorySelectorWidget {
       this.categoryList.set(
         res.map((category) => ({
           ...category,
-          selected: this.selectedCategoryList().some((fav: CategoriesGetDTO) => fav.id === category.id),
+          selected: this.selectedCategoryList().some((fav: number) => fav === category.id),
         })),
       );
     });
@@ -55,6 +55,6 @@ export class CategorySelectorWidget {
     const updatedList = this.categoryList()
       .filter((category) => category.selected)
       .map(({ id, name }) => ({ id, name }));
-    this.selectedCategoryList.set(updatedList);
+    this.selectedCategoryList.set(updatedList.map((c) => c.id));
   }
 }

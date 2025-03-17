@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { CategoriesGetDTO } from 'src/entities/category';
+import { ProfileUpdateFormType } from 'src/entities/user/model/user.type';
 import { ButtonComponent } from 'src/shared/components';
 import { CategorySelectorWidget } from 'src/widgets/category-selector';
 import { HeaderWidget } from 'src/widgets/header';
@@ -15,11 +15,16 @@ import { ProfileUpdateForm } from 'src/widgets/profile-update-form';
   imports: [ButtonComponent, ProfileUpdateForm, CategorySelectorWidget, CommonModule, HeaderWidget, ProfileUpdateButton, ProfileUpdateForm],
 })
 export class OnboardingPage {
-  // TODO 온보딩 페이지 파일 업로드 기능
-  activeStep = signal(1);
-  selectedCategoryList = signal<CategoriesGetDTO[]>([]);
-
   private readonly router = inject(Router);
+
+  activeStep = signal(1);
+  selectedCategoryList = signal<number[]>([]);
+  updatedForm = signal<ProfileUpdateFormType>({
+    nickname: '',
+    bio: '',
+    file: null,
+    categoryIds: [],
+  });
 
   constructor() {}
 
@@ -27,11 +32,17 @@ export class OnboardingPage {
     this.activeStep.set(step);
   }
 
-  updateSelectedCategories(updatedList: CategoriesGetDTO[]) {
+  updateSelectedCategories(updatedList: number[]) {
     this.selectedCategoryList.set(updatedList);
+    this.updatedForm.update((prev) => ({ ...prev, categoryIds: this.selectedCategoryList() }));
+    console.log(this.updatedForm());
   }
 
   updateProfile() {
     this.router.navigateByUrl('/home');
+  }
+
+  updateForm(updatedForm: ProfileUpdateFormType) {
+    this.updatedForm.set(updatedForm);
   }
 }

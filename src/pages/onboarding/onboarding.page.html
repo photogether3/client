@@ -13,7 +13,7 @@
         회원가입이 거의 완료되었습니다. <br />
         회원님에 대해서 알려주세요.
       </p>
-      <app-profile-update-form />
+      <app-profile-update-form (profileUpdatedForm)="updateForm($event)" />
       <app-button text="다음으로" (click)="setStep(2)" />
     } @else {
       <p class="text-gray70">
@@ -24,7 +24,8 @@
       <app-category-selector [isMultiSelect]="true" [selectedCategoryList]="selectedCategoryList()" (selectedCategoryListChange)="updateSelectedCategories($event)" />
 
       <p class="text-center">선택한 주제는 나중에 다시 수정할 수 있어요!</p>
-      <!-- <app-profile-update-button buttonText="사진첩 정리하러 가기" [form]="form" (handleButton)="updateProfile()" /> -->
+      <app-profile-update-button buttonText="사진첩 정리하러 가기" [form]="updatedForm()" (handleButton)="updateProfile()" />
     }
   </section>
+  {{ updatedForm() | json }}
 </div>
