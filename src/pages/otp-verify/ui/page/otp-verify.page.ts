@@ -17,6 +17,6 @@ export class OtpVerifyPage {
     const navigation = this.router.getCurrentNavigation();
     const email = navigation?.extras?.state?.['email'] || null;
 
-    this.authApi.generateOtp({ email }).subscribe();
+    // this.authApi.generateOtp({ email }).subscribe();
   }
 }

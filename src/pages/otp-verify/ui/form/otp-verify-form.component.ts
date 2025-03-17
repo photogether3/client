@@ -13,8 +13,7 @@ import { BaseForm } from 'src/shared/lib';
   imports: [ReactiveFormsModule, ButtonComponent, InputComponent],
 })
 export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnInit, OnDestroy {
-  public email: string = '';
-
+  email: string = '';
   private timeLeft = 300;
   private timerSubscription!: Subscription;
   private authApi = inject(AuthApi);
