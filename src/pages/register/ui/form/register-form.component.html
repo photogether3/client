@@ -1,18 +1,38 @@
-<form [formGroup]="form" class="flex flex-col h-full gap-2">
-  <app-input formControlName="email" placeholder="이메일(example@gmail.com)" />
-  @if (form.get('email')?.pending) {
-    <span class="ml-1"> 로딩중 .. </span>
-  }
-  @if (getErrorMessage('email')) {
-    <p class="ml-1 text-xs text-red-600">{{ getErrorMessage('email') }}</p>
-  }
-  <app-input inputType="password" formControlName="password" placeholder="비밀번호" />
-  @if (getErrorMessage('password')) {
-    <p class="ml-1 text-xs text-red-600">{{ getErrorMessage('password') }}</p>
-  }
-  <app-input inputType="password" formControlName="confirmPassword" placeholder="비밀번호 확인" />
-  @if (getErrorMessage('confirmPassword')) {
-    <p class="ml-1 text-xs text-red-600">{{ getErrorMessage('confirmPassword') }}</p>
-  }
-  <app-button text="가입하기" [isDisabled]="!isValid()" (click)="onRegister()" />
+<form [formGroup]="form" class="flex h-full flex-col gap-2.5">
+  <div>
+    <app-input label="이메일" info="ex)abc@qwer.com" [hasInfoIcon]="true" formControlName="email" [hasError]="!!getErrorMessage('email')" placeholder="이메일을 입력해주세요." />
+    @if (form.get('email')?.pending) {
+      <span class="mt-2 block">로딩중 ..</span>
+    }
+    @if (getErrorMessage('email')) {
+      <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('email') }}</p>
+    }
+  </div>
+  <div>
+    <app-input
+      label="비밀번호"
+      info="숫자, 영문자, 특수문자를 포함 8~15자"
+      [hasInfoIcon]="true"
+      inputType="password"
+      formControlName="password"
+      [hasError]="!!getErrorMessage('password')"
+      placeholder="비밀번호" />
+    @if (getErrorMessage('password')) {
+      <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('password') }}</p>
+    }
+  </div>
+  <div>
+    <app-input
+      label="비밀번호 확인"
+      info="숫자, 영문자, 특수문자를 포함 8~15자"
+      [hasInfoIcon]="true"
+      inputType="password"
+      formControlName="confirmPassword"
+      [hasError]="!!getErrorMessage('confirmPassword')"
+      placeholder="비밀번호 확인" />
+    @if (getErrorMessage('confirmPassword')) {
+      <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('confirmPassword') }}</p>
+    }
+  </div>
+  <app-button text="다음으로" [isDisabled]="!isValid()" (click)="onRegister()" />
 </form>
