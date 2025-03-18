@@ -5,7 +5,7 @@
     <app-category-selector
       [isMultiSelect]="false"
       type="fav"
-      [selectedCategoryList]="this.category() ? [this.category()!] : []"
+      [selectedCategoryList]="this.categoryId() ? [this.categoryId()!] : []"
       (selectedCategoryListChange)="toggleCategory($event)"
       class="flex-1" />
   </div>

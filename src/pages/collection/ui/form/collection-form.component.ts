@@ -26,17 +26,17 @@ export class CollectionFormComponent extends BaseForm<CollectionFormType> implem
   submitForm = output<FormGroup>();
   mode = input.required<string>();
   title = input<string>();
-  category = input<CategoriesGetDTO>();
+  categoryId = input<number>();
 
   constructor() {
     super();
   }
 
   ngOnInit(): void {
-    if (this.mode() === 'update' && this.title() && this.category()) {
+    if (this.mode() === 'update' && this.title() && this.categoryId()) {
       this.form.patchValue({
         title: this.title(),
-        categoryId: this.category()?.id,
+        categoryId: this.categoryId(),
       });
     }
   }
@@ -49,8 +49,8 @@ export class CollectionFormComponent extends BaseForm<CollectionFormType> implem
   }
 
   // 카테고리 클릭 시
-  toggleCategory(category: CategoriesGetDTO[]) {
-    this.form.patchValue({ categoryId: category[0].id });
+  toggleCategory(category: number[]) {
+    this.form.patchValue({ categoryId: category[0] });
   }
 
   // 폼 제출
