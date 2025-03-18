@@ -1,13 +1,16 @@
-import { FormControl } from '@angular/forms';
-
-export type ProfileType = {
-  id: string;
+// TODO 프로필 초기, 수정 form type 재정의
+export type ProfileUpdateFormType = {
   nickname: string;
-  email: string;
-  createdAt: string;
-  tags: string[];
-  content: string;
-  image: string;
+  bio: string;
+  file: File | null;
+  categoryIds: number[];
+};
+
+export type ProfileInitFormType = {
+  nickname: string;
+  bio: string;
+  imageUrl: string;
+  categoryIds: number[];
 };
 
 export type PasswordUpdateType = {

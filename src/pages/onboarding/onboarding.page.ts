@@ -1,58 +1,48 @@
-import { CommonModule, JsonPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CategoriesGetDTO, CategoryApi, TagComponent } from 'src/entities/category';
-import { ButtonComponent, InputComponent } from 'src/shared/components';
+
+import { ProfileUpdateFormType } from 'src/entities/user/model/user.type';
+import { ButtonComponent } from 'src/shared/components';
+import { CategorySelectorWidget } from 'src/widgets/category-selector';
 import { HeaderWidget } from 'src/widgets/header';
 import { ProfileUpdateButton } from 'src/widgets/porfile-update-button';
+import { ProfileUpdateForm } from 'src/widgets/profile-update-form';
 
 @Component({
   selector: 'onboarding-page',
   templateUrl: './onboarding.page.html',
-  imports: [ReactiveFormsModule, ButtonComponent, TagComponent, JsonPipe, CommonModule, InputComponent, HeaderWidget, ProfileUpdateButton],
+  imports: [ButtonComponent, ProfileUpdateForm, CategorySelectorWidget, CommonModule, HeaderWidget, ProfileUpdateButton, ProfileUpdateForm],
 })
 export class OnboardingPage {
-  public initForm!: FormGroup;
-  public activeStep = signal(1);
-  public categoryList: CategoriesGetDTO[] = [];
-
-  private fb = inject(FormBuilder);
-  private readonly categoryApi = inject(CategoryApi);
   private readonly router = inject(Router);
 
-  get categoryFormArray() {
-    return this.initForm.get('categoryIds') as FormArray;
-  }
+  activeStep = signal(1);
+  selectedCategoryList = signal<number[]>([]);
+  updatedForm = signal<ProfileUpdateFormType>({
+    nickname: '',
+    bio: '',
+    file: null,
+    categoryIds: [],
+  });
 
-  constructor() {
-    this.initForm = this.fb.group({
-      nickname: '',
-      bio: '',
-      categoryIds: this.fb.array<number[]>([]),
-      file: null,
-    });
-
-    this.categoryApi.fetchCategories().subscribe((res) => {
-      this.categoryList = res;
-    });
-  }
+  constructor() {}
 
   setStep(step: number) {
     this.activeStep.set(step);
   }
 
-  toggleCategory(categoryId: number) {
-    const index = this.categoryFormArray.value.findIndex((id: number) => id === categoryId);
-
-    if (index === -1) {
-      this.categoryFormArray.push(this.fb.control(categoryId));
-    } else {
-      this.categoryFormArray.removeAt(index);
-    }
+  updateSelectedCategories(updatedList: number[]) {
+    this.selectedCategoryList.set(updatedList);
+    this.updatedForm.update((prev) => ({ ...prev, categoryIds: this.selectedCategoryList() }));
+    console.log(this.updatedForm());
   }
 
   updateProfile() {
     this.router.navigateByUrl('/home');
+  }
+
+  updateForm(updatedForm: ProfileUpdateFormType) {
+    this.updatedForm.set(updatedForm);
   }
 }

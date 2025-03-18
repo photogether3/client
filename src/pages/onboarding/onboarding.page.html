@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-secondary5">
+<div class="min-h-screen bg-white">
   <!-- TODO step 1,2가 있는 것 상태관리 -->
   <app-header>
     <p rightContent class="flex items-center">
@@ -9,37 +9,23 @@
 
   <section class="flex flex-col gap-5 px-4 pt-4">
     @if (activeStep() === 1) {
-      <div>
-        <p class="text-lg font-bold">내 정보를 입력해주세요.</p>
-        <p>회원님에 대해서 알려주세요.</p>
-      </div>
-
-      <form [formGroup]="initForm">
-        <app-input label="닉네임" placeholder="닉네임을 입력해주세요." formControlName="nickname" />
-        <app-input type="textarea" label="자기소개" placeholder="내 소개를 입력해주세요." formControlName="bio" />
-      </form>
-
+      <p class="text-gray70">
+        회원가입이 거의 완료되었습니다. <br />
+        회원님에 대해서 알려주세요.
+      </p>
+      <app-profile-update-form (profileUpdatedForm)="updateForm($event)" />
       <app-button text="다음으로" (click)="setStep(2)" />
     } @else {
-      <div>
-        <p class="text-lg font-bold">내 피드에 관리하고 싶은 관심주제</p>
-        <p>선택한 주제에 대한 사진첩을 만드실 수 있습니다.</p>
-      </div>
+      <p class="text-gray70">
+        회원님의 관심주제를 선택해주세요. <br />
+        선택한 주제에 대한 사진첩을 만드실 수 있습니다.
+      </p>
 
-      <div class="flex flex-wrap w-full gap-2 p-3 bg-white border rounded-lg">
-        @for (category of categoryList; track $index) {
-          <app-tag
-            [tagName]="category.name"
-            size="md"
-            [type]="categoryFormArray.value.includes(category.id) ? 'solid' : 'outline'"
-            (click)="toggleCategory(category.id)"
-            class="block cursor-pointer" />
-        }
-      </div>
+      <app-category-selector [isMultiSelect]="true" [selectedCategoryList]="selectedCategoryList()" (selectedCategoryListChange)="updateSelectedCategories($event)" />
 
-      <p>선택한 주제는 나중에 다시 수정할 수 있어요!</p>
-      <app-profile-update-button buttonText="사진첩 덜어내러 가기" [form]="initForm" (handleButton)="updateProfile()" />
+      <p class="text-center">선택한 주제는 나중에 다시 수정할 수 있어요!</p>
+      <app-profile-update-button buttonText="사진첩 정리하러 가기" [form]="updatedForm()" (handleButton)="updateProfile()" />
     }
-    {{ initForm.value | json }}
   </section>
+  {{ updatedForm() | json }}
 </div>

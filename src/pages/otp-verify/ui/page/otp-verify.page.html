@@ -1,9 +1,7 @@
-<section class="flex flex-col min-h-screen gap-5 px-4 pt-10 bg-secondary5">
-  <div>
-    <h1 class="text-3xl font-bold">OTP 인증</h1>
-    <p class="mt-1">이메일 확인 후, 인증 코드를 입력해주세요!</p>
-  </div>
-  <otp-verify-form />
-  <p class="mt-10">인증코드가 가지 않았나요 ?</p>
-  <app-button text="인증코드 재요청" />
+<section class="flex min-h-screen flex-col gap-5 bg-white px-4 pt-10">
+  <p class="text-body-s text-gray70">
+    이메일로 인증코드가 발송되었습니다.<br />
+    이메일 확인 후, 인증 코드를 입력해주세요.
+  </p>
+  <otp-verify-form [otpSent]="otpSent()" />
 </section>

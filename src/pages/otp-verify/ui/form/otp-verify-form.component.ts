@@ -1,7 +1,9 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, inject, input, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { interval, Subscription, takeWhile } from 'rxjs';
+
 import { AuthApi, AuthService, OtpFormType } from 'src/entities/auth';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { OTP_REGEX } from 'src/shared/const';
@@ -12,13 +14,14 @@ import { BaseForm } from 'src/shared/lib';
   templateUrl: './otp-verify-form.component.html',
   imports: [ReactiveFormsModule, ButtonComponent, InputComponent],
 })
-export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnInit, OnDestroy {
-  public email: string = '';
-
-  private timeLeft = 300;
-  private timerSubscription!: Subscription;
+export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnDestroy {
   private authApi = inject(AuthApi);
   private router = inject(Router);
+
+  otpSent = input<boolean>();
+  email: string = '';
+  private timeLeft = 300;
+  private timerSubscription!: Subscription;
 
   get formattedTime(): string {
     const minutes = Math.floor(this.timeLeft / 60);
@@ -40,6 +43,12 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnI
 
     const navigation = this.router.getCurrentNavigation();
     this.email = navigation?.extras?.state?.['email'] || null;
+
+    effect(() => {
+      if (this.otpSent()) {
+        this.startTimer();
+      }
+    });
   }
 
   protected override initForm(): void {
@@ -48,10 +57,6 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnI
         validators: [Validators.required, Validators.pattern(OTP_REGEX), Validators.minLength(6), Validators.maxLength(6)],
       }),
     });
-  }
-
-  ngOnInit() {
-    this.startTimer();
   }
 
   startTimer() {
@@ -78,6 +83,7 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnI
     });
   }
 
+  // TODO timer 리펙토링
   ngOnDestroy() {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();

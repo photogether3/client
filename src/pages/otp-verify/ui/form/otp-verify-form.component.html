@@ -1,11 +1,30 @@
 <form [formGroup]="form" class="flex flex-col gap-4">
-  <app-input inputType="text" minlength="6" maxlength="6" formControlName="otp" class="w-full" />
-  @if (getErrorMessage('otp')) {
-    <p class="ml-1 text-xs text-red-600">{{ getErrorMessage('otp') }}</p>
-  }
-  <span
-    >남은 입력시간:
-    <span class="text-red-600">{{ formattedTime }}</span>
+  <div>
+    <div class="flex items-end gap-2">
+      <app-input
+        label="인증코드"
+        info="인증코드를 입력해주세요"
+        [hasInfoIcon]="true"
+        placeholder="코드 6자리"
+        inputType="text"
+        minlength="6"
+        maxlength="6"
+        formControlName="otp"
+        [hasError]="!!getErrorMessage('otp')"
+        class="w-full flex-1" />
+      <app-button text="확인" [isDisabled]="!isValid()" (click)="onVerify()" class="w-24" />
+    </div>
+    @if (getErrorMessage('otp')) {
+      <p class="mt-2 text-detail text-accent50">{{ getErrorMessage('otp') }}</p>
+    }
+  </div>
+  <span class="text-body-s">
+    남은 입력시간:
+    <span class="font-bold text-accent60">{{ formattedTime }}</span>
   </span>
-  <app-button text="인증하기" [isDisabled]="!isValid()" (click)="onVerify()" />
+  <div class="flex justify-between text-body-s">
+    <p class="text-gray60">인증코드가 이메일로 전송되지 않았나요?</p>
+    <!-- TODO otp 재요청 -->
+    <button class="text-primary60 underline">재요청</button>
+  </div>
 </form>

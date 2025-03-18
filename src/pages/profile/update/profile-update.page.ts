@@ -1,81 +1,69 @@
 import { JsonPipe } from '@angular/common';
-import { Component, inject, Type } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject, signal, Type } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { forkJoin } from 'rxjs';
+
 import { CategoriesGetDTO, CategoryApi, TagComponent } from 'src/entities/category';
 import { UserApi } from 'src/entities/user';
 import { BottomSheetService, ButtonComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
-import { CategoriesUpdateDialog } from '../ui';
 import { HeaderWidget } from 'src/widgets/header';
-import { Router } from '@angular/router';
 import { ProfileUpdateButton } from 'src/widgets/porfile-update-button';
+import { ProfileUpdateForm } from 'src/widgets/profile-update-form';
+
+import { ProfileInitFormType, ProfileUpdateFormType } from 'src/entities/user/model/user.type';
+import { CategoriesUpdateDialog } from '../ui';
 
 @Component({
   selector: 'profile-update-page',
   templateUrl: './profile-update.page.html',
-  imports: [TagComponent, ButtonComponent, FooterWidget, ReactiveFormsModule, JsonPipe, HeaderWidget, InputComponent, ProfileUpdateButton],
+  imports: [TagComponent, ButtonComponent, FooterWidget, ProfileUpdateForm, HeaderWidget, InputComponent, ProfileUpdateButton, JsonPipe],
 })
 export class ProfileUpdatePage {
-  private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly userApi = inject(UserApi);
   private readonly categoryApi = inject(CategoryApi);
   private readonly bottomSheetService = inject(BottomSheetService);
   private readonly modalReactiveService = inject(ModalReactiveService);
 
-  profileUpdateForm!: FormGroup;
-  previewUrl: string | ArrayBuffer | null | undefined = null;
-
-  get categoryArray() {
-    return this.profileUpdateForm.get('categories') as FormArray;
-  }
+  categories = signal<CategoriesGetDTO[]>([]);
+  profileForm = signal<ProfileInitFormType>({
+    nickname: '',
+    bio: '',
+    imageUrl: '',
+    categoryIds: [],
+  });
+  updatedForm = signal<ProfileUpdateFormType>({
+    nickname: '',
+    bio: '',
+    file: null,
+    categoryIds: [],
+  });
 
   constructor() {
-    this.profileUpdateForm = this.fb.group({
-      nickname: '',
-      bio: '',
-      categories: this.fb.array([]),
-      file: '',
-    });
-
     forkJoin({
       profile: this.userApi.getProfile(),
       categories: this.categoryApi.fetchFavCategories(),
     }).subscribe(({ profile, categories }) => {
-      this.profileUpdateForm.patchValue({
+      this.profileForm.set({
         nickname: profile.nickname,
-        bio: profile.bio,
+        bio: profile.bio ?? '',
+        imageUrl: profile.imageUrl ?? '',
+        categoryIds: categories.map((c) => c.id),
       });
-
-      this.previewUrl = profile.imageUrl;
-      categories.forEach((category) => this.categoryArray.push(this.fb.control(category)));
+      this.categories.set(categories);
+      console.log(this.categories());
     });
   }
 
-  // 사용자 이미지 업데이트
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.profileUpdateForm.patchValue({ file });
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.previewUrl = e.target?.result;
-      };
-
-      reader.readAsDataURL(file);
-    }
-  }
-
   async updateCategory() {
-    const categoryArray = this.categoryArray.value;
-    const result = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, categoryArray);
+    const result = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, this.categories());
 
-    this.categoryArray.clear();
-    result.forEach((category: CategoriesGetDTO) => this.categoryArray.push(this.fb.control(category)));
+    this.profileForm.update((prev) => ({
+      ...prev,
+      categoryIds: result.map((category: CategoriesGetDTO) => category.id),
+    }));
   }
 
   updateProfile() {
@@ -88,5 +76,9 @@ export class ProfileUpdatePage {
     this.modalReactiveService.open(modalData).subscribe(() => {
       this.router.navigateByUrl('/profile');
     });
+  }
+
+  updateForm(updatedForm: ProfileUpdateFormType) {
+    this.updatedForm.set(updatedForm);
   }
 }
