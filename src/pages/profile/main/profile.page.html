@@ -1,21 +1,20 @@
-<div class="flex flex-col min-h-screen border-x bg-secondary5">
+<div class="flex min-h-screen flex-col border-x bg-gray10">
   @if (profile) {
-    <!-- header -->
     <app-header title="내 프로필 조회" />
 
-    <div class="flex flex-col flex-1 w-full gap-5 px-4 py-6">
-      <img [src]="profile.imageUrl || 'assets/images/default-image.webp'" alt="프로필 임시 이미지" class="block mx-auto bg-white border rounded-full size-28" />
+    <div class="flex w-full flex-1 flex-col gap-5 px-4 py-6">
+      <img [src]="profile.imageUrl || 'assets/images/default-image.webp'" alt="프로필 임시 이미지" class="mx-auto block size-28 rounded-full border bg-white" />
       <div>
-        <span class="block text-lg font-bold text-center">{{ profile.nickname }}</span>
-        <span class="block text-sm text-center text-gray-600">&#64;{{ profile.email.split('@')[0] }}</span>
+        <span class="block text-center text-lg font-bold">{{ profile.nickname }}</span>
+        <span class="block text-center text-sm text-gray-600">&#64;{{ profile.email.split('@')[0] }}</span>
       </div>
       <div class="text-sm">
         <span class="block">
-          <span class="inline-block mr-4 font-semibold">이메일 |</span>
+          <span class="mr-4 inline-block font-semibold">이메일 |</span>
           {{ profile.email }}
         </span>
         <p>
-          <span class="inline-block mr-4 font-semibold">자기소개 | </span>
+          <span class="mr-4 inline-block font-semibold">자기소개 | </span>
           {{ profile.bio }}
         </p>
       </div>
@@ -34,6 +33,5 @@
     </div>
   }
 
-  <!-- footer -->
   <app-footer class="sticky bottom-0 mt-auto" />
 </div>
