@@ -1,4 +1,4 @@
 <div class="flex flex-col gap-5">
-  <app-category-selector [isMultiSelect]="true" type="fav" [selectedCategoryList]="selectedCategoryList()" (selectedCategoryListChange)="updateSelectedCategories($event)" />
+  <app-category-selector [isMultiSelect]="true" type="all" [selectedCategoryList]="selectedCategoryList()" (selectedCategoryListChange)="updateSelectedCategories($event)" />
   <app-button text="태그 선택 완료" (click)="selectCategories()" />
 </div>

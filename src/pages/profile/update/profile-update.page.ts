@@ -58,7 +58,8 @@ export class ProfileUpdatePage {
   }
 
   async updateCategory() {
-    const result = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, this.categories());
+    const categoryIds = this.categories().map((c) => c.id);
+    const result = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, categoryIds);
 
     this.profileForm.update((prev) => ({
       ...prev,

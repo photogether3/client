@@ -20,7 +20,7 @@ export class CategoriesUpdateDialog {
 
   constructor() {}
 
-  updateSelectedCategories(updatedList: CategoriesGetDTO[]) {
+  updateSelectedCategories(updatedList: number[]) {
     this.selectedCategoryList.set(updatedList);
   }
 
