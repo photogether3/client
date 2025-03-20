@@ -10,6 +10,7 @@ import { UserApi } from 'src/entities/user';
 import { ButtonComponent, IconComponent, SearchBarComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
+import { ThemeService } from 'src/shared/services';
 
 import { CollectionCardComponent } from './components';
 
@@ -19,6 +20,7 @@ import { CollectionCardComponent } from './components';
   imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule, HeaderWidget, SearchBarComponent],
 })
 export class HomePage implements OnInit {
+  readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
   private readonly userApi = inject(UserApi);
   private readonly categoryApi = inject(CategoryApi);
@@ -65,5 +67,9 @@ export class HomePage implements OnInit {
   // 사진첩 생성
   createCollection() {
     this.router.navigateByUrl('collection/create');
+  }
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
   }
 }

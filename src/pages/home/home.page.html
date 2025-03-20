@@ -1,15 +1,16 @@
-<div class="flex flex-col min-h-screen border-x bg-gray10">
+<div class="flex min-h-screen flex-col border-x bg-gray10">
   <app-header [hasBackButton]="false" [hasLogo]="true">
     <app-button rightContent appearance="primary" text="사진첩 추가" size="xs" rightIcon="plus" [iconSize]="12" (click)="createCollection()" class="ml-auto" />
   </app-header>
 
-  <main class="flex flex-col flex-grow gap-4 px-4 py-5">
+  <main class="flex flex-grow flex-col gap-4 px-4 py-5">
+    <app-button (click)="toggleTheme()" [text]="themeService.theme() === 'dark' ? '🌙 Light Mode' : '☀️ Light Mode'" />
     <app-search-bar [value]="searchValue()" />
     <div class="">
       {{ searchValue() }}
       <p class="mb-2.5 flex items-center justify-between text-gray90">
-        <span class="font-bold text-body-s">{{ nickname }}의 사진첩</span>
-        <button class="flex items-center gap-1 font-bold text-detail">
+        <span class="text-body-s font-bold">{{ nickname }}의 사진첩</span>
+        <button class="flex items-center gap-1 text-detail font-bold">
           태그필터
           <app-icon name="filter" styleClass="size-5" />
         </button>
@@ -27,7 +28,7 @@
       <h4 class="mb-2.5 text-body-s font-bold text-gray90">정리가 필요한 사진첩</h4>
       <div class="divide-y divide-gray30 rounded-[12px] bg-white p-4 text-detail">
         <!-- 미분류 -->
-        <div class="flex items-center justify-between pb-2 cursor-pointer">
+        <div class="flex cursor-pointer items-center justify-between pb-2">
           <div class="flex items-center gap-2">
             <app-icon name="uncategorized" [size]="20" />
             <span class="font-bold">미분류</span>
@@ -39,7 +40,7 @@
         </div>
 
         <!-- 휴지통 -->
-        <div class="flex items-center justify-between pt-2 cursor-pointer">
+        <div class="flex cursor-pointer items-center justify-between pt-2">
           <div class="flex items-center gap-2">
             <app-icon name="trash" [size]="15" />
             <span class="font-bold">휴지통</span>
