@@ -3,32 +3,32 @@
   <div class="grid grid-cols-2 gap-5">
     @for (collection of myCollections().default; track $index) {
       <div (click)="checkboxRef.click()" class="relative">
-        <input #checkboxRef type="checkbox" (change)="selectCollection(collection.id, $event)" [checked]="selectedCollectionId() === collection.id" class="absolute z-20 w-6 h-6" />
-        <app-collection-card [post]="collection" />
+        <input #checkboxRef type="checkbox" (change)="selectCollection(collection.id, $event)" [checked]="selectedCollectionId() === collection.id" class="absolute z-20 h-6 w-6" />
+        <app-collection-card [collection]="collection" />
         <div [ngClass]="selectedCollectionId() !== collection.id ? 'bg-black/20' : 'border border-primary50'" class="absolute inset-0 z-10 rounded-[12px]"></div>
       </div>
     }
   </div>
   <section class="col-span-full">
     <h4 class="mb-2.5 text-body-s font-bold text-gray90">정리가 필요한 사진첩</h4>
-    <div class="shadow-custom divide-y divide-gray30 rounded-[12px] bg-white p-4 text-detail">
+    <div class="divide-y divide-gray30 rounded-[12px] bg-white p-4 text-detail shadow-custom">
       <!-- 미분류 -->
-      <div class="flex items-center justify-between pb-2 cursor-pointer">
+      <div class="flex cursor-pointer items-center justify-between pb-2">
         <div class="flex items-center gap-2">
           <input
             type="checkbox"
             (change)="selectCollection(myCollections().uncategorized!.id, $event)"
             [checked]="selectedCollectionId() === myCollections().uncategorized!.id"
-            class="w-6 h-6" />
+            class="h-6 w-6" />
           <span class="font-bold">미분류</span>
         </div>
         <span class="text-gray50">{{ myCollections().uncategorized?.postCount }}개 사진</span>
       </div>
 
       <!-- 휴지통 -->
-      <div class="flex items-center justify-between pt-2 cursor-pointer">
+      <div class="flex cursor-pointer items-center justify-between pt-2">
         <div class="flex items-center gap-2">
-          <input type="checkbox" (change)="selectCollection(myCollections().trash?.id, $event)" [checked]="selectedCollectionId() === myCollections().trash?.id" class="w-6 h-6" />
+          <input type="checkbox" (change)="selectCollection(myCollections().trash?.id, $event)" [checked]="selectedCollectionId() === myCollections().trash?.id" class="h-6 w-6" />
           <span class="font-bold">휴지통</span>
         </div>
         <span class="text-gray50">{{ myCollections().trash?.postCount }}개 사진</span>

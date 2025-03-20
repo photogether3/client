@@ -1,4 +1,4 @@
-<div class="flex flex-col min-h-screen border-x bg-gray10">
+<div class="flex min-h-screen flex-col border-x bg-gray10">
   <app-header title="게시물 생성">
     <span rightContent class="flex text-body-m text-gray90">
       <span class="font-bold text-primary60">{{ step() }}</span>
@@ -6,13 +6,13 @@
     </span>
   </app-header>
 
-  <div class="flex-1 w-full px-4 py-6">
+  <div class="w-full flex-1 px-4 py-6">
     @if (step() === 1) {
       <form [formGroup]="form" class="flex flex-col gap-5">
         <input type="file" (change)="upload($event)" />
-        <div class="shadow-custom flex h-[485px] items-center justify-center rounded-[8px] border bg-white">
+        <div class="flex h-[485px] items-center justify-center rounded-[8px] border bg-white shadow-custom">
           @if (previewUrl) {
-            <img [src]="previewUrl" alt="임시 이미지" class="shadow-custom h-[485px] w-full rounded-[8px]" />
+            <img [src]="previewUrl" alt="임시 이미지" class="h-[485px] w-full rounded-[8px] shadow-custom" />
           } @else {
             <p>사진을 선택해주세요.</p>
           }
@@ -62,8 +62,8 @@
                 type="checkbox"
                 (change)="selectCollection(collection.id, $event)"
                 [checked]="form.value.collectionId === collection.id"
-                class="absolute z-20 w-6 h-6 left-2 top-2" />
-              <app-collection-card [post]="collection" />
+                class="absolute left-2 top-2 z-20 h-6 w-6" />
+              <app-collection-card [collection]="collection" />
               <div [ngClass]="form.value.collectionId !== collection.id ? 'bg-black/20' : 'border border-primary50'" class="absolute inset-0 z-10 rounded-[12px]"></div>
             </div>
           }
@@ -72,26 +72,26 @@
           <h4 class="mb-2.5 text-body-s font-bold text-gray90">정리가 필요한 사진첩</h4>
           <div class="divide-y divide-gray30 rounded-[12px] bg-white p-4 text-detail">
             <!-- 미분류 -->
-            <div class="flex items-center justify-between pb-2 cursor-pointer">
+            <div class="flex cursor-pointer items-center justify-between pb-2">
               <div class="flex items-center gap-2">
                 <input
                   type="checkbox"
                   (change)="selectCollection(myCollections().uncategorized!.id, $event)"
                   [checked]="form.value.collectionId === myCollections().uncategorized!.id"
-                  class="w-6 h-6" />
+                  class="h-6 w-6" />
                 <span class="font-bold">미분류</span>
               </div>
               <span class="text-gray50">{{ myCollections().uncategorized?.postCount }}개 사진</span>
             </div>
 
             <!-- 휴지통 -->
-            <div class="flex items-center justify-between pt-2 cursor-pointer">
+            <div class="flex cursor-pointer items-center justify-between pt-2">
               <div class="flex items-center gap-2">
                 <input
                   type="checkbox"
                   (change)="selectCollection(myCollections().trash?.id, $event)"
                   [checked]="form.value.collectionId === myCollections().trash?.id"
-                  class="w-6 h-6" />
+                  class="h-6 w-6" />
                 <span class="font-bold">휴지통</span>
               </div>
               <span class="text-gray50">{{ myCollections().trash?.postCount }}개 사진</span>

@@ -17,7 +17,7 @@
       </p>
       <div class="flex flex-col gap-5">
         @for (collection of myCollections.default; track $index) {
-          <app-collection-card [post]="collection" />
+          <app-collection-card [collection]="collection" />
         } @empty {
           <div class="col-span-full h-[140px] rounded-[12px] border border-black bg-white p-4">생성된 사진첩이 없습니다!</div>
         }
