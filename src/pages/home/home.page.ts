@@ -12,7 +12,7 @@ import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 import { ThemeService } from 'src/shared/services';
 
-import { CollectionCardComponent } from './components';
+import { CollectionCardComponent } from './ui';
 
 @Component({
   selector: 'home-page',

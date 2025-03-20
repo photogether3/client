@@ -1,2 +1,2 @@
 export * from './home.page';
-export * from './components';
+export * from './ui';

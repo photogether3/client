@@ -15,7 +15,7 @@
           <app-icon name="filter" styleClass="size-5" />
         </button>
       </p>
-      <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+      <div class="flex flex-col gap-5">
         @for (collection of myCollections.default; track $index) {
           <app-collection-card [post]="collection" />
         } @empty {
