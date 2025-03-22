@@ -4,6 +4,7 @@ import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { CollectionApi, CollectionType } from 'src/entities/collection';
 import { ImgContentType, PostApi, PostCreateFormType } from 'src/entities/post';
+import { VisionApi } from 'src/entities/vision';
 import { CollectionCardComponent } from 'src/pages/home';
 import { ButtonComponent, IconComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
 import { BaseForm, FormControls } from 'src/shared/lib';
@@ -18,6 +19,7 @@ import { HeaderWidget } from 'src/widgets/header';
 export class PostCreatePage extends BaseForm<PostCreateFormType> {
   private readonly postApi = inject(PostApi);
   private readonly collectionApi = inject(CollectionApi);
+  private readonly visionApi = inject(VisionApi);
   private readonly modalReactiveService = inject(ModalReactiveService);
 
   step = signal<number>(1);
@@ -64,6 +66,9 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
       const file = input.files[0];
       this.form.patchValue({ file });
       const reader = new FileReader();
+
+      // + 이미지 정보 추출 API 호출
+      this.visionApi.preview(file).subscribe();
 
       reader.onload = (e) => {
         this.previewUrl = e.target?.result;
