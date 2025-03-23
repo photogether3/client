@@ -59,10 +59,10 @@ module.exports = {
         accent80: 'var(--color-accent80)',
         accent90: 'var(--color-accent90)',
 
-        warning5: 'var(--color-warning5)',
-        warning10: 'var(--color-warning10)',
-        warning50: 'var(--color-warning50)',
-        warning60: 'var(--color-warning60)',
+        layer10: 'var(--color-layer10)',
+        layer20: 'var(--color-layer20)',
+        layer30: 'var(--color-layer30)',
+        layer40: 'var(--color-layer40)',
       },
       boxShadow: {
         custom: '2px 4px 8px 0 rgba(0,0,0,0.15)',
