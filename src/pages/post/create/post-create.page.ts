@@ -3,6 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { CollectionApi, CollectionType } from 'src/entities/collection';
+import { ImageApi } from 'src/entities/image';
 import { ImgContentType, PostApi, PostCreateFormType } from 'src/entities/post';
 import { CollectionCardComponent } from 'src/pages/home';
 import { ButtonComponent, IconComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
@@ -17,6 +18,7 @@ import { HeaderWidget } from 'src/widgets/header';
 })
 export class PostCreatePage extends BaseForm<PostCreateFormType> {
   private readonly postApi = inject(PostApi);
+  private readonly imageApi = inject(ImageApi);
   private readonly collectionApi = inject(CollectionApi);
   private readonly modalReactiveService = inject(ModalReactiveService);
 
@@ -35,8 +37,6 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
 
   constructor() {
     super();
-
-    this.initializeMetadata();
 
     this.collectionApi.getCollections().subscribe((res) => {
       this.collections.set(res);
@@ -59,18 +59,27 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
   // =============== STEP1 ===============
   upload(event: Event) {
     const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
 
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      this.form.patchValue({ file });
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        this.previewUrl = e.target?.result;
-      };
-
-      reader.readAsDataURL(file);
+    if (!file) {
+      return;
     }
+
+    this.form.patchValue({ file });
+
+    const reader = new FileReader();
+    reader.onload = ({ target }) => {
+      this.previewUrl = target?.result;
+    };
+
+    reader.readAsDataURL(file);
+
+    this.imageApi.extractImgText({ file }).subscribe((textArray) => {
+      const { lines } = textArray;
+      lines.forEach((content: string) => {
+        this.addMetadata(content, false, false);
+      });
+    });
   }
 
   toggleLink(index: number) {
@@ -95,16 +104,6 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
     });
 
     this.metadataArray.push(metadataGroup);
-  }
-
-  private initializeMetadata() {
-    const initialImages = Array.from({ length: 4 }, (_, i) => ({
-      content: `(임시) 사진내용 ${i + 1}`,
-      isPublic: false,
-      hasLink: false,
-    }));
-
-    initialImages.forEach((img) => this.addMetadata(img.content, img.isPublic, img.hasLink));
   }
 
   // =============== STEP2 ===============
