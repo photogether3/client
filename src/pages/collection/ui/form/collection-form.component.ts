@@ -2,7 +2,6 @@ import { Component, input, OnInit, output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategorySelectorWidget } from 'src/widgets/category-selector';
 
-import { CategoriesGetDTO, TagComponent } from 'src/entities/category';
 import { CollectionFormType } from 'src/entities/collection';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { BaseForm } from 'src/shared/lib';
@@ -20,7 +19,7 @@ import { BaseForm } from 'src/shared/lib';
       }
     `,
   ],
-  imports: [TagComponent, ReactiveFormsModule, InputComponent, ButtonComponent, CategorySelectorWidget],
+  imports: [ReactiveFormsModule, InputComponent, ButtonComponent, CategorySelectorWidget],
 })
 export class CollectionFormComponent extends BaseForm<CollectionFormType> implements OnInit {
   submitForm = output<FormGroup>();

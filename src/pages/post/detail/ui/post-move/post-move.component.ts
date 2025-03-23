@@ -4,12 +4,12 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { CollectionApi, CollectionType } from 'src/entities/collection';
 import { PostApi, PostMoveReqDTO } from 'src/entities/post';
 import { CollectionCardComponent } from 'src/pages/home';
-import { BottomSheetService, ButtonComponent, IconComponent } from 'src/shared/components';
+import { BottomSheetService, ButtonComponent } from 'src/shared/components';
 
 @Component({
   selector: 'post-move',
   templateUrl: './post-move.component.html',
-  imports: [ButtonComponent, CollectionCardComponent, IconComponent, CommonModule],
+  imports: [ButtonComponent, CollectionCardComponent, CommonModule],
 })
 export class PostMoveComponent {
   private readonly bottomSheetService = inject(BottomSheetService);

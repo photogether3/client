@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -16,7 +15,7 @@ import { BaseForm } from 'src/shared/lib';
       width: 100%;
     }
   `,
-  imports: [ReactiveFormsModule, ButtonComponent, InputComponent, JsonPipe],
+  imports: [ReactiveFormsModule, ButtonComponent, InputComponent],
 })
 export class LoginFormComponent extends BaseForm<LoginFormType> {
   private readonly authApi = inject(AuthApi);

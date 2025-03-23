@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import { Component, inject, signal, Type } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -6,7 +5,7 @@ import { forkJoin } from 'rxjs';
 
 import { CategoriesGetDTO, CategoryApi, TagComponent } from 'src/entities/category';
 import { UserApi } from 'src/entities/user';
-import { BottomSheetService, ButtonComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
+import { BottomSheetService, ButtonComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 import { ProfileUpdateButton } from 'src/widgets/porfile-update-button';
@@ -18,7 +17,7 @@ import { CategoriesUpdateDialog } from '../ui';
 @Component({
   selector: 'profile-update-page',
   templateUrl: './profile-update.page.html',
-  imports: [TagComponent, ButtonComponent, FooterWidget, ProfileUpdateForm, HeaderWidget, InputComponent, ProfileUpdateButton, JsonPipe],
+  imports: [TagComponent, ButtonComponent, FooterWidget, ProfileUpdateForm, HeaderWidget, ProfileUpdateButton],
 })
 export class ProfileUpdatePage {
   private readonly router = inject(Router);

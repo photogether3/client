@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ButtonComponent } from '../../button';
 
 @Component({
   selector: 'app-loading',
@@ -9,7 +8,7 @@ import { ButtonComponent } from '../../button';
       position: absolute;
     }
   `,
-  imports: [ButtonComponent],
+  imports: [],
 })
 export class LoadingComponent {
   constructor() {}
