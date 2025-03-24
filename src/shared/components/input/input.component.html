@@ -1,6 +1,6 @@
 <label class="flex flex-col gap-2">
   @if (label()) {
-    <span class="font-normal text-body-s">{{ label() }}</span>
+    <span class="text-body-s font-normal text-white">{{ label() }}</span>
   }
 
   @if (info()) {
@@ -8,7 +8,7 @@
       @if (hasInfoIcon()) {
         <app-icon name="info" [size]="16" class="text-primary50" />
       }
-      <p class="text-detail text-gray70">
+      <p class="text-detail text-gray40">
         {{ info() }}
       </p>
     </div>

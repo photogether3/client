@@ -3,12 +3,13 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { twMerge } from 'tailwind-merge';
 
-import { inputVariants } from './input.styles';
+import { inputVariants, InputProps } from './input.styles';
 import { IconComponent } from '../icon';
 
 @Component({
   selector: 'app-input',
   templateUrl: 'input.component.html',
+  styleUrl: 'input.component.css',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -21,6 +22,7 @@ import { IconComponent } from '../icon';
 export class InputComponent implements ControlValueAccessor {
   label = input<string>('');
   type = input<'input' | 'textarea'>('input');
+  size = input<InputProps['size']>('md');
   inputType = input<'text' | 'password' | 'number' | 'email'>('text');
   placeholder = input<string>('');
   info = input<string>('');
@@ -28,7 +30,7 @@ export class InputComponent implements ControlValueAccessor {
   hasInfoIcon = input<boolean>(false);
 
   computedClass = computed(() => {
-    return twMerge(inputVariants({ type: this.type(), state: this.hasError() ? 'error' : 'default' }));
+    return twMerge(inputVariants({ type: this.type(), size: this.size(), state: this.hasError() ? 'error' : 'default' }));
   });
 
   value: string = '';

@@ -1,15 +1,22 @@
 import { cva, VariantProps } from 'class-variance-authority';
 
-export const inputVariants = cva('border rounded-[8px] px-4 text-gray90 text-body-m placeholder:text-gray50 outline-none', {
+export const inputVariants = cva('border rounded-[8px] px-4 text-body-m placeholder:text-gray50 outline-none', {
   variants: {
+    size: {
+      lg: 'h-14',
+      md: 'h-12',
+      sm: 'h-10',
+      xs: 'h-8',
+    },
     type: {
-      input: 'h-12',
+      input: '',
       textarea: 'py-2 resize-none min-h-[144px]',
     },
     state: {
-      default: 'bg-white border-gray70 focus:border-primary50 focus:border-2',
-      error: 'bg-white border-accent50 border-2',
-      disabled: 'bg-gray30 border-gray50 text-gray60',
+      // TODO border border-image-source로 줘야 함 (임시: border-gray60)
+      default: 'bg-layer30 focus:border-primary50 focus:border-2 border-gray70 text-white',
+      error: 'bg-layer30 border-accent50 border-2 text-white',
+      disabled: 'bg-layer20 border-gray50 text-gray50',
     },
     defaultVariants: {
       state: 'default',

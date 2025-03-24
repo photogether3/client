@@ -1,0 +1,4 @@
+.border-gradient {
+  border: 1px solid;
+  border-image-source: linear-gradient(295.46deg, rgba(255, 255, 255, 0) 0.77%, rgba(255, 255, 255, 0.16) 98.62%);
+}
