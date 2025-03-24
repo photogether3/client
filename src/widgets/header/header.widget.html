@@ -1,13 +1,13 @@
-<header class="sticky top-0 z-10 flex max-h-[73px] w-full items-center gap-3 border-b border-b-primary50 bg-white px-4 py-5 shadow-sm">
+<header class="bg-layer40/80 sticky top-0 z-10 flex max-h-[73px] w-full items-center gap-3 border-b border-b-primary50 px-4 py-5 shadow-sm">
   @if (hasBackButton()) {
-    <button (click)="goBack()" class="flex items-center justify-center text-xl font-bold rounded-full size-8 hover:bg-gray-200">
+    <button (click)="goBack()" class="flex size-8 items-center justify-center rounded-full text-xl font-bold hover:bg-gray-200">
       <app-icon name="arrow-left" />
     </button>
   }
   @if (hasLogo()) {
     <app-icon name="logo-lg" class="mb-1" />
   } @else {
-    <span class="w-full text-xl font-bold truncate">{{ title() }}</span>
+    <span class="w-full truncate text-xl font-bold">{{ title() }}</span>
   }
   <ng-content select="[rightContent]" />
 </header>
