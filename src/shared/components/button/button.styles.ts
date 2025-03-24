@@ -4,11 +4,11 @@ import { extendTailwindMerge } from 'tailwind-merge';
 export const buttonStyles = cva('flex items-center justify-center rounded-full', {
   variants: {
     type: {
-      primary: 'text-white bg-primary50 hover:bg-primary60 active:bg-primary70 disabled:bg-gray30 disabled:text-gray60',
-      secondary:
-        'text-primary60 border border-primary50 bg-primary5 hover:bg-primary20 active:bg-primary70 active:text-primary70 disabled:bg-gray30 disabled:border-gray40 disabled:text-gray60',
-      tertiary: 'text-secondary90 border border-gray90 bg-white active:bg-gray10 disabled:border-gray40 disabled:bg-gray30 disabled:text-gray60',
-      text: 'border border-base04 hover:text-white hover:bg-secondary60 active:text-white active:bg-secondary70 disabled:text-link-disabled',
+      primary: 'text-white bg-primary50 active:bg-primary70 disabled:bg-layer30 shadow-custom disabled:text-gray70',
+      secondary: 'text-primary20 border border-primary50 bg-[#182B28] disabled:bg-layer30 shadow-custom disabled:text-gray70',
+      tertiary: 'text-secondary20 border border-layer10 bg-layer40 active:bg-layer20 active:border-layer10 disabled:bg-layer30 shadow-custom disabled:text-gray70',
+      text: 'text-white active:bg-secondary10 active:text-gray90 disabled:text-gray50',
+      danger: 'text-accent30 border border-accent70 text-[#311A1F] disabled:bg-layer30 shadow-custom disabled:text-gray70',
     },
     size: {
       xl: 'text-body-l px-6 h-16',
