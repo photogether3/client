@@ -1,4 +1,5 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, effect, inject, input, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 
 import { IconComponent } from 'src/shared/components';
@@ -15,10 +16,12 @@ import { IconComponent } from 'src/shared/components';
       }
     `,
   ],
-  imports: [IconComponent, RouterLink],
+  imports: [IconComponent, RouterLink, NgClass],
 })
 export class FooterWidget {
   private readonly router = inject(Router);
+
+  hasButton = input<boolean>(false);
   private readonly url = signal<string>(this.router.url);
 
   constructor() {
