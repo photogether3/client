@@ -1,13 +1,13 @@
 <div
-  class="flex items-center justify-center w-full h-12 gap-2 px-4 bg-white rounded-full shadow-custom text-body-m text-gray90 ring-1 ring-gray10 focus-within:ring-2 focus-within:ring-primary50">
-  <app-icon name="search" [size]="20" />
+  class="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-layer30 px-4 text-body-m text-gray90 text-white shadow-custom ring-1 ring-gray70 focus-within:ring-2 focus-within:ring-primary50">
+  <app-icon name="search" [size]="20" class="text-white" />
   <input
     #inputRef
     type="text"
     placeholder="사진첩 전체 검색하기"
     [value]="value()"
     (input)="onInput($event)"
-    class="w-full h-full rounded-r-full outline-none placeholder:text-gray50" />
+    class="h-full w-full rounded-r-full bg-layer30 outline-none placeholder:text-gray50" />
   @if (value()) {
     <button (click)="resetValue()">
       <app-icon name="close-circle" [size]="20" />

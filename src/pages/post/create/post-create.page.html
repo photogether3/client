@@ -1,4 +1,4 @@
-<div class="bg-layer40 flex min-h-screen flex-col border-x">
+<div class="flex min-h-screen flex-col border-x bg-layer40">
   <app-header title="게시물 생성">
     <span rightContent class="flex text-body-m text-gray90">
       <span class="font-bold text-primary60">{{ step() }}</span>
@@ -52,7 +52,9 @@
             }
           </div>
         </div>
-        <app-button text="다음 단계로" width="full" (click)="updateState()" />
+        <app-footer [hasButton]="true" class="sticky bottom-0 mt-auto">
+          <app-button button text="다음으로" size="lg" (click)="updateState()" />
+        </app-footer>
       </form>
     } @else {
       <!-- STEP2 -->
@@ -103,9 +105,9 @@
           </div>
         </section>
       </div>
-
-      <app-button text="게시물 생성하기" width="full" (click)="createCollection()" class="mt-5" />
+      <app-footer [hasButton]="true" class="sticky bottom-0 mt-auto">
+        <app-button text="게시물 생성하기" size="lg" (click)="createCollection()" />
+      </app-footer>
     }
   </div>
-  <app-footer class="sticky bottom-0 mt-auto" />
 </div>
