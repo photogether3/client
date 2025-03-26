@@ -1,9 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+
+import { catchError, Observable, throwError } from 'rxjs';
+
 import { environment } from 'src/shared/environments';
 import { skipAuth } from 'src/shared/interceptors';
-import { jwtSourceDTO, loginDTO, VerifyOtpDTO, RegisterDTO, GenerateOtpDTO } from '../model';
+import { ErrorType } from 'src/shared/models';
+
+import { GenerateOtpDTO, jwtSourceDTO, loginDTO, RegisterDTO, VerifyOtpDTO } from '../model';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +29,11 @@ export class AuthApi {
 
   // OTP 발급
   generateOtp(otpObj: GenerateOtpDTO): Observable<jwtSourceDTO> {
-    return this.http.post<jwtSourceDTO>(`${environment.serverUrl}/v1/auth/otp/generate`, otpObj, { context: skipAuth() });
+    return this.http.post<jwtSourceDTO>(`${environment.serverUrl}/v1/auth/otp/generate`, otpObj, { context: skipAuth() }).pipe(
+      catchError((error: ErrorType) => {
+        return throwError(() => new Error(error.error.message || 'otp 전송 실패'));
+      }),
+    );
   }
 
   // OTP 검증 및 토큰 발급

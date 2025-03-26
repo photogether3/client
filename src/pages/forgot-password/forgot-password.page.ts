@@ -18,7 +18,16 @@ import { OtpVerifyFormComponent } from '../otp-verify';
 export class ForgotPasswordPage extends BaseForm<GenerateOtpDTO> {
   private readonly authApi = inject(AuthApi);
 
-  step = signal<number>(2);
+  step = signal<number>(1);
+  errorMessage = signal<string>('');
+
+  get getButtonText() {
+    if (this.step() === 1) {
+      return '인증번호 발송';
+    } else {
+      return '다음으로';
+    }
+  }
 
   constructor() {
     super();
@@ -42,9 +51,24 @@ export class ForgotPasswordPage extends BaseForm<GenerateOtpDTO> {
     });
   }
 
+  clickFooterButton() {
+    if (this.step() === 1) {
+      return this.verifyOtp();
+    } else if (this.step() === 2) {
+      return console.log('스텝2');
+    } else {
+      return console.log('스텝2');
+    }
+  }
+
   verifyOtp() {
-    this.authApi.generateOtp(this.getRawValue()).subscribe((res) => {
-      console.log(res);
+    this.authApi.generateOtp(this.getRawValue()).subscribe({
+      next: (res) => {
+        console.log('OTP 성공:', res);
+      },
+      error: (errMessage) => {
+        this.errorMessage.set(errMessage);
+      },
     });
   }
 }
