@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, OnDestroy } from '@angular/core';
+import { Component, inject, input, OnDestroy, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -18,8 +18,8 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
   private authApi = inject(AuthApi);
   private router = inject(Router);
 
-  otpSent = input<boolean>();
-  email: string = '';
+  email = input<string>('');
+  errorMessage = signal<string>('');
   private timeLeft = 300;
   private timerSubscription!: Subscription;
 
@@ -41,13 +41,15 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
       },
     };
 
-    const navigation = this.router.getCurrentNavigation();
-    this.email = navigation?.extras?.state?.['email'] || null;
-
-    effect(() => {
-      if (this.otpSent()) {
+    const email = { email: this.email() };
+    this.authApi.generateOtp(email).subscribe({
+      next: (res) => {
+        console.log('OTP 성공:', res);
         this.startTimer();
-      }
+      },
+      error: (errMessage) => {
+        this.errorMessage.set(errMessage);
+      },
     });
   }
 
@@ -59,19 +61,11 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
     });
   }
 
-  startTimer() {
-    this.timerSubscription = interval(1000)
-      .pipe(takeWhile(() => this.timeLeft > 0))
-      .subscribe(() => {
-        this.timeLeft--;
-      });
-  }
-
   onVerify() {
     const otp = this.getRawValue().otp;
 
     const formValue = {
-      email: this.email,
+      email: this.email(),
       otp: otp,
     };
 
@@ -88,5 +82,13 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
+  }
+
+  private startTimer() {
+    this.timerSubscription = interval(1000)
+      .pipe(takeWhile(() => this.timeLeft > 0))
+      .subscribe(() => {
+        this.timeLeft--;
+      });
   }
 }
