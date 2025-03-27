@@ -12,7 +12,7 @@
         formControlName="otp"
         [hasError]="!!getErrorMessage('otp')"
         class="w-full flex-1" />
-      <app-button text="확인" [isDisabled]="!isValid()" (click)="onVerify()" class="w-24" />
+      <app-button text="확인" appearance="secondary" [isDisabled]="!isValid()" (click)="onVerify()" class="w-24" />
     </div>
     @if (getErrorMessage('otp')) {
       <p class="mt-2 text-detail text-accent50">{{ getErrorMessage('otp') }}</p>
