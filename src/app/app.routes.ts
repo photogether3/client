@@ -20,10 +20,6 @@ export const routes: Routes = [
     loadComponent: () => import('../pages/forgot-password').then((m) => m.ForgotPasswordPage),
   },
   {
-    path: 'otp/verify',
-    loadComponent: () => import('../pages/otp-verify/ui/page').then((m) => m.OtpVerifyPage),
-  },
-  {
     path: 'onboarding',
     loadComponent: () => import('../pages/onboarding').then((m) => m.OnboardingPage),
   },
