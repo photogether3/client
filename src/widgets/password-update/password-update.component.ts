@@ -1,20 +1,24 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { catchError, map, of } from 'rxjs';
+
 import { UserApi } from 'src/entities/user';
 import { PasswordUpdateType } from 'src/entities/user/model/user.type';
-import { ButtonComponent, InputComponent, ModalService } from 'src/shared/components';
+import { InputComponent, ModalService } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
 
 @Component({
-  selector: 'password-update-dialog',
-  templateUrl: './password-update-dialog.component.html',
-  imports: [ReactiveFormsModule, ButtonComponent, InputComponent],
+  selector: 'app-password-update',
+  templateUrl: './password-update.component.html',
+  imports: [ReactiveFormsModule, InputComponent],
 })
-export class PasswordUpdateDialog extends BaseForm<PasswordUpdateType> {
+export class PasswordUpdateComponent extends BaseForm<PasswordUpdateType> {
   private readonly userApi = inject(UserApi);
   private readonly modalService = inject(ModalService);
+
+  type = input.required<'forgot' | 'update'>();
 
   constructor() {
     super();
