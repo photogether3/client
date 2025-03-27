@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { RegisterFormType } from 'src/entities/auth';
@@ -23,6 +23,8 @@ import { VALIDATION_SERVICE } from 'src/shared/lib/validation.service';
 export class RegisterFormComponent extends BaseForm<RegisterFormType> {
   private readonly userApi = inject(UserApi);
 
+  readonly isFormValid = output<boolean>();
+
   constructor() {
     super();
 
@@ -41,6 +43,10 @@ export class RegisterFormComponent extends BaseForm<RegisterFormType> {
         fieldMismatch: '비밀번호가 일치하지 않습니다.',
       },
     };
+
+    this.form.statusChanges.subscribe(() => {
+      this.isFormValid.emit(this.isValid());
+    });
   }
 
   protected initForm() {

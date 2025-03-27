@@ -1,4 +1,4 @@
-import { Component, inject, input, OnDestroy, signal } from '@angular/core';
+import { Component, inject, input, OnDestroy, output, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -19,6 +19,7 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
   private router = inject(Router);
 
   email = input<string>('');
+  isFormValid = output<boolean>();
   errorMessage = signal<string>('');
   private timeLeft = 300;
   private timerSubscription!: Subscription;
@@ -50,6 +51,10 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
       error: (errMessage) => {
         this.errorMessage.set(errMessage);
       },
+    });
+
+    this.form.statusChanges.subscribe(() => {
+      this.isFormValid.emit(this.isValid());
     });
   }
 

@@ -17,6 +17,8 @@ export class RegisterPage {
   private readonly router = inject(Router);
 
   step = signal<number>(1);
+  isRegisterFormValid = signal(false);
+  isOtpFormValid = signal(false);
 
   get stepTitle() {
     if (this.step() === 1) {
@@ -38,17 +40,17 @@ export class RegisterPage {
     }
   }
 
-  goNextStep() {
-    // form.value와 form.getRawValue의 차이점 !
-    // const formData = this.getRawValue();
-    // this.authApi.register(formData).subscribe(() => {
-    //   this.router.navigateByUrl('/otp/verify', {
-    //     state: {
-    //       email: formData.email,
-    //     },
-    //   });
-    // });
+  get isButtonValid() {
+    if (this.step() === 1) {
+      return !this.isRegisterFormValid();
+    } else if (this.step() === 2) {
+      return !this.isOtpFormValid();
+    } else {
+      return false;
+    }
+  }
 
+  goNextStep() {
     this.step.update((prev) => prev + 1);
   }
 
