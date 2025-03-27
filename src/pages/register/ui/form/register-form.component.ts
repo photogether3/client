@@ -1,11 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 
-import { AuthApi, RegisterFormType } from 'src/entities/auth';
+import { RegisterFormType } from 'src/entities/auth';
 import { AuthValidators } from 'src/entities/auth/custom-validators';
 import { UserApi } from 'src/entities/user';
-import { ButtonComponent, InputComponent } from 'src/shared/components';
+import { InputComponent } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
 import { VALIDATION_SERVICE } from 'src/shared/lib/validation.service';
@@ -13,7 +12,7 @@ import { VALIDATION_SERVICE } from 'src/shared/lib/validation.service';
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
-  imports: [ReactiveFormsModule, ButtonComponent, InputComponent],
+  imports: [ReactiveFormsModule, InputComponent],
   providers: [
     {
       provide: VALIDATION_SERVICE,
@@ -22,9 +21,7 @@ import { VALIDATION_SERVICE } from 'src/shared/lib/validation.service';
   ],
 })
 export class RegisterFormComponent extends BaseForm<RegisterFormType> {
-  private readonly authApi = inject(AuthApi);
   private readonly userApi = inject(UserApi);
-  private readonly router = inject(Router);
 
   constructor() {
     super();
@@ -59,19 +56,6 @@ export class RegisterFormComponent extends BaseForm<RegisterFormType> {
         validators: [Validators.required],
         asyncValidators: [this.validationService.validateMatchingFields('password', 'confirmPassword')],
       }),
-    });
-  }
-
-  onRegister() {
-    // form.value와 form.getRawValue의 차이점 !
-    const formData = this.getRawValue();
-
-    this.authApi.register(formData).subscribe(() => {
-      this.router.navigateByUrl('/otp/verify', {
-        state: {
-          email: formData.email,
-        },
-      });
     });
   }
 }
