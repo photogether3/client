@@ -5,7 +5,7 @@ export const buttonStyles = cva('flex items-center justify-center rounded-full',
   variants: {
     type: {
       primary: 'text-white bg-primary50 active:bg-primary70 disabled:bg-layer30 shadow-custom disabled:text-gray70',
-      secondary: 'text-primary20 border border-primary50 bg-[#182B28] disabled:bg-layer30 shadow-custom disabled:text-gray70',
+      secondary: 'text-primary20 border border-primary50 bg-[#182B28] disabled:bg-layer30 shadow-custom disabled:text-gray70 disabled:border-none',
       tertiary: 'text-secondary20 border border-layer10 bg-layer40 active:bg-layer20 active:border-layer10 disabled:bg-layer30 shadow-custom disabled:text-gray70',
       text: 'text-white active:bg-secondary10 active:text-gray90 disabled:text-gray50',
       danger: 'text-accent30 border border-accent70 text-[#311A1F] disabled:bg-layer30 shadow-custom disabled:text-gray70',
