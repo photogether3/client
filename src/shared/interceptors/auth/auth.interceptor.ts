@@ -49,8 +49,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const refreshToken = instance.getRefreshToken();
 
   if (!refreshToken) {
-    alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-    router.navigateByUrl('/login');
+    // alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+    // router.navigateByUrl('/login');
     return EMPTY;
   }
 
@@ -72,8 +72,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         .catch((err) => {
           console.log(err);
           // 갱신 실패 시 로그인 페이지로 이동
-          alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-          router.navigateByUrl('/login');
+          // alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+          // router.navigateByUrl('/login');
         })
         .finally(() => {
           isRefreshing = false;

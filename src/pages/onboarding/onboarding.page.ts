@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ProfileUpdateFormType } from 'src/entities/user/model/user.type';
 import { ButtonComponent } from 'src/shared/components';
 import { CategorySelectorWidget } from 'src/widgets/category-selector';
+import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 import { ProfileUpdateButton } from 'src/widgets/porfile-update-button';
 import { ProfileUpdateForm } from 'src/widgets/profile-update-form';
@@ -12,12 +13,12 @@ import { ProfileUpdateForm } from 'src/widgets/profile-update-form';
 @Component({
   selector: 'onboarding-page',
   templateUrl: './onboarding.page.html',
-  imports: [ButtonComponent, ProfileUpdateForm, CategorySelectorWidget, CommonModule, HeaderWidget, ProfileUpdateButton, ProfileUpdateForm],
+  imports: [ButtonComponent, ProfileUpdateForm, CategorySelectorWidget, CommonModule, HeaderWidget, ProfileUpdateButton, ProfileUpdateForm, FooterWidget],
 })
 export class OnboardingPage {
   private readonly router = inject(Router);
 
-  activeStep = signal(1);
+  step = signal(1);
   selectedCategoryList = signal<number[]>([]);
   updatedForm = signal<ProfileUpdateFormType>({
     nickname: '',
@@ -29,7 +30,7 @@ export class OnboardingPage {
   constructor() {}
 
   setStep(step: number) {
-    this.activeStep.set(step);
+    this.step.set(step);
   }
 
   updateSelectedCategories(updatedList: number[]) {
@@ -44,5 +45,13 @@ export class OnboardingPage {
 
   updateForm(updatedForm: ProfileUpdateFormType) {
     this.updatedForm.set(updatedForm);
+  }
+
+  clickFooterButton() {
+    if (this.step() === 1) {
+      return this.setStep(2);
+    } else if (this.step() === 2) {
+      return this.router.navigateByUrl('/home');
+    }
   }
 }
