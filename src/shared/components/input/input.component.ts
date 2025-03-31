@@ -1,9 +1,7 @@
 import { Component, computed, forwardRef, input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { twMerge } from 'tailwind-merge';
-
-import { inputVariants, InputProps } from './input.styles';
+import { inputVariants, InputProps, customTwMerge } from './input.styles';
 import { IconComponent } from '../icon';
 
 @Component({
@@ -30,7 +28,7 @@ export class InputComponent implements ControlValueAccessor {
   hasInfoIcon = input<boolean>(false);
 
   computedClass = computed(() => {
-    return twMerge(inputVariants({ type: this.type(), size: this.size(), state: this.hasError() ? 'error' : 'default' }));
+    return customTwMerge(inputVariants({ type: this.type(), size: this.size(), state: this.hasError() ? 'error' : 'default' }));
   });
 
   value: string = '';

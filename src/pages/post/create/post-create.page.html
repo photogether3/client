@@ -1,60 +1,65 @@
-<div class="flex min-h-screen flex-col border-x bg-layer40">
+<div class="bg-layer40 flex min-h-screen flex-col border-x">
   <app-header title="게시물 생성">
-    <span rightContent class="flex text-body-m text-gray90">
+    <span rightContent class="flex text-body-m text-white">
       <span class="font-bold text-primary60">{{ step() }}</span>
       /2
     </span>
   </app-header>
 
-  <div class="w-full flex-1 px-4 py-6">
+  <div class="w-full flex-1 py-10">
     @if (step() === 1) {
-      <form [formGroup]="form" class="flex flex-col gap-5">
+      <form [formGroup]="form" class="px-5">
         <input #fileRef type="file" (change)="upload($event)" class="hidden" />
-        <div class="mx-auto flex h-[480px] w-[270px] items-center justify-center rounded-[12px] border-2 border-primary50 shadow-custom">
+        <button
+          (click)="fileRef.click()"
+          class="mx-auto mb-10 flex h-[480px] w-[270px] items-center justify-center rounded-[12px] border-2 border-primary50 bg-[#182B28] shadow-custom">
           @if (previewUrl) {
-            <img [src]="previewUrl" alt="임시 이미지" class="h-[485px] w-full rounded-[8px] shadow-custom" />
+            <img [src]="previewUrl" alt="임시 이미지" class="h-full w-full overflow-hidden rounded-[12px] shadow-custom" />
           } @else {
-            <button (click)="fileRef.click()" class="h-full w-full">사진을 선택해주세요.</button>
+            <div class="flex flex-col items-center gap-5">
+              <app-icon name="plus" [size]="30" class="text-primary20" />
+              <div class="h-full w-full text-body-s text-primary20">사진을 선택해주세요.</div>
+            </div>
           }
-        </div>
+        </button>
         <app-input label="게시물 제목" placeholder="게시물 제목을 입력해주세요." info="게시물 제목은 추후에 변경이 가능합니다." [hasInfoIcon]="true" formControlName="title" />
-        <app-input type="textarea" label="게시물 내용" placeholder="게시물 내용을 입력해주세요." info="게시물에 대한 간단한 메모를 남겨주세요." formControlName="content" />
+        <app-input
+          type="textarea"
+          label="게시물 내용"
+          placeholder="게시물 내용을 입력해주세요."
+          info="게시물에 대한 간단한 메모를 남겨주세요."
+          formControlName="content"
+          class="mt-5 block" />
 
-        <div formArrayName="metadataStringify">
-          <p class="mb-2 text-body-s">사진내용</p>
-          <div class="min-w-full rounded-[12px]">
-            <div class="flex rounded-t-[12px] border border-gray40 bg-primary5 font-bold text-primary70">
+        <div formArrayName="metadataStringify" class="mt-5">
+          <p class="mb-2 text-body-s text-white">사진내용</p>
+          <!-- TODO 테두리 변경 -->
+          <div class="min-w-full rounded-[12px] border border-gray70">
+            <div class="text-detail-m flex rounded-t-[12px] bg-[#182B28] font-bold text-primary20">
               <span class="px-2.5 py-2">노출</span>
               <span class="flex-1 px-1 py-2">텍스트</span>
               @if (metadataArray.controls.length > 0) {
-                <span class="px-2.5 py-2">수정</span>
+                <span class="px-2.5 py-2"></span>
               }
             </div>
             @for (imgContent of metadataArray.controls; track $index) {
-              <div
-                [formGroup]="imgContent"
-                class="[&>div]:typo-body-s border-b-gray-30 [&>div]:text-body_s flex items-center border-b bg-white px-2.5 hover:cursor-pointer hover:bg-gray5 [&>td]:border-b [&>td]:border-b-gray30 [&>td]:px-4 [&>td]:py-3 [&>td]:text-left">
+              <div [formGroup]="imgContent" class="bg-layer40 flex items-center gap-2.5 px-2.5">
                 <div class="py-2">
                   <input type="checkbox" formControlName="isPublic" />
                 </div>
                 <div class="flex-1 px-2.5 py-2">
-                  <app-input formControlName="content" class="flex-1" />
+                  <app-input size="xs" formControlName="content" class="flex-1" />
                 </div>
-                <div (click)="toggleLink($index)" class="py-2">
-                  <app-icon
-                    [name]="metadataArray.at($index).value.hasLink ? 'link' : 'no-link'"
-                    [size]="20"
-                    [class]="metadataArray.at($index).value.hasLink ? 'text-primary50' : 'text-gray50'" />
-                </div>
+                <button (click)="deleteText($index)" class="py-2">
+                  <app-icon name="delete" [size]="16" />
+                </button>
               </div>
             } @empty {
-              <div class="rounded-b-[12px] border px-2.5 py-2">사진을 선택해주세요.</div>
+              <!-- TODO border-t 테두리 변경 -->
+              <div class="text-detail-l rounded-b-[12px] border-t-gray70 px-2.5 py-2 text-gray40">사진을 선택해주세요.</div>
             }
           </div>
         </div>
-        <app-footer [hasButton]="true" class="sticky bottom-0 mt-auto">
-          <app-button button text="다음으로" size="lg" (click)="updateState()" />
-        </app-footer>
       </form>
     } @else {
       <!-- STEP2 -->
@@ -76,7 +81,7 @@
         }
         <section class="col-span-full">
           <h4 class="mb-2.5 text-body-s font-bold text-gray90">정리가 필요한 사진첩</h4>
-          <div class="divide-y divide-gray30 rounded-[12px] bg-white p-4 text-detail">
+          <div class="text-detail-l divide-y divide-gray30 rounded-[12px] bg-white p-4">
             <!-- 미분류 -->
             <div class="flex cursor-pointer items-center justify-between pb-2">
               <div class="flex items-center gap-2">
@@ -110,4 +115,8 @@
       </app-footer>
     }
   </div>
+
+  <app-footer [hasButton]="true" class="sticky bottom-0 mt-auto">
+    <app-button button text="다음으로" size="lg" (click)="updateState()" />
+  </app-footer>
 </div>

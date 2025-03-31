@@ -82,13 +82,10 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
     });
   }
 
-  toggleLink(index: number) {
+  deleteText(index: number) {
+    // TODO 게시글 사진 내용 삭제
     const control = this.metadataArray.at(index);
-    if (control) {
-      control.patchValue({
-        hasLink: !control.value.hasLink,
-      });
-    }
+    console.log(control.value);
   }
 
   updateState() {
