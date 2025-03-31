@@ -5,6 +5,7 @@ import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CollectionApi, CollectionType } from 'src/entities/collection';
 import { ImageApi } from 'src/entities/image';
 import { ImgContentType, PostApi, PostCreateFormType } from 'src/entities/post';
+import { UserApi } from 'src/entities/user';
 import { CollectionCardComponent } from 'src/pages/home';
 import { ButtonComponent, IconComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
 import { BaseForm, FormControls } from 'src/shared/lib';
@@ -19,9 +20,11 @@ import { HeaderWidget } from 'src/widgets/header';
 export class PostCreatePage extends BaseForm<PostCreateFormType> {
   private readonly postApi = inject(PostApi);
   private readonly imageApi = inject(ImageApi);
+  private readonly userApi = inject(UserApi);
   private readonly collectionApi = inject(CollectionApi);
   private readonly modalReactiveService = inject(ModalReactiveService);
 
+  nickname: string = '';
   step = signal<number>(1);
   collections = signal<CollectionType[]>([]);
   previewUrl: string | ArrayBuffer | null | undefined = null;
@@ -35,6 +38,15 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
     return this.form.get('metadataStringify') as FormArray<FormGroup>;
   }
 
+  get getButtonText() {
+    if (this.step() === 1) {
+      return '다음으로';
+    } else if (this.step() === 2) {
+      return '게시물 생성하기';
+    }
+    return '';
+  }
+
   constructor() {
     super();
 
@@ -43,6 +55,10 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
       this.form.patchValue({
         collectionId: this.myCollections().uncategorized?.id,
       });
+    });
+
+    this.userApi.getProfile().subscribe((res) => {
+      this.nickname = res.nickname;
     });
   }
 
@@ -54,6 +70,14 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
       metadataStringify: this.fb.array<FormGroup<FormControls<ImgContentType>>>([]),
       file: this.fb.control<File | null>(null),
     });
+  }
+
+  clickFooterButton() {
+    if (this.step() === 1) {
+      this.step.set(2);
+    } else if (this.step() === 2) {
+      return this.createCollection();
+    }
   }
 
   // =============== STEP1 ===============
@@ -88,11 +112,6 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
     console.log(control.value);
   }
 
-  updateState() {
-    console.log(this.form.value);
-    this.step.set(2);
-  }
-
   private addMetadata(content: string = '', isPublic: boolean = false, hasLink: boolean = false) {
     const metadataGroup = this.fb.group({
       content: [content],
@@ -104,19 +123,17 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
   }
 
   // =============== STEP2 ===============
-  selectCollection(collectionId: number | undefined, event: Event) {
-    const isChecked = (event.target as HTMLInputElement).checked;
-
+  onCardChecked(isChecked: boolean, collectionId?: number) {
     if (isChecked) {
       this.form.patchValue({ collectionId });
     } else {
       this.form.patchValue({ collectionId: null });
     }
+    console.log(this.form.value);
   }
 
   createCollection() {
     const dto = this.getRawValue();
-    console.log(dto);
 
     this.postApi.createPost(dto).subscribe(() => {
       const modalData = {

@@ -6,8 +6,9 @@
     </span>
   </app-header>
 
-  <div class="w-full flex-1 py-10">
+  <div class="w-full flex-1 py-5">
     @if (step() === 1) {
+      <!-- TODO 게시물 생성 form 분리 -->
       <form [formGroup]="form" class="px-5">
         <input #fileRef type="file" (change)="upload($event)" class="hidden" />
         <button
@@ -64,59 +65,51 @@
     } @else {
       <!-- STEP2 -->
       <!-- TODO 홈화면에 있는 요소랑 공통, 컴포넌트로 빼기 -->
-      <div class="grid grid-cols-2 gap-5">
-        @for (collection of collections(); track $index) {
-          @if (collection.type === 'DEFAULT') {
-            <div (click)="checkboxRef.click()" class="relative">
-              <input
-                #checkboxRef
-                type="checkbox"
-                (change)="selectCollection(collection.id, $event)"
-                [checked]="form.value.collectionId === collection.id"
-                class="absolute left-2 top-2 z-20 h-6 w-6" />
-              <app-collection-card [collection]="collection" />
-              <div [ngClass]="form.value.collectionId !== collection.id ? 'bg-black/20' : 'border border-primary50'" class="absolute inset-0 z-10 rounded-[12px]"></div>
-            </div>
-          }
-        }
-        <section class="col-span-full">
-          <h4 class="mb-2.5 text-body-s font-bold text-gray90">정리가 필요한 사진첩</h4>
-          <div class="text-detail-l divide-y divide-gray30 rounded-[12px] bg-white p-4">
+      <div class="px-5">
+        <div class="flex flex-col gap-5">
+          <p class="text-body-s font-bold text-white">{{ nickname }}의 사진첩</p>
+          <div class="flex flex-col gap-5">
+            @for (collection of myCollections().default; track $index) {
+              <app-collection-card [collection]="collection" [isCheckable]="true" (clickEvent)="onCardChecked($event, collection.id)" />
+            } @empty {
+              <div class="bg-layer20 col-span-full h-[275px] rounded-[12px] p-4 text-white">등록된 사진첩이 없습니다</div>
+            }
+          </div>
+        </div>
+
+        <section class="mt-5">
+          <h4 class="mb-2.5 text-body-s font-bold text-white">정리가 필요한 사진첩</h4>
+          <div class="divide-layer20 bg-layer30 text-detail-l divide-y rounded-[12px] p-4 text-gray30">
             <!-- 미분류 -->
             <div class="flex cursor-pointer items-center justify-between pb-2">
               <div class="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  (change)="selectCollection(myCollections().uncategorized!.id, $event)"
-                  [checked]="form.value.collectionId === myCollections().uncategorized!.id"
-                  class="h-6 w-6" />
+                <app-icon name="uncategorized" [size]="20" />
                 <span class="font-bold">미분류</span>
               </div>
-              <span class="text-gray50">{{ myCollections().uncategorized?.postCount }}개 사진</span>
+              <div class="flex items-center gap-2">
+                <span>{{ myCollections().uncategorized?.postCount }}개 사진</span>
+                <app-icon name="arrow-right" />
+              </div>
             </div>
 
             <!-- 휴지통 -->
             <div class="flex cursor-pointer items-center justify-between pt-2">
               <div class="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  (change)="selectCollection(myCollections().trash?.id, $event)"
-                  [checked]="form.value.collectionId === myCollections().trash?.id"
-                  class="h-6 w-6" />
+                <app-icon name="trash" [size]="15" />
                 <span class="font-bold">휴지통</span>
               </div>
-              <span class="text-gray50">{{ myCollections().trash?.postCount }}개 사진</span>
+              <div class="flex items-center gap-2">
+                <span>{{ myCollections().trash?.postCount }}개 사진</span>
+                <app-icon name="arrow-right" />
+              </div>
             </div>
           </div>
         </section>
       </div>
-      <app-footer [hasButton]="true" class="sticky bottom-0 mt-auto">
-        <app-button text="게시물 생성하기" size="lg" (click)="createCollection()" />
-      </app-footer>
     }
   </div>
 
   <app-footer [hasButton]="true" class="sticky bottom-0 mt-auto">
-    <app-button button text="다음으로" size="lg" (click)="updateState()" />
+    <app-button button [text]="getButtonText" size="lg" (click)="clickFooterButton()" />
   </app-footer>
 </div>
