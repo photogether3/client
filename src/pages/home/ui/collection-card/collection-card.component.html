@@ -7,7 +7,7 @@
       <h4 class="text-body-m font-bold text-gray90">{{ collection().title }}</h4>
     </div>
     <div class="relative flex items-center gap-2">
-      <span class="text-detail text-gray40">{{ collection().postCount }}개 사진</span>
+      <span class="text-detail-l text-gray40">{{ collection().postCount }}개 사진</span>
       <button (click)="handlePopover($event)" [ngClass]="isOpenPopover() ? 'bg-primary50' : ''" class="size-5 rounded-full">
         <app-icon name="more" [size]="20" />
       </button>
@@ -39,7 +39,7 @@
     <app-tag [tagName]="post().category?.name || ''" type="solid" />
   }
   <div class="text-center">
-    <h4 class="font-bold text-detail text-gray90">{{ post().title }}</h4>
-    <span class="text-detail text-gray50">{{ post().postCount }}개 사진</span>
+    <h4 class="font-bold text-detail-l text-gray90">{{ post().title }}</h4>
+    <span class="text-detail-l text-gray50">{{ post().postCount }}개 사진</span>
   </div>
 </section> -->

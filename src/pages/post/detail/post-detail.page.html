@@ -18,13 +18,13 @@
               <app-tag [tagName]="post.category?.name" />
               <p class="flex items-center gap-2">
                 <app-icon name="folder" />
-                <span class="text-detail font-bold text-gray90">{{ post.collection.title }}</span>
+                <span class="text-detail-l font-bold text-gray90">{{ post.collection.title }}</span>
               </p>
             </div>
 
             <div class="flex flex-col gap-2.5 border-b border-b-gray40 py-5 text-gray90">
               <span class="text-body-s font-bold">게시물 내용</span>
-              <p class="text-detail">{{ post.content }}</p>
+              <p class="text-detail-l">{{ post.content }}</p>
             </div>
 
             <div class="flex flex-col gap-2.5 pt-5">
@@ -32,7 +32,7 @@
               <ul class="flex flex-col gap-2.5">
                 @for (imgContent of post.metadataList; track $index) {
                   @if (imgContent.isPublic) {
-                    <li class="list-inside list-disc text-detail">{{ imgContent.content }}</li>
+                    <li class="text-detail-l list-inside list-disc">{{ imgContent.content }}</li>
                   }
                 }
               </ul>

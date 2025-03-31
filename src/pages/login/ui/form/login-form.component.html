@@ -2,13 +2,13 @@
   <div>
     <app-input formControlName="email" placeholder="포토게더 아이디" [hasError]="!!getErrorMessage('email')" />
     @if (getErrorMessage('email')) {
-      <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('email') }}</p>
+      <p class="text-detail-l mt-2 text-accent60">{{ getErrorMessage('email') }}</p>
     }
   </div>
   <div>
     <app-input inputType="password" formControlName="password" placeholder="비밀번호" [hasError]="!!getErrorMessage('password')" />
     @if (getErrorMessage('password')) {
-      <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('password') }}</p>
+      <p class="text-detail-l mt-2 text-accent60">{{ getErrorMessage('password') }}</p>
     }
   </div>
 </form>

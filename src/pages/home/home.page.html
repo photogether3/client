@@ -1,4 +1,4 @@
-<div class="flex min-h-screen flex-col border-x bg-layer40">
+<div class="bg-layer40 flex min-h-screen flex-col border-x">
   <app-header [hasBackButton]="false" [hasLogo]="true">
     <app-button rightContent appearance="primary" text="사진첩 추가" size="xs" rightIcon="plus" [iconSize]="12" (click)="createCollection()" class="ml-auto" />
   </app-header>
@@ -10,7 +10,7 @@
       {{ searchValue() }}
       <p class="mb-2.5 flex items-center justify-between text-white">
         <span class="text-body-s font-bold">{{ nickname }}의 사진첩</span>
-        <button class="flex items-center gap-1 text-detail font-bold">
+        <button class="text-detail-l flex items-center gap-1 font-bold">
           태그필터
           <app-icon name="filter" styleClass="size-5" class="text-white" />
         </button>
@@ -19,14 +19,14 @@
         @for (collection of myCollections.default; track $index) {
           <app-collection-card [collection]="collection" />
         } @empty {
-          <div class="col-span-full h-[140px] rounded-[12px] bg-layer20 p-4 text-white">생성된 사진첩이 없습니다!</div>
+          <div class="bg-layer20 col-span-full h-[140px] rounded-[12px] p-4 text-white">생성된 사진첩이 없습니다!</div>
         }
       </div>
     </div>
 
     <section class="mt-auto">
       <h4 class="mb-2.5 text-body-s font-bold text-white">정리가 필요한 사진첩</h4>
-      <div class="divide-y divide-layer20 rounded-[12px] bg-layer30 p-4 text-detail text-gray30">
+      <div class="divide-layer20 bg-layer30 text-detail-l divide-y rounded-[12px] p-4 text-gray30">
         <!-- 미분류 -->
         <div class="flex cursor-pointer items-center justify-between pb-2">
           <div class="flex items-center gap-2">

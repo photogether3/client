@@ -12,7 +12,9 @@ module.exports = {
         'body-l': ['20px', { lineHeight: '150%' }],
         'body-m': ['18px', { lineHeight: '150%' }],
         'body-s': ['16px', { lineHeight: '150%' }],
-        detail: ['14px', { lineHeight: '150%' }],
+        'detail-l': ['14px', { lineHeight: '150%' }],
+        'detail-m': ['12px', { lineHeight: '150%' }],
+        'detail-s': ['10px', { lineHeight: '150%' }],
       },
       colors: {
         primary5: 'var(--color-primary5)',

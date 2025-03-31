@@ -5,7 +5,7 @@
       <span class="mt-2 block">로딩중 ..</span>
     }
     @if (getErrorMessage('email')) {
-      <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('email') }}</p>
+      <p class="text-detail-l mt-2 text-accent60">{{ getErrorMessage('email') }}</p>
     }
   </div>
   <div>
@@ -18,7 +18,7 @@
       [hasError]="!!getErrorMessage('password')"
       placeholder="비밀번호" />
     @if (getErrorMessage('password')) {
-      <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('password') }}</p>
+      <p class="text-detail-l mt-2 text-accent60">{{ getErrorMessage('password') }}</p>
     }
   </div>
   <div>
@@ -31,7 +31,7 @@
       [hasError]="!!getErrorMessage('confirmPassword')"
       placeholder="비밀번호 확인" />
     @if (getErrorMessage('confirmPassword')) {
-      <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('confirmPassword') }}</p>
+      <p class="text-detail-l mt-2 text-accent60">{{ getErrorMessage('confirmPassword') }}</p>
     }
   </div>
 </form>

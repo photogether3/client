@@ -9,7 +9,7 @@ export const tagVariants = cva('flex items-center justify-center whitespace-nowr
     },
     size: {
       lg: 'h-8 text-body-m',
-      md: 'h-6 text-detail',
+      md: 'h-6 text-detail-l',
     },
   },
   defaultVariants: {
