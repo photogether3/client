@@ -2,20 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { IconComponent } from 'src/shared/components';
+
 @Component({
   selector: 'app-popover',
   templateUrl: './popover.component.html',
-  styles: `
-    :host {
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      z-index: 10;
-      transform: translateX(-50%);
-      margin-top: 0.5rem;
-    }
-  `,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
 })
 export class PopoverComponent {
   private readonly router = inject(Router);

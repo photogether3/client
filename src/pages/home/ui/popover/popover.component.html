@@ -1,11 +1,20 @@
-<ul class="text-detail-l whitespace-nowrap rounded-[12px] bg-black px-3 py-2 ring-2 ring-primary50">
+<ul class="text-detail-l whitespace-nowrap rounded-[12px] bg-[#2A2C3499]/60 px-3 py-2 ring-2 ring-primary50">
   <li class="pb-1 text-white">
-    <button (click)="onClick('update')">사진첩 수정</button>
+    <button (click)="onClick('organize')" class="flex items-center gap-1">
+      <app-icon name="album" />
+      <span>사진첩 정리</span>
+    </button>
   </li>
-  <li class="border-y border-y-[white/20] py-1 text-primary30">
-    <button (click)="onClick('organize')">사진첩 정리</button>
+  <li class="border-y border-y-[white/20] py-1 text-primary20">
+    <button (click)="onClick('update')" class="flex items-center gap-1">
+      <app-icon name="post" [size]="12" />
+      <span>사진첩 수정</span>
+    </button>
   </li>
   <li class="pt-1 text-accent40">
-    <button (click)="onClick('delete')">사진첩 삭제</button>
+    <button (click)="onClick('delete')" class="flex items-center gap-1">
+      <app-icon name="trash" [size]="12" />
+      <span>사진첩 삭제</span>
+    </button>
   </li>
 </ul>
