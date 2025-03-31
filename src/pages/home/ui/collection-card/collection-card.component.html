@@ -1,26 +1,27 @@
-<section
-  (click)="goPage()"
-  class="flex flex-col items-center justify-center gap-4 rounded-[12px] bg-white px-5 py-4 shadow-custom hover:cursor-pointer hover:ring-1 hover:ring-primary50">
+<!-- TODO 테두리 바꿔야 함  -->
+<section (click)="goPage()" class="flex h-[275px] flex-col items-center justify-center gap-4 rounded-[12px] border border-gray70 bg-[#23252BD9]/85 px-5 py-4 shadow-custom">
   <div class="flex w-full items-center justify-between">
     <div class="flex items-center gap-3">
-      <app-tag [tagName]="collection().category?.name || ''" type="solid" />
-      <h4 class="text-body-m font-bold text-gray90">{{ collection().title }}</h4>
+      <app-tag [tagName]="collection().category?.name || ''" size="md" type="solid" />
+      <h4 class="text-body-m font-bold text-white">{{ collection().title }}</h4>
     </div>
     <div class="relative flex items-center gap-2">
       <span class="text-detail-l text-gray40">{{ collection().postCount }}개 사진</span>
-      <button (click)="handlePopover($event)" [ngClass]="isOpenPopover() ? 'bg-primary50' : ''" class="size-5 rounded-full">
-        <app-icon name="more" [size]="20" />
+      <button (click)="handlePopover($event)" [ngClass]="isOpenPopover() ? 'bg-primary50' : ''" class="flex size-5 items-center justify-center rounded-full">
+        <app-icon name="more" [size]="13" class="text-white" />
       </button>
       @if (isOpenPopover()) {
-        <div clickOutside (clickOutside)="closePopover()">
+        <div clickOutside (clickOutside)="closePopover()" class="absolute top-full z-10 mt-2">
           <app-popover [collectionId]="collection().id" />
         </div>
       }
     </div>
   </div>
-  <div class="flex w-full gap-3 overflow-hidden overflow-x-auto border-t border-t-[white/20] py-5">
+  <div class="flex w-full flex-1 gap-3 overflow-hidden overflow-x-auto border-t border-t-[white/20] py-5">
     @for (imageUrl of collection().imageUrls; track $index; let i = $index) {
       <img [src]="imageUrl" class="aspect-[84/183] w-[5.25rem] rounded-[8px] object-cover" />
+    } @empty {
+      <p class="text-body-s text-gray40">등록된 사진이 없습니다.</p>
     }
   </div>
 </section>
