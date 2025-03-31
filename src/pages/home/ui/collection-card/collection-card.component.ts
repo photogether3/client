@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { TagComponent } from 'src/entities/category';
@@ -17,8 +17,11 @@ import { PopoverComponent } from '../popover';
 export class CollectionCardComponent {
   private readonly router = inject(Router);
 
+  isCheckable = input<boolean>(false);
   collection = input.required<CollectionType>();
+  clickEvent = output<boolean>();
   isOpenPopover = signal<boolean>(false);
+  isChecked = signal<boolean>(false);
 
   constructor() {}
 
@@ -29,6 +32,15 @@ export class CollectionCardComponent {
 
   closePopover() {
     this.isOpenPopover.set(false);
+  }
+
+  clickCard() {
+    if (!this.isCheckable()) {
+      this.goPage();
+    } else {
+      this.isChecked.update((v) => !v);
+      this.clickEvent.emit(this.isChecked());
+    }
   }
 
   goPage() {

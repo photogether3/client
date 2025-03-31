@@ -1,5 +1,5 @@
 <!-- TODO 테두리 바꿔야 함  -->
-<section (click)="goPage()" class="flex h-[275px] flex-col items-center justify-center gap-4 rounded-[12px] border border-gray70 bg-[#23252BD9]/85 px-5 py-4 shadow-custom">
+<section (click)="clickCard()" class="flex h-[275px] flex-col items-center justify-center gap-4 rounded-[12px] border border-gray70 bg-[#23252BD9]/85 px-5 py-4 shadow-custom">
   <div class="flex w-full items-center justify-between">
     <div class="flex items-center gap-3">
       <app-tag [tagName]="collection().category?.name || ''" size="md" type="solid" />
@@ -7,9 +7,13 @@
     </div>
     <div class="relative flex items-center gap-2">
       <span class="text-detail-l text-gray40">{{ collection().postCount }}개 사진</span>
-      <button (click)="handlePopover($event)" [ngClass]="isOpenPopover() ? 'bg-primary50' : ''" class="flex size-5 items-center justify-center rounded-full">
-        <app-icon name="more" [size]="13" class="text-white" />
-      </button>
+      @if (!isCheckable()) {
+        <button (click)="handlePopover($event)" [ngClass]="isOpenPopover() ? 'bg-primary50' : ''" class="flex size-5 items-center justify-center rounded-full">
+          <app-icon name="more" [size]="13" class="text-white" />
+        </button>
+      } @else {
+        <input type="checkbox" #inputRef [checked]="isChecked()" readonly />
+      }
       @if (isOpenPopover()) {
         <div clickOutside (clickOutside)="closePopover()" class="absolute top-full z-10 mt-2">
           <app-popover [collectionId]="collection().id" />
@@ -25,22 +29,3 @@
     }
   </div>
 </section>
-
-<!-- <section
-  (click)="goPage()"
-  class="shadow-custom flex flex-col items-center justify-center gap-2 rounded-[12px] bg-white p-2 hover:cursor-pointer hover:ring-1 hover:ring-primary50">
-  <div
-    [ngClass]="{ 'grid grid-cols-2': post().imageUrls.length === 2, 'grid grid-cols-2 grid-rows-2': post().imageUrls.length === 3 }"
-    class="h-[145px] w-full overflow-hidden rounded-[12px]">
-    @for (imageUrl of post().imageUrls; track $index; let i = $index) {
-      <img [src]="imageUrl" [ngClass]="{ 'row-span-full': i === 1 }" class="object-cover w-full h-full" />
-    }
-  </div>
-  @if (post().type === 'DEFAULT') {
-    <app-tag [tagName]="post().category?.name || ''" type="solid" />
-  }
-  <div class="text-center">
-    <h4 class="font-bold text-detail-l text-gray90">{{ post().title }}</h4>
-    <span class="text-detail-l text-gray50">{{ post().postCount }}개 사진</span>
-  </div>
-</section> -->
