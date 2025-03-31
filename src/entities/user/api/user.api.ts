@@ -7,7 +7,7 @@ import { environment } from 'src/shared/environments';
 import { skipAuth } from 'src/shared/interceptors';
 import { convertToFormData } from 'src/shared/utils';
 
-import { DuplicateEmailDTO, ProfileGetDTO, UpdatePasswordDTO, UpdateProfileDTO } from '../model';
+import { DuplicateEmailDTO, ProfileGetDTO, ForgotPasswordDTO, UpdatePasswordDTO, UpdateProfileDTO } from '../model';
 
 @Injectable({
   providedIn: 'root',
@@ -38,5 +38,10 @@ export class UserApi {
   // 비밀번호 변경 (프로필 페이지)
   updatePassword(updatedPassword: UpdatePasswordDTO): Observable<ProfileGetDTO> {
     return this.http.patch<ProfileGetDTO>(`${environment.serverUrl}/v1/users/me/password`, updatedPassword);
+  }
+
+  // 비밀번호 변경 (비밀번호 찾기 페이지)
+  recoverPassword(recoverPasswordDTO: ForgotPasswordDTO): Observable<ProfileGetDTO> {
+    return this.http.patch<ProfileGetDTO>(`${environment.serverUrl}/v1/users/password`, recoverPasswordDTO);
   }
 }

@@ -18,3 +18,8 @@ export type PasswordUpdateType = {
   password: string;
   confirmPassword: string;
 };
+
+export type PasswordForgotType = {
+  password: string;
+  confirmPassword: string;
+};
