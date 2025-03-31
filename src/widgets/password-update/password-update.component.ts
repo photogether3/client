@@ -1,11 +1,11 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { catchError, map, of } from 'rxjs';
 
 import { UserApi } from 'src/entities/user';
 import { PasswordUpdateType } from 'src/entities/user/model/user.type';
-import { InputComponent, ModalService } from 'src/shared/components';
+import { InputComponent } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
 
@@ -16,9 +16,6 @@ import { BaseForm } from 'src/shared/lib';
 })
 export class PasswordUpdateComponent extends BaseForm<PasswordUpdateType> {
   private readonly userApi = inject(UserApi);
-  private readonly modalService = inject(ModalService);
-
-  type = input.required<'forgot' | 'update'>();
 
   constructor() {
     super();
@@ -43,7 +40,7 @@ export class PasswordUpdateComponent extends BaseForm<PasswordUpdateType> {
   protected override initForm(): void {
     this.form = this.fb.group({
       currentPassword: this.fb.control('', {
-        validators: [Validators.required, Validators.pattern(PASSWORD_REGEX)],
+        validators: [Validators.pattern(PASSWORD_REGEX)],
       }),
       password: this.fb.control('', {
         validators: [Validators.required, Validators.pattern(PASSWORD_REGEX)],
@@ -66,7 +63,8 @@ export class PasswordUpdateComponent extends BaseForm<PasswordUpdateType> {
         catchError(() => of(false)),
       )
       .subscribe((res) => {
-        this.modalService.close(res);
+        // TODO 비밀번호 변경 성공적으로 이루어졌을 때 나타나는 모달
+        console.log(res, '비밀번호 재설정 성공');
       });
   }
 }
