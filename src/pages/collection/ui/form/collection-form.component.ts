@@ -1,10 +1,10 @@
-import { Component, input, OnInit, output } from '@angular/core';
-import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CategorySelectorWidget } from 'src/widgets/category-selector';
+import { Component, input, OnInit } from '@angular/core';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CollectionFormType } from 'src/entities/collection';
-import { ButtonComponent, InputComponent } from 'src/shared/components';
-import { BaseForm } from 'src/shared/lib';
+import { InputComponent } from 'src/shared/components';
+import { BaseForm, FormControls } from 'src/shared/lib';
+import { CategorySelectorWidget } from 'src/widgets/category-selector';
 
 @Component({
   selector: 'app-collection-form',
@@ -19,10 +19,9 @@ import { BaseForm } from 'src/shared/lib';
       }
     `,
   ],
-  imports: [ReactiveFormsModule, InputComponent, ButtonComponent, CategorySelectorWidget],
+  imports: [ReactiveFormsModule, InputComponent, CategorySelectorWidget],
 })
 export class CollectionFormComponent extends BaseForm<CollectionFormType> implements OnInit {
-  submitForm = output<FormGroup>();
   mode = input.required<string>();
   title = input<string>();
   categoryId = input<number>();
@@ -41,19 +40,13 @@ export class CollectionFormComponent extends BaseForm<CollectionFormType> implem
   }
 
   protected initForm() {
-    this.form = this.fb.group({
-      title: ['', Validators.required],
-      categoryId: [0, Validators.required],
+    this.form = this.fb.group<FormControls<CollectionFormType>>({
+      title: this.fb.control(null, [Validators.required]),
+      categoryId: this.fb.control(null, [Validators.required]),
     });
   }
 
-  // 카테고리 클릭 시
   toggleCategory(category: number[]) {
     this.form.patchValue({ categoryId: category[0] });
-  }
-
-  // 폼 제출
-  onSubmit() {
-    this.submitForm.emit(this.form);
   }
 }

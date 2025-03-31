@@ -1,29 +1,30 @@
-import { Component, inject } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, inject, viewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
+import { CollectionApi } from 'src/entities/collection';
+import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 
 import { CollectionFormComponent } from '../ui';
-import { CollectionApi } from 'src/entities/collection';
-import { ModalReactiveService } from 'src/shared/components';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-collection-create',
   templateUrl: './collection-create.page.html',
-  imports: [FooterWidget, HeaderWidget, CollectionFormComponent],
+  imports: [FooterWidget, HeaderWidget, CollectionFormComponent, ButtonComponent],
 })
 export class CollectionCreatePage {
   private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly collectionApi = inject(CollectionApi);
   private readonly router = inject(Router);
 
+  readonly collectionCreateForm = viewChild<CollectionFormComponent>('collectionCreateForm');
+
   constructor() {}
 
   // 사진첩 생성
-  createCollection(formGroup: FormGroup) {
-    const collectionCreateDTO = formGroup.getRawValue();
+  createCollection() {
+    const collectionCreateDTO = this.collectionCreateForm()!.getRawValue();
     this.collectionApi.createCollection(collectionCreateDTO).subscribe(() => {
       const modalData = {
         title: '사진첩 생성 완료',

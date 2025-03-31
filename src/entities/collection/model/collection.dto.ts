@@ -19,5 +19,5 @@ export type CollectionDetailResDTO = {
 
 export type CollectionReqDTO = {
   title: string;
-  categoryId: string;
+  categoryId: number;
 };
