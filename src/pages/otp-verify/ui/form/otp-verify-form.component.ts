@@ -1,10 +1,10 @@
-import { Component, inject, input, OnDestroy, output, signal } from '@angular/core';
+import { Component, effect, inject, input, OnDestroy, output, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { interval, Subscription, takeWhile } from 'rxjs';
+import { interval, Subscription, take, takeWhile } from 'rxjs';
 
-import { AuthApi, AuthService, OtpFormType } from 'src/entities/auth';
+import { AuthApi, AuthService, ForgotPasswordService, OtpFormType } from 'src/entities/auth';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { OTP_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
@@ -17,9 +17,11 @@ import { BaseForm } from 'src/shared/lib';
 export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnDestroy {
   private authApi = inject(AuthApi);
   private router = inject(Router);
+  private readonly forgotPasswordService = inject(ForgotPasswordService);
 
   email = input<string>('');
   isFormValid = output<boolean>();
+  isVerified = signal<boolean>(false);
   errorMessage = signal<string>('');
   private timeLeft = 300;
   private timerSubscription!: Subscription;
@@ -42,19 +44,17 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
       },
     };
 
-    const email = { email: this.email() };
-    this.authApi.generateOtp(email).subscribe({
-      next: (res) => {
-        console.log('OTP 성공:', res);
-        this.startTimer();
-      },
-      error: (errMessage) => {
-        this.errorMessage.set(errMessage);
-      },
-    });
+    effect(() => {
+      const email = this.email();
+      if (!email) return;
 
-    this.form.statusChanges.subscribe(() => {
-      this.isFormValid.emit(this.isValid());
+      this.authApi
+        .generateOtp({ email })
+        .pipe(take(1))
+        .subscribe({
+          next: () => this.startTimer(),
+          error: (err) => this.errorMessage.set(err),
+        });
     });
   }
 
@@ -74,11 +74,16 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
       otp: otp,
     };
 
-    this.authApi.verifyOtp(formValue).subscribe((res) => {
-      const instance = AuthService.getInstance();
-      instance.store(res);
+    this.authApi.verifyOtp(formValue).subscribe({
+      next: (res) => {
+        const instance = AuthService.getInstance();
+        instance.store(res);
 
-      this.router.navigateByUrl('/onboarding');
+        // TODO 비밀번호 찾기 페이지 한정 => 수정해야
+        this.forgotPasswordService.setOtp(otp);
+        this.isVerified.set(true);
+      },
+      error: (err) => this.errorMessage.set(err),
     });
   }
 
