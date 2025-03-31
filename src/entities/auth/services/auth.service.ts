@@ -40,7 +40,7 @@ export class AuthService {
     return this.expiresIn;
   }
 
-  store(resource: JwtResource) {
+  store(resource: JwtResource): Promise<void> {
     const { accessToken, expiresIn, refreshToken } = resource;
     this.accessToken = accessToken;
     this.expiresIn = expiresIn;
@@ -53,6 +53,8 @@ export class AuthService {
 
       localStorage.setItem(this.refreshTokenKey, refreshToken);
     }
+
+    return Promise.resolve();
   }
 
   clear() {

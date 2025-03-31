@@ -1,7 +1,9 @@
-import { HttpContext, HttpContextToken, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import { HttpContext, HttpContextToken, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+
 import { EMPTY, lastValueFrom, Observable, tap } from 'rxjs';
+
 import { AuthApi, AuthService } from 'src/entities/auth';
 
 const instance = AuthService.getInstance();
@@ -17,22 +19,14 @@ const instance = AuthService.getInstance();
 
 const skipJwtContextToken = new HttpContextToken(() => false);
 
-// 요청 대기열 저장소
 const requestQueue: Array<() => void> = [];
-
-export type PendingRequest = {
-  req: HttpRequest<any>;
-  next: HttpHandlerFn;
-};
-
-let isRefreshing = false; // 현재 토큰 갱신 중인지 확인
+let isRefreshing = false;
 
 export function skipAuth(): HttpContext {
   return new HttpContext().set(skipJwtContextToken, true);
 }
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  // TODO FSD 요청에 맞추어 수정
   const authApi = inject(AuthApi);
   const router = inject(Router);
 
@@ -49,8 +43,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const refreshToken = instance.getRefreshToken();
 
   if (!refreshToken) {
-    // alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-    // router.navigateByUrl('/login');
+    alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+    router.navigateByUrl('/login');
     return EMPTY;
   }
 
@@ -58,22 +52,18 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (isTokenExpired()) {
     console.log('만료됨');
 
-    // TODO (질문) 궁금한 부분 왜 observer?
     if (!isRefreshing) {
       isRefreshing = true;
 
       lastValueFrom(authApi.refresh(refreshToken))
-        .then((newToken) => {
+        .then(async (newToken) => {
           console.log('토큰 재발급중 ..');
-          instance.store(newToken);
-
+          await instance.store(newToken);
           requestQueue.forEach((ck) => ck());
         })
-        .catch((err) => {
-          console.log(err);
-          // 갱신 실패 시 로그인 페이지로 이동
-          // alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-          // router.navigateByUrl('/login');
+        .catch(() => {
+          alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+          router.navigateByUrl('/login');
         })
         .finally(() => {
           isRefreshing = false;
