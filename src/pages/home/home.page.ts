@@ -38,6 +38,21 @@ export class HomePage implements OnInit {
     };
   }
 
+  get systemFolders() {
+    return [
+      {
+        label: '미분류',
+        name: 'uncategorized',
+        postCount: this.myCollections.uncategorized?.postCount,
+      },
+      {
+        label: '휴지통',
+        name: 'trash',
+        postCount: this.myCollections.trash?.postCount,
+      },
+    ];
+  }
+
   constructor() {}
 
   ngOnInit(): void {
@@ -64,12 +79,15 @@ export class HomePage implements OnInit {
       });
   }
 
-  // 사진첩 생성
   createCollection() {
     this.router.navigateByUrl('collection/create');
   }
 
   toggleTheme() {
     this.themeService.toggleTheme();
+  }
+
+  goPage(type: string) {
+    this.router.navigateByUrl(`collection/${type}`);
   }
 }

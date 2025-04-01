@@ -7,7 +7,6 @@
     <!-- <app-button (click)="toggleTheme()" [text]="themeService.theme() === 'dark' ? '🌙 Light Mode' : '☀️ Light Mode'" /> -->
     <app-search-bar [value]="searchValue()" />
     <div class="">
-      {{ searchValue() }}
       <p class="mb-5 flex items-center justify-between text-white">
         <span class="text-body-s font-bold">{{ nickname }}의 사진첩</span>
         <button class="text-detail-l flex items-center gap-1 font-bold">
@@ -27,33 +26,21 @@
     <section class="mt-auto">
       <h4 class="mb-2.5 text-body-s font-bold text-white">정리가 필요한 사진첩</h4>
       <div class="divide-layer20 bg-layer30 text-detail-l divide-y rounded-[12px] p-4 text-gray30">
-        <!-- 미분류 -->
-        <div class="flex cursor-pointer items-center justify-between pb-2">
-          <div class="flex items-center gap-2">
-            <app-icon name="uncategorized" [size]="20" />
-            <span class="font-bold">미분류</span>
+        @for (systemFolder of systemFolders; track $index; let last = $last; let first = $first) {
+          <div (click)="goPage(systemFolder.name)" [ngClass]="{ 'pb-2': first, 'pt-2': last }" class="flex cursor-pointer items-center justify-between">
+            <div class="flex items-center gap-2">
+              <app-icon [name]="systemFolder.name" [size]="20" />
+              <span class="font-bold">{{ systemFolder.label }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span>{{ systemFolder.postCount }}개 사진</span>
+              <app-icon name="arrow-right" />
+            </div>
           </div>
-          <div class="flex items-center gap-2">
-            <span>{{ myCollections.uncategorized?.postCount }}개 사진</span>
-            <app-icon name="arrow-right" />
-          </div>
-        </div>
-
-        <!-- 휴지통 -->
-        <div class="flex cursor-pointer items-center justify-between pt-2">
-          <div class="flex items-center gap-2">
-            <app-icon name="trash" [size]="15" />
-            <span class="font-bold">휴지통</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span>{{ myCollections.trash?.postCount }}개 사진</span>
-            <app-icon name="arrow-right" />
-          </div>
-        </div>
+        }
       </div>
     </section>
   </main>
 
-  <!-- footer -->
   <app-footer class="sticky bottom-0 mt-auto" />
 </div>
