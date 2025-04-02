@@ -1,5 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { Component, inject } from '@angular/core';
+import { NgClass } from '@angular/common';
 
 import { ButtonComponent } from '../../button';
 import { ReactiveModalData } from '../services';
@@ -8,7 +9,7 @@ import { IconComponent } from '../../icon';
 @Component({
   selector: 'app-common-modal',
   templateUrl: 'common-modal.component.html',
-  imports: [ButtonComponent, IconComponent],
+  imports: [ButtonComponent, IconComponent, NgClass],
 })
 export class CommonModalComponent {
   private readonly dialogRef = inject(DialogRef);

@@ -1,10 +1,13 @@
 import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { inject, Injectable } from '@angular/core';
+
+import { firstValueFrom, Observable } from 'rxjs';
+
 import { CommonModalComponent } from '../ui';
-import { Observable } from 'rxjs';
 
 export type ReactiveModalData = {
-  title: string;
+  iconName?: string;
+  title?: string;
   subTitle: string;
   content: string;
   buttons: string[];
@@ -17,12 +20,12 @@ export class ModalReactiveService {
 
   constructor() {}
 
-  open(data: ReactiveModalData) {
+  open(data: ReactiveModalData): Promise<string | undefined> {
     if (this.dialogRef) {
       this.dialogRef.close();
     }
 
     this.dialogRef = this.dialog.open<CommonModalComponent>(CommonModalComponent, { data });
-    return this.dialogRef.closed as Observable<string | undefined>;
+    return firstValueFrom(this.dialogRef.closed as Observable<string | undefined>);
   }
 }
