@@ -1,5 +1,11 @@
-<div class="flex h-full w-[24rem] flex-col gap-4 overflow-y-auto rounded-t-[12px] bg-white px-6 pb-6 shadow-lg">
-  <div class="mx-auto my-2.5 h-1 w-[108px] rounded-full bg-black"></div>
+<div class="bg-layer40 h-full overflow-y-auto rounded-t-[12px] px-5">
+  <div class="mx-auto my-2.5 h-1 w-[108px] rounded-full bg-gray20"></div>
+  <div class="flex items-center pb-2 pt-1">
+    <p class="flex-1 text-body-l font-bold text-white">수행할 동작 선택</p>
+    <button (click)="close()">
+      <app-icon name="close" class="text-white" />
+    </button>
+  </div>
 
   <ng-container *ngComponentOutlet="component"></ng-container>
 </div>
