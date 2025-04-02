@@ -1,0 +1,14 @@
+<div class="divide-layer20 bg-layer30 text-detail-l divide-y rounded-[12px] p-4 text-gray30">
+  @for (systemFolder of systemFolders; track $index; let last = $last; let first = $first) {
+    <div (click)="goPage(systemFolder.id)" [ngClass]="{ 'pb-2': first, 'pt-2': last }" class="flex cursor-pointer items-center justify-between">
+      <div class="flex items-center gap-2">
+        <app-icon [name]="systemFolder.name" [size]="20" />
+        <span class="font-bold">{{ systemFolder.label }}</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span>{{ systemFolder.postCount }}개 사진</span>
+        <app-icon name="arrow-right" />
+      </div>
+    </div>
+  }
+</div>

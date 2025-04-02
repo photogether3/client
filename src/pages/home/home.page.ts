@@ -11,39 +11,26 @@ import { ButtonComponent, IconComponent, SearchBarComponent } from 'src/shared/c
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 import { ThemeService } from 'src/shared/services';
+import { SystemFoldersComponent } from 'src/widgets/system-folders/system-folders.component';
 
 import { CollectionCardComponent } from './ui';
+import { ActionButtonsComponent } from '../collection';
 
 @Component({
   selector: 'home-page',
   templateUrl: './home.page.html',
-  imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule, HeaderWidget, SearchBarComponent],
+  imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule, HeaderWidget, SearchBarComponent, SystemFoldersComponent, ActionButtonsComponent],
 })
 export class HomePage implements OnInit {
-  readonly themeService = inject(ThemeService);
+  private readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
   private readonly userApi = inject(UserApi);
   private readonly categoryApi = inject(CategoryApi);
   private readonly collectionApi = inject(CollectionApi);
 
   nickname: string = '';
-  collectionList: CollectionType[] = [];
+  defaultCollections: CollectionType[] = [];
   searchValue = signal<string>('');
-
-  get myCollections() {
-    return {
-      default: this.collectionList?.filter((collection) => collection.type === 'DEFAULT'),
-      uncategorized: this.collectionList?.find((collection) => collection.type === 'UNCATEGORIZED'),
-      trash: this.collectionList?.find((collection) => collection.type === 'TRASH'),
-    };
-  }
-
-  get systemFolders() {
-    return [
-      { id: this.myCollections.uncategorized?.id, label: '미분류', name: 'uncategorized', postCount: this.myCollections.uncategorized?.postCount },
-      { id: this.myCollections.trash?.id, label: '휴지통', name: 'trash', postCount: this.myCollections.trash?.postCount },
-    ];
-  }
 
   constructor() {}
 
@@ -67,7 +54,7 @@ export class HomePage implements OnInit {
       )
       .subscribe(({ profile, collections }) => {
         this.nickname = profile.nickname;
-        this.collectionList = collections;
+        this.defaultCollections = collections.filter((collection: CollectionType) => collection.type === 'DEFAULT');
       });
   }
 
@@ -77,12 +64,5 @@ export class HomePage implements OnInit {
 
   toggleTheme() {
     this.themeService.toggleTheme();
-  }
-
-  goPage(id: number | undefined) {
-    if (!id) {
-      return;
-    }
-    this.router.navigateByUrl(`collection/${id}`);
   }
 }

@@ -1,0 +1,45 @@
+import { NgClass } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { CollectionApi, CollectionType } from 'src/entities/collection';
+
+import { IconComponent } from 'src/shared/components';
+
+@Component({
+  selector: 'app-system-folders',
+  templateUrl: './system-folders.component.html',
+  imports: [IconComponent, NgClass],
+})
+export class SystemFoldersComponent {
+  private readonly router = inject(Router);
+  private readonly collectionApi = inject(CollectionApi);
+
+  collectionList: CollectionType[] = [];
+
+  constructor() {
+    this.collectionApi.getCollections().subscribe((res) => {
+      this.collectionList = res;
+    });
+  }
+
+  get systemFolders() {
+    return [
+      { id: this.collections.uncategorized?.id, label: '미분류', name: 'uncategorized', postCount: this.collections.uncategorized?.postCount },
+      { id: this.collections.trash?.id, label: '휴지통', name: 'trash', postCount: this.collections.trash?.postCount },
+    ];
+  }
+
+  get collections() {
+    return {
+      uncategorized: this.collectionList?.find((collection) => collection.type === 'UNCATEGORIZED'),
+      trash: this.collectionList?.find((collection) => collection.type === 'TRASH'),
+    };
+  }
+
+  goPage(id: number | undefined) {
+    if (!id) {
+      return;
+    }
+    this.router.navigateByUrl(`collection/${id}`);
+  }
+}
