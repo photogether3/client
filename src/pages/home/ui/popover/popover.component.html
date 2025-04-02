@@ -1,20 +1,11 @@
+<!-- TODO 구분선 추가해야 함 -->
 <ul class="text-detail-l whitespace-nowrap rounded-[12px] bg-[#2A2C3499]/60 px-3 py-2 ring-2 ring-primary50">
-  <li class="pb-1 text-white">
-    <button (click)="onClick('organize')" class="flex items-center gap-1">
-      <app-icon name="album" />
-      <span>사진첩 정리</span>
-    </button>
-  </li>
-  <li class="border-y border-y-[white/20] py-1 text-primary20">
-    <button (click)="onClick('update')" class="flex items-center gap-1">
-      <app-icon name="post" [size]="12" />
-      <span>사진첩 수정</span>
-    </button>
-  </li>
-  <li class="pt-1 text-accent40">
-    <button (click)="onClick('delete')" class="flex items-center gap-1">
-      <app-icon name="trash" [size]="12" />
-      <span>사진첩 삭제</span>
-    </button>
-  </li>
+  @for (item of items(); track $index) {
+    <li [ngClass]="item.color">
+      <button (click)="item.action()" class="flex items-center gap-1">
+        <app-icon [name]="item.icon" [size]="12" />
+        <span>{{ item.label }}</span>
+      </button>
+    </li>
+  }
 </ul>

@@ -1,8 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, input } from '@angular/core';
 
 import { IconComponent } from 'src/shared/components';
+
+export type PopoverItemType = {
+  icon: string;
+  label: string;
+  color?: string;
+  action: () => void;
+};
 
 @Component({
   selector: 'app-popover',
@@ -10,16 +16,7 @@ import { IconComponent } from 'src/shared/components';
   imports: [CommonModule, IconComponent],
 })
 export class PopoverComponent {
-  private readonly router = inject(Router);
-
-  collectionId = input.required<number>();
+  items = input<PopoverItemType[]>([]);
 
   constructor() {}
-
-  onClick(type: 'update' | 'organize' | 'delete') {
-    if (type === 'update') {
-      this.router.navigateByUrl(`collection/update/${this.collectionId()}`);
-    }
-    console.log(type);
-  }
 }
