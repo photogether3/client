@@ -40,16 +40,8 @@ export class HomePage implements OnInit {
 
   get systemFolders() {
     return [
-      {
-        label: '미분류',
-        name: 'uncategorized',
-        postCount: this.myCollections.uncategorized?.postCount,
-      },
-      {
-        label: '휴지통',
-        name: 'trash',
-        postCount: this.myCollections.trash?.postCount,
-      },
+      { id: this.myCollections.uncategorized?.id, label: '미분류', name: 'uncategorized', postCount: this.myCollections.uncategorized?.postCount },
+      { id: this.myCollections.trash?.id, label: '휴지통', name: 'trash', postCount: this.myCollections.trash?.postCount },
     ];
   }
 
@@ -87,7 +79,10 @@ export class HomePage implements OnInit {
     this.themeService.toggleTheme();
   }
 
-  goPage(type: string) {
-    this.router.navigateByUrl(`collection/${type}`);
+  goPage(id: number | undefined) {
+    if (!id) {
+      return;
+    }
+    this.router.navigateByUrl(`collection/${id}`);
   }
 }

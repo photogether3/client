@@ -5,7 +5,7 @@
 
   <main class="flex flex-grow flex-col gap-5 px-4 py-5">
     <!-- <app-button (click)="toggleTheme()" [text]="themeService.theme() === 'dark' ? '🌙 Light Mode' : '☀️ Light Mode'" /> -->
-    <app-search-bar [value]="searchValue()" />
+    <app-search-bar placeholder="사진첩 전체 검색하기" [value]="searchValue()" />
     <div class="">
       <p class="mb-5 flex items-center justify-between text-white">
         <span class="text-body-s font-bold">{{ nickname }}의 사진첩</span>
@@ -27,7 +27,7 @@
       <h4 class="mb-2.5 text-body-s font-bold text-white">정리가 필요한 사진첩</h4>
       <div class="divide-layer20 bg-layer30 text-detail-l divide-y rounded-[12px] p-4 text-gray30">
         @for (systemFolder of systemFolders; track $index; let last = $last; let first = $first) {
-          <div (click)="goPage(systemFolder.name)" [ngClass]="{ 'pb-2': first, 'pt-2': last }" class="flex cursor-pointer items-center justify-between">
+          <div (click)="goPage(systemFolder.id)" [ngClass]="{ 'pb-2': first, 'pt-2': last }" class="flex cursor-pointer items-center justify-between">
             <div class="flex items-center gap-2">
               <app-icon [name]="systemFolder.name" [size]="20" />
               <span class="font-bold">{{ systemFolder.label }}</span>

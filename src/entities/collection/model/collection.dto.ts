@@ -11,7 +11,7 @@ export type CollectionsResDTO = {
 };
 
 export type CollectionDetailResDTO = {
-  id: string;
+  id: number;
   title: string;
   postCount: number;
   category: CategoriesGetDTO | null;

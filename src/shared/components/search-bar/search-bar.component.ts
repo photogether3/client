@@ -1,4 +1,4 @@
-import { Component, model } from '@angular/core';
+import { Component, input, model } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { IconComponent } from '../icon';
@@ -9,6 +9,7 @@ import { IconComponent } from '../icon';
   imports: [IconComponent, FormsModule],
 })
 export class SearchBarComponent {
+  placeholder = input<string>('');
   value = model<string>('');
 
   constructor() {}
