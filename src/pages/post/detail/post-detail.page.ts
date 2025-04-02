@@ -6,6 +6,7 @@ import { PostApi, PostType } from 'src/entities/post';
 import { BottomSheetService, ButtonComponent, IconComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
+
 import { PostMoveComponent } from './ui';
 import { PostActionComponent } from './ui/post-action';
 
@@ -45,24 +46,15 @@ export class PostDetailPage {
       collectionId: this.collectionId,
       postId: this.post?.id,
     };
-    console.log(data);
-
     const result = await this.bottomSheetService.open(PostActionComponent as Type<Component>, data);
-    console.log('📌 바텀시트가 닫히면서 반환된 값:', result);
-
-    // 게시물 이동
-    if (result === 'move') {
-      const response = await this.bottomSheetService.open(PostMoveComponent as Type<Component>, this.post?.id);
-      if (response === 'success') {
-        const modalData = {
-          title: '게시물 이동 완료',
-          subTitle: '게시물 이동이 완료되었습니다.',
-          content: '확인 버튼을 누르시면 홈화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
-          buttons: ['확인'],
-        };
-
-        this.modalReactiveService.open(modalData).subscribe();
-      }
+    // TODO 게시물 수정, 게시물 삭제도 구현
+    if (result !== 'move') {
+      return;
     }
+
+    this.bottomSheetService.open(PostMoveComponent as Type<Component>, {
+      postIds: [this.post?.id],
+      hasSystemFolders: true,
+    });
   }
 }
