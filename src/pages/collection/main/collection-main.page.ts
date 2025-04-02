@@ -1,15 +1,17 @@
-import { Component, effect, ElementRef, inject, OnInit, QueryList, signal, Type, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, QueryList, signal, Type, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+
+import { forkJoin } from 'rxjs';
 
 import { TagComponent } from 'src/entities/category';
 import { CollectionApi, CollectionDetailResDTO } from 'src/entities/collection';
 import { PostApi, PostType } from 'src/entities/post';
+import { PostMoveComponent } from 'src/pages/post';
 import { BottomSheetService, ButtonComponent, IconComponent, ModalReactiveService, SearchBarComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 
 import { ActionButtonsComponent, PostCardComponent } from '../ui';
-import { PostMoveComponent } from 'src/pages/post';
 
 @Component({
   selector: 'app-collection-main',
@@ -25,37 +27,35 @@ export class CollectionMainPage implements OnInit {
   private readonly modalReactiveService = inject(ModalReactiveService);
   private resizeObserver: ResizeObserver | null = null;
 
-  @ViewChild('grid') grid!: ElementRef<HTMLElement>;
-  @ViewChildren('item') items!: QueryList<ElementRef<HTMLElement>>;
-
   collection: CollectionDetailResDTO | undefined = undefined;
   postList: PostType[] | undefined = undefined;
-  // TODO 마소니 레이아웃 간격, 너비 수정
-  columnWidth = 150;
-  columnGap = 10;
-  rowGap = 10;
-  collectionId: string | undefined = undefined;
-
   isEditMode = signal<boolean>(false);
   selectedPostIds = signal<number[]>([]);
 
-  constructor() {
-    effect(() => {
-      console.log(this.selectedPostIds());
-    });
-  }
-
+  // *---------------- 마손리 레이아아웃 변수 --------------------
+  // TODO 마소니 레이아웃 간격, 너비 수정
+  // TODO 마손리 레이아웃 컴포넌트 or 디렉티브 분리
   // TODO 사진첩 내부 마소니 레이아웃 리펙토링
+  private columnWidth = 150;
+  private columnGap = 10;
+  private rowGap = 10;
+  private collectionId: string | undefined = undefined;
+  @ViewChild('grid') grid!: ElementRef<HTMLElement>;
+  @ViewChildren('item') items!: QueryList<ElementRef<HTMLElement>>;
+  // *---------------- 마손리 레이아아웃 변수 // --------------------
+
+  constructor() {}
+
   ngOnInit(): void {
     this.collectionId = this.route.snapshot.paramMap.get('id') as string;
     if (!this.collectionId) return;
 
-    this.collectionApi.getCollection(this.collectionId).subscribe((res) => {
-      this.collection = res;
-    });
-
-    this.postApi.getCollection(this.collectionId).subscribe((res) => {
-      this.postList = res;
+    forkJoin({
+      collection: this.collectionApi.getCollection(this.collectionId),
+      postList: this.postApi.getCollection(this.collectionId),
+    }).subscribe(({ collection, postList }) => {
+      this.collection = collection;
+      this.postList = postList;
 
       this.items.changes.subscribe(() => {
         if (this.items.length > 0) {
@@ -63,6 +63,70 @@ export class CollectionMainPage implements OnInit {
         }
       });
     });
+  }
+
+  onSelect(updatedId: number) {
+    const currentIds = this.selectedPostIds();
+    const index = currentIds.indexOf(updatedId);
+
+    if (index !== -1) {
+      this.selectedPostIds.set(currentIds.filter((id) => id !== updatedId));
+    } else {
+      this.selectedPostIds.set([...currentIds, updatedId]);
+    }
+  }
+
+  postMove() {
+    this.bottomSheetService.open(PostMoveComponent as Type<Component>, {
+      postIds: this.selectedPostIds(),
+      hasSystemFolders: false,
+    });
+  }
+
+  async postDelete() {
+    const modalData = {
+      iconName: 'modal-trash',
+      subTitle: '선택하신 게시물을 삭제합니다.',
+      content: '이 작업은 되돌릴 수 없습니다. 삭제를 원하시지 않을 경우 취소를 눌러주세요.',
+      buttons: ['취소', '확인'],
+    };
+
+    const result = await this.modalReactiveService.open(modalData);
+
+    if (result !== '확인') {
+      return;
+    }
+
+    this.postApi.deletePost(this.selectedPostIds()).subscribe((res) => {
+      console.log('게시물 삭제 api 전송 후 응답: ', res); //  null값 찍힘
+      const modalData = {
+        title: '게시물 삭제 완료',
+        subTitle: '게시물 삭제가 완료되었습니다.',
+        content: '확인버튼을 누르시면 홈 화면으로 돌아갑니다. 확인 버튼을 눌러주세요.',
+        buttons: ['확인'],
+      };
+
+      const result = this.modalReactiveService.open(modalData);
+      if (!result) {
+        return;
+      }
+
+      this.router.navigateByUrl('home');
+    });
+  }
+
+  // TODO 바텀시트 버튼 아이콘 넣기
+  async openBottomSheet() {
+    const result = await this.bottomSheetService.open(ActionButtonsComponent as Type<Component>);
+
+    switch (result) {
+      case 'update':
+        return this.router.navigateByUrl(`collection/update/${this.collectionId}`);
+      case 'organize':
+        return this.isEditMode.set(true);
+      case 'delete':
+        return this.postDelete();
+    }
   }
 
   private async initializeLayout() {
@@ -81,18 +145,7 @@ export class CollectionMainPage implements OnInit {
     this.resizeObserver.observe(this.grid.nativeElement);
   }
 
-  onSelect(updatedId: number) {
-    const currentIds = this.selectedPostIds();
-    const index = currentIds.indexOf(updatedId);
-
-    if (index !== -1) {
-      this.selectedPostIds.set(currentIds.filter((id) => id !== updatedId));
-    } else {
-      this.selectedPostIds.set([...currentIds, updatedId]);
-    }
-  }
-
-  positionAllItems() {
+  private positionAllItems() {
     const gridWidth = this.grid.nativeElement.clientWidth;
     const brickWidth = this.columnWidth + this.columnGap;
     const nCol = Math.max(1, Math.floor(gridWidth / brickWidth));
@@ -141,7 +194,7 @@ export class CollectionMainPage implements OnInit {
     container.style.height = maxHeight + 'px';
   }
 
-  wrapAllItems() {
+  private wrapAllItems() {
     // 기존의 컨테이너 있다면 삭제
     const existingContainer = this.grid.nativeElement.querySelector('.container');
     if (existingContainer) {
@@ -205,61 +258,9 @@ export class CollectionMainPage implements OnInit {
     );
   }
 
-  ngOnDestroy() {
+  private ngOnDestroy() {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
-    }
-  }
-
-  // 게시물 이동
-  async postMove() {
-    const response = await this.bottomSheetService.open(PostMoveComponent as Type<Component>, this.selectedPostIds());
-    if (response === 'success') {
-      const modalData = {
-        title: '게시물 이동 완료',
-        subTitle: '게시물 이동이 완료되었습니다.',
-        content: '확인 버튼을 누르시면 홈화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
-        buttons: ['확인'],
-      };
-
-      this.modalReactiveService.open(modalData).subscribe();
-    }
-  }
-
-  postDelete() {
-    const modalData = {
-      title: '게시물 삭제',
-      subTitle: '선택하신 게시물을 삭제합니다.',
-      content: '삭제 버튼을 누르시면 해당 게시물이 삭제됩니다. 이 작업은 되돌릴 수 없습니다. 삭제를 원하시지 않을 경우 취소를 눌러주세요.',
-      buttons: ['취소', '확인'],
-    };
-    this.modalReactiveService.open(modalData).subscribe((res) => {
-      if (res === '확인') {
-        this.postApi.deletePost(this.selectedPostIds()).subscribe((res) => {
-          console.log('게시물 삭제 api 전송 후 응답: ', res); //  null값 찍힘
-          const modalData = {
-            title: '게시물 삭제 완료',
-            subTitle: '게시물 삭제가 완료되었습니다.',
-            content: '확인버튼을 누르시면 홈 화면으로 돌아갑니다. 확인 버튼을 눌러주세요.',
-            buttons: ['확인'],
-          };
-
-          this.modalReactiveService.open(modalData).subscribe((res) => {
-            this.router.navigateByUrl('home');
-          });
-        });
-      }
-    });
-  }
-
-  async openBottomSheet() {
-    const result = await this.bottomSheetService.open(ActionButtonsComponent as Type<Component>);
-    console.log('📌 바텀시트가 닫히면서 반환된 값:', result);
-
-    if (result === 'update') {
-      this.router.navigateByUrl(`collection/update/${this.collectionId}`);
-    } else if (result === 'organize') {
-      this.isEditMode.set(true);
     }
   }
 }

@@ -1,50 +1,57 @@
 <div class="bg-layer40 flex min-h-screen flex-col border-x">
-  @if (collection) {
-    <app-header [title]="collection.title">
-      @if (!isEditMode()) {
-        <button rightContent (click)="openBottomSheet()">
-          <app-icon name="more" />
-        </button>
-      } @else {
-        <app-tag rightContent [tagName]="collection.category?.name" type="solid" />
-      }
-    </app-header>
-  }
-
-  <main class="mt-5 flex flex-1 flex-col gap-5 px-4">
+  <app-header [title]="collection?.title ?? ''">
     @if (!isEditMode()) {
-      <app-search-bar />
+      <button rightContent (click)="openBottomSheet()" class="flex size-5 items-center justify-center rounded-full border border-primary50 bg-[#182B28] px-1 text-primary20">
+        <app-icon name="more" [size]="13" />
+      </button>
     } @else {
-      <div class="grid grid-cols-2 gap-2">
-        <app-button text="게시물 삭제" appearance="tertiary" size="md" (click)="postDelete()" />
-        <app-button text="게시물 이동" size="md" (click)="postMove()" />
-      </div>
+      <label rightContent class="flex gap-2 whitespace-nowrap text-body-s font-bold">
+        <input type="checkbox" />
+        전체선택
+      </label>
+    }
+  </app-header>
+
+  <main class="mt-5 flex flex-1 flex-col gap-5 px-5">
+    @if (!isEditMode()) {
+      <app-search-bar placeholder="사진첩 검색하기" />
     }
     <div class="flex items-center justify-between">
-      @if (!isEditMode()) {
-        <app-tag [tagName]="collection?.category?.name" appearance="primary" />
-        <p class="text-body-s font-bold">
-          <span class="text-primary60">{{ postList?.length }}</span>
-          개의 게시물
-        </p>
-      } @else {
-        <div class="flex items-center gap-2">
-          <input type="checkbox" class="size-6" />
-          <span class="text-body-s font-bold text-gray90">전체선택</span>
-        </div>
-        <p class="text-body-s font-bold">
-          <span class="text-primary60">{{ selectedPostIds().length }}</span>
-          개 선택됨
-        </p>
-      }
+      <app-tag [tagName]="collection?.category?.name ?? collection?.title" size="md" [type]="collection?.category?.name ? 'solid' : 'outline'" />
+      <p class="text-body-s font-bold text-white">
+        <span class="text-primary40">{{ postList?.length }}</span>
+        개의 게시물
+      </p>
     </div>
     <section #grid>
       @for (post of postList || []; track $index) {
         <div #item>
           <app-post-card [post]="post" [isCheckable]="isEditMode()" (postSelected)="onSelect($event)" />
         </div>
+      } @empty {
+        <p class="text-body-s text-gray40">
+          @if (collection?.title === '휴지통') {
+            휴지통이 비었습니다.
+          } @else {
+            등록된 사진이 없습니다.
+          }
+        </p>
       }
     </section>
   </main>
-  <app-footer />
+
+  @if (!isEditMode()) {
+    <app-footer />
+  } @else {
+    <app-footer [hasButton]="true">
+      <div button class="flex items-center justify-between">
+        <app-button text="삭제" size="sm" appearance="danger" [isDisabled]="selectedPostIds().length === 0" (click)="postDelete()" />
+        <p class="text-body-s font-bold text-white">
+          <span class="text-primary60">{{ selectedPostIds().length }}</span>
+          개 선택됨
+        </p>
+        <app-button text="이동" size="sm" [isDisabled]="selectedPostIds().length === 0" (click)="postMove()" />
+      </div>
+    </app-footer>
+  }
 </div>
