@@ -96,8 +96,8 @@ export class PostUpdatePage extends BaseForm<PostUpdateFormType> {
         content: '확인 버튼을 누르시면 홈 화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
         buttons: ['확인'],
       };
-      this.modalReactiveService.open(modalData).subscribe((buttonText) => {
-        console.log('선택된 버튼:', buttonText);
+      this.modalReactiveService.open(modalData).then(() => {
+        this.router.navigateByUrl('home');
       });
     });
   }

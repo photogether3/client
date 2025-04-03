@@ -27,12 +27,13 @@ export class CollectionCreatePage {
     const collectionCreateDTO = this.collectionCreateForm()!.getRawValue();
     this.collectionApi.createCollection(collectionCreateDTO).subscribe(() => {
       const modalData = {
-        title: '사진첩 생성 완료',
+        iconName: 'modal-create',
         subTitle: '사진첩 생성이 완료되었습니다.',
         content: '확인 버튼을 누르시면 홈화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
         buttons: ['확인'],
       };
-      this.modalReactiveService.open(modalData).subscribe(() => {
+
+      this.modalReactiveService.open(modalData).then(() => {
         this.router.navigateByUrl('/home');
       });
     });
