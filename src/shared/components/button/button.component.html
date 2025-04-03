@@ -1,4 +1,4 @@
-<button [class]="computedClass()" [type]="type()" [disabled]="isDisabled()" class="flex items-center gap-1.5">
+<button [class]="computedClass()" [type]="type()" [disabled]="isDisabled()" class="flex items-center gap-1.5 whitespace-nowrap">
   @if (leftIcon()) {
     <app-icon [name]="leftIcon()" [size]="iconSize()" />
   }
@@ -7,4 +7,3 @@
     <app-icon [name]="rightIcon()" [size]="iconSize()" />
   }
 </button>
-<!-- TODO 버튼 아이콘 넣기 -->
