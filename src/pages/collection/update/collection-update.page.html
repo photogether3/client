@@ -1,7 +1,7 @@
-<div class="bg-layer40 flex min-h-screen flex-col border-x">
+<div class="flex flex-col min-h-screen border-x bg-layer40">
   <app-header title="사진첩 수정" />
-  @if (isCollectionLoaded()) {
-    <app-collection-form mode="update" [title]="collection()?.title || ''" [categoryId]="collection()?.category?.id" />
-  }
-  <app-footer class="sticky bottom-0 mt-auto" />
+  <app-collection-form #collectionUpdateForm mode="update" />
+  <app-footer [hasButton]="true">
+    <app-button button text="수정된 내용 저장하기" [isDisabled]="!collectionUpdateForm.isValid()" (click)="updateCollection()" />
+  </app-footer>
 </div>

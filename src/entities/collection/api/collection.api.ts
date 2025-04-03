@@ -14,7 +14,7 @@ export class CollectionApi {
   private http = inject(HttpClient);
 
   // 사진첩 목록 조회
-  getCollections(): Observable<any> {
+  getCollections() {
     const params = new HttpParams({
       fromObject: {
         page: 1,

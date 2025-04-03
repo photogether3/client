@@ -1,4 +1,4 @@
-import { Component, input, OnInit } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CollectionFormType } from 'src/entities/collection';
@@ -21,22 +21,11 @@ import { CategorySelectorWidget } from 'src/widgets/category-selector';
   ],
   imports: [ReactiveFormsModule, InputComponent, CategorySelectorWidget],
 })
-export class CollectionFormComponent extends BaseForm<CollectionFormType> implements OnInit {
+export class CollectionFormComponent extends BaseForm<CollectionFormType> {
   mode = input.required<string>();
-  title = input<string>();
-  categoryId = input<number>();
 
   constructor() {
     super();
-  }
-
-  ngOnInit(): void {
-    if (this.mode() === 'update' && this.title() && this.categoryId()) {
-      this.form.patchValue({
-        title: this.title(),
-        categoryId: this.categoryId(),
-      });
-    }
   }
 
   protected initForm() {
