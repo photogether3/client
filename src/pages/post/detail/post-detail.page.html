@@ -1,44 +1,43 @@
-<div class="flex flex-col min-h-screen border-x bg-layer40">
+<div class="flex flex-col min-h-screen border-x">
   <app-header [title]="post?.title ?? ''">
     <button rightContent (click)="openBottomSheet()" class="flex size-5 items-center justify-center rounded-full border border-primary50 bg-[#182B28] px-1 text-primary20">
       <app-icon name="more" [size]="13" />
     </button>
   </app-header>
 
-  <main class="flex-1 w-full px-4 py-5">
+  <main class="flex-1 w-full px-5 py-10">
     @defer {
       @if (post) {
-        <div class="flex flex-col gap-5">
-          <div class="rounded-[8px] bg-white px-4 py-5 shadow-custom">
-            <img [src]="post.imageUrl" alt="임시 이미지" class="h-[485px] w-full rounded-[8px]" />
+        <!-- TODO 게시물 상세 페이지 캐러셀 -->
+        <!-- TODO 게시물 상세 페이지 배경색 -->
+        <img [src]="post.imageUrl" alt="임시 이미지" class="mx-auto mb-10 w-[270px] rounded-[12px] border-2 border-primary50 shadow-custom" />
+
+        <!-- TODO 테두리 -->
+        <section class="mb-5 rounded-[12px] border border-gray70 bg-layer40 px-4 py-5">
+          <div class="flex items-center justify-between pb-4 border-b border-b-white/20">
+            <app-tag [tagName]="post.category?.name" type="solid" />
+            <p class="flex items-center gap-1.5 text-white">
+              <app-icon name="folder" [size]="16" />
+              <span class="font-bold text-detail-l">{{ post.collection.title }}</span>
+            </p>
           </div>
 
-          <section class="mb-5 rounded-[8px] bg-white px-4 py-5">
-            <div class="flex items-center justify-between pb-4 border-b border-b-gray40">
-              <app-tag [tagName]="post.category?.name" />
-              <p class="flex items-center gap-2">
-                <app-icon name="folder" />
-                <span class="font-bold text-detail-l text-gray90">{{ post.collection.title }}</span>
-              </p>
-            </div>
+          <div class="py-5 border-b border-b-white/20">
+            <span class="font-bold text-white text-body-s">게시물 내용</span>
+            <p class="mt-2.5 text-detail-l text-gray40">{{ post.content }}</p>
+          </div>
 
-            <div class="flex flex-col gap-2.5 border-b border-b-gray40 py-5 text-gray90">
-              <span class="font-bold text-body-s">게시물 내용</span>
-              <p class="text-detail-l">{{ post.content }}</p>
-            </div>
-
-            <div class="flex flex-col gap-2.5 pt-5">
-              <span class="font-bold text-body-s">사진 내용</span>
-              <ul class="flex flex-col gap-2.5">
-                @for (imgContent of post.metadataList; track $index) {
-                  @if (imgContent.isPublic) {
-                    <li class="list-disc list-inside text-detail-l">{{ imgContent.content }}</li>
-                  }
+          <div class="pt-5">
+            <span class="font-bold text-white text-body-s">사진 내용</span>
+            <ul class="mt-2.5 flex flex-col gap-2.5">
+              @for (imgContent of post.metadataList; track $index) {
+                @if (imgContent.isPublic) {
+                  <li class="list-disc list-inside text-detail-l text-gray40">{{ imgContent.content }}</li>
                 }
-              </ul>
-            </div>
-          </section>
-        </div>
+              }
+            </ul>
+          </div>
+        </section>
       }
     } @loading {
       <div class="flex flex-col items-center justify-center min-h-screen text-center bg-white">게시물 정보를 찾을 수 없습니다. 다시 시도해주세요.</div>
@@ -46,5 +45,5 @@
     <app-button text="목록으로 돌아가기" width="full" (click)="goPage()" />
   </main>
 
-  <app-footer class="sticky bottom-0 mt-auto" />
+  <app-footer />
 </div>
