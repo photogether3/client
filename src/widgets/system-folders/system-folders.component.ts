@@ -1,8 +1,8 @@
 import { NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, input, output, signal, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { CollectionApi, CollectionType } from 'src/entities/collection';
 
+import { CollectionApi, CollectionType } from 'src/entities/collection';
 import { IconComponent } from 'src/shared/components';
 
 @Component({
@@ -14,6 +14,10 @@ export class SystemFoldersComponent {
   private readonly router = inject(Router);
   private readonly collectionApi = inject(CollectionApi);
 
+  isCheckable = input<boolean>(false);
+  inputRef = viewChild<HTMLInputElement>('inputRef');
+  selectedId = signal<number | undefined>(undefined);
+  clickFolder = output<number | undefined>();
   collectionList: CollectionType[] = [];
 
   constructor() {
@@ -36,10 +40,16 @@ export class SystemFoldersComponent {
     };
   }
 
-  goPage(id: number | undefined) {
+  clickEvent(id: number | undefined) {
     if (!id) {
       return;
     }
-    this.router.navigateByUrl(`collection/${id}`);
+
+    if (!this.isCheckable()) {
+      this.router.navigateByUrl(`collection/${id}`);
+    } else {
+      this.selectedId.set(id);
+      this.clickFolder.emit(this.selectedId());
+    }
   }
 }
