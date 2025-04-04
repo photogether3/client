@@ -1,13 +1,13 @@
 <div class="flex flex-col gap-5">
   <!-- TODO 닉네임 불러오기 -->
   @for (collection of defaultCollections(); track $index) {
-    <app-collection-card [collection]="collection" [isCheckable]="true" (clickEvent)="onCardChecked($event, collection.id)" />
+    <app-collection-card [collection]="collection" [isCheckable]="true" [isChecked]="collection.id === selectedCollectionId()" (clickEvent)="onCardChecked($event)" />
   }
 
   @if (hasSystemFolders()) {
     <div>
       <h4 class="mb-2.5 mt-auto text-body-s font-bold text-white">정리가 필요한 사진첩</h4>
-      <app-system-folders />
+      <app-system-folders [isCheckable]="true" />
     </div>
   }
   <app-button text="선택 폴더로 이동" (click)="movePost()" />

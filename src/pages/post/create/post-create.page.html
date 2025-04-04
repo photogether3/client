@@ -1,12 +1,12 @@
-<div class="bg-layer40 flex min-h-screen flex-col border-x">
+<div class="flex flex-col min-h-screen border-x bg-layer40">
   <app-header title="게시물 생성">
-    <span rightContent class="flex text-body-m text-white">
+    <span rightContent class="flex text-white text-body-m">
       <span class="font-bold text-primary60">{{ step() }}</span>
       /2
     </span>
   </app-header>
 
-  <div class="w-full flex-1 py-5">
+  <div class="flex-1 w-full py-5">
     @if (step() === 1) {
       <!-- TODO 게시물 생성 form 분리 -->
       <form [formGroup]="form" class="px-5">
@@ -19,7 +19,7 @@
           } @else {
             <div class="flex flex-col items-center gap-5">
               <app-icon name="plus" [size]="30" class="text-primary20" />
-              <div class="h-full w-full text-body-s text-primary20">사진을 선택해주세요.</div>
+              <div class="w-full h-full text-body-s text-primary20">사진을 선택해주세요.</div>
             </div>
           }
         </button>
@@ -30,13 +30,13 @@
           placeholder="게시물 내용을 입력해주세요."
           info="게시물에 대한 간단한 메모를 남겨주세요."
           formControlName="content"
-          class="mt-5 block" />
+          class="block mt-5" />
 
         <div formArrayName="metadataStringify" class="mt-5">
-          <p class="mb-2 text-body-s text-white">사진내용</p>
+          <p class="mb-2 text-white text-body-s">사진내용</p>
           <!-- TODO 테두리 변경 -->
           <div class="min-w-full rounded-[12px] border border-gray70">
-            <div class="text-detail-m flex rounded-t-[12px] bg-[#182B28] font-bold text-primary20">
+            <div class="flex rounded-t-[12px] bg-[#182B28] text-detail-m font-bold text-primary20">
               <span class="px-2.5 py-2">노출</span>
               <span class="flex-1 px-1 py-2">텍스트</span>
               @if (metadataArray.controls.length > 0) {
@@ -44,7 +44,7 @@
               }
             </div>
             @for (imgContent of metadataArray.controls; track $index) {
-              <div [formGroup]="imgContent" class="bg-layer40 flex items-center gap-2.5 px-2.5">
+              <div [formGroup]="imgContent" class="flex items-center gap-2.5 bg-layer40 px-2.5">
                 <div class="py-2">
                   <input type="checkbox" formControlName="isPublic" />
                 </div>
@@ -57,53 +57,32 @@
               </div>
             } @empty {
               <!-- TODO border-t 테두리 변경 -->
-              <div class="text-detail-l rounded-b-[12px] border-t-gray70 px-2.5 py-2 text-gray40">사진을 선택해주세요.</div>
+              <div class="rounded-b-[12px] border-t-gray70 px-2.5 py-2 text-detail-l text-gray40">사진을 선택해주세요.</div>
             }
           </div>
         </div>
       </form>
     } @else {
       <!-- STEP2 -->
-      <!-- TODO 홈화면에 있는 요소랑 공통, 컴포넌트로 빼기 -->
       <div class="px-5">
         <div class="flex flex-col gap-5">
-          <p class="text-body-s font-bold text-white">{{ nickname }}의 사진첩</p>
+          <p class="font-bold text-white text-body-s">{{ nickname }}의 사진첩</p>
           <div class="flex flex-col gap-5">
             @for (collection of myCollections().default; track $index) {
-              <app-collection-card [collection]="collection" [isCheckable]="true" (clickEvent)="onCardChecked($event, collection.id)" />
+              <app-collection-card
+                [collection]="collection"
+                [isCheckable]="true"
+                [isChecked]="selectedCollectionId() === collection.id"
+                (clickEvent)="onCardChecked(collection.id)" />
             } @empty {
-              <div class="bg-layer20 col-span-full h-[275px] rounded-[12px] p-4 text-white">등록된 사진첩이 없습니다</div>
+              <div class="col-span-full h-[275px] rounded-[12px] bg-layer20 p-4 text-white">등록된 사진첩이 없습니다</div>
             }
           </div>
         </div>
 
         <section class="mt-5">
           <h4 class="mb-2.5 text-body-s font-bold text-white">정리가 필요한 사진첩</h4>
-          <div class="divide-layer20 bg-layer30 text-detail-l divide-y rounded-[12px] p-4 text-gray30">
-            <!-- 미분류 -->
-            <div class="flex cursor-pointer items-center justify-between pb-2">
-              <div class="flex items-center gap-2">
-                <app-icon name="uncategorized" [size]="20" />
-                <span class="font-bold">미분류</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <span>{{ myCollections().uncategorized?.postCount }}개 사진</span>
-                <app-icon name="arrow-right" />
-              </div>
-            </div>
-
-            <!-- 휴지통 -->
-            <div class="flex cursor-pointer items-center justify-between pt-2">
-              <div class="flex items-center gap-2">
-                <app-icon name="trash" [size]="15" />
-                <span class="font-bold">휴지통</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <span>{{ myCollections().trash?.postCount }}개 사진</span>
-                <app-icon name="arrow-right" />
-              </div>
-            </div>
-          </div>
+          <app-system-folders [isCheckable]="true" (clickFolder)="onCardChecked($event)" />
         </section>
       </div>
     }

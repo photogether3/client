@@ -23,7 +23,7 @@ export class PostMoveComponent {
   postIds: number[] = [];
   defaultCollections = signal<CollectionType[]>([]);
   hasSystemFolders = signal<boolean>(false);
-  selectedCollectionId = signal<number | undefined>(undefined);
+  selectedCollectionId = signal<number | null>(null);
 
   constructor() {
     const { postIds, hasSystemFolders } = this.bottomSheetService.data();
@@ -45,17 +45,17 @@ export class PostMoveComponent {
       if (this.hasSystemFolders()) {
         const _uncategorized = collections.find((c) => c.type === 'UNCATEGORIZED')?.id;
         console.log(_uncategorized);
-        this.selectedCollectionId.set(_uncategorized);
+        this.selectedCollectionId.set(_uncategorized ?? null);
       }
     });
   }
 
-  selectCollection(collectionId: number | undefined, event: Event) {
-    const isChecked = (event.target as HTMLInputElement).checked;
-
-    if (isChecked) {
-      this.selectedCollectionId.set(collectionId);
+  onCardChecked(collectionId?: number) {
+    if (!collectionId) {
+      return;
     }
+    const isSame = this.selectedCollectionId() === collectionId;
+    this.selectedCollectionId.set(isSame ? null : collectionId);
   }
 
   movePost() {
@@ -79,13 +79,5 @@ export class PostMoveComponent {
         });
       },
     });
-  }
-
-  onCardChecked(isChecked: boolean, collectionId?: number) {
-    if (isChecked) {
-      this.selectedCollectionId.set(collectionId);
-    } else {
-      this.selectedCollectionId.set(undefined);
-    }
   }
 }

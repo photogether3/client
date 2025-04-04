@@ -19,12 +19,11 @@ export class CollectionCardComponent {
   private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly collectionApi = inject(CollectionApi);
 
-  // TODO model로 클릭된 id 내보내기
-  isCheckable = input<boolean>(false);
   collection = input.required<CollectionType>();
-  clickEvent = output<boolean>();
+  isCheckable = input<boolean>(false);
+  isChecked = input<boolean>(false);
+  clickEvent = output<number>();
   isOpenPopover = signal<boolean>(false);
-  isChecked = signal<boolean>(false);
   readonly popoverItems: PopoverItemType[] = [
     // TODO 사진첩 정리 필요없는 기능 -> 삭제 확인
     {
@@ -62,8 +61,7 @@ export class CollectionCardComponent {
     if (!this.isCheckable()) {
       this.goPage();
     } else {
-      this.isChecked.update((v) => !v);
-      this.clickEvent.emit(this.isChecked());
+      this.clickEvent.emit(this.collection().id);
     }
   }
 

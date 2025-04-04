@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { CollectionApi, CollectionType } from 'src/entities/collection';
 import { ImageApi } from 'src/entities/image';
@@ -11,13 +12,15 @@ import { ButtonComponent, IconComponent, InputComponent, ModalReactiveService } 
 import { BaseForm, FormControls } from 'src/shared/lib';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
+import { SystemFoldersComponent } from 'src/widgets/system-folders/system-folders.component';
 
 @Component({
   selector: 'post-create-page',
   templateUrl: './post-create.page.html',
-  imports: [ButtonComponent, FooterWidget, ReactiveFormsModule, CollectionCardComponent, HeaderWidget, InputComponent, IconComponent, CommonModule],
+  imports: [ButtonComponent, FooterWidget, ReactiveFormsModule, CollectionCardComponent, HeaderWidget, InputComponent, IconComponent, CommonModule, SystemFoldersComponent],
 })
 export class PostCreatePage extends BaseForm<PostCreateFormType> {
+  private readonly router = inject(Router);
   private readonly postApi = inject(PostApi);
   private readonly imageApi = inject(ImageApi);
   private readonly userApi = inject(UserApi);
@@ -27,6 +30,7 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
   nickname: string = '';
   step = signal<number>(1);
   collections = signal<CollectionType[]>([]);
+  selectedCollectionId = signal<number | null>(null);
   previewUrl: string | ArrayBuffer | null | undefined = null;
   myCollections = computed(() => ({
     default: this.collections()?.filter((collection) => collection.type === 'DEFAULT'),
@@ -123,28 +127,33 @@ export class PostCreatePage extends BaseForm<PostCreateFormType> {
   }
 
   // =============== STEP2 ===============
-  onCardChecked(isChecked: boolean, collectionId?: number) {
-    if (isChecked) {
-      this.form.patchValue({ collectionId });
-    } else {
-      this.form.patchValue({ collectionId: null });
+  onCardChecked(collectionId?: number) {
+    if (!collectionId) {
+      return;
     }
+
+    const isSame = this.selectedCollectionId() === collectionId;
+    this.selectedCollectionId.set(isSame ? null : collectionId);
+
+    this.form.patchValue({ collectionId: isSame ? null : collectionId });
     console.log(this.form.value);
   }
 
   createCollection() {
     const dto = this.getRawValue();
 
-    this.postApi.createPost(dto).subscribe(() => {
-      const modalData = {
-        title: '게시물 생성 완료',
-        subTitle: '게시물 생성이 완료되었습니다.',
-        content: '확인 버튼을 누르시면 홈 화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
-        buttons: ['확인'],
-      };
-      this.modalReactiveService.open(modalData).subscribe((buttonText) => {
-        console.log('선택된 버튼:', buttonText);
-      });
+    this.postApi.createPost(dto).subscribe({
+      next: () => {
+        const modalData = {
+          iconName: 'modal-photo',
+          subTitle: '게시물 생성이 완료되었습니다.',
+          content: '확인 버튼을 누르시면 홈 화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
+          buttons: ['확인'],
+        };
+        this.modalReactiveService.open(modalData).then(() => {
+          this.router.navigateByUrl('/home');
+        });
+      },
     });
   }
 }
