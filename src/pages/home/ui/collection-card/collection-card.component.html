@@ -16,7 +16,7 @@
       }
       @if (isOpenPopover()) {
         <div clickOutside (clickOutside)="closePopover()" class="absolute top-full z-10 mt-2">
-          <app-popover [collectionId]="collection().id" />
+          <app-popover [items]="popoverItems" />
         </div>
       }
     </div>
