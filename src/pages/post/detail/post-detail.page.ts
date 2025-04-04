@@ -6,9 +6,9 @@ import { PostApi, PostType } from 'src/entities/post';
 import { BottomSheetService, ButtonComponent, IconComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
+import { ActionButtonsComponent } from 'src/pages/collection';
 
 import { PostMoveComponent } from './ui';
-import { PostActionComponent } from './ui/post-action';
 
 @Component({
   selector: 'post-detail-page',
@@ -42,19 +42,47 @@ export class PostDetailPage {
   }
 
   async openBottomSheet() {
-    const data = {
-      collectionId: this.collectionId,
-      postId: this.post?.id,
-    };
-    const result = await this.bottomSheetService.open(PostActionComponent as Type<Component>, data);
-    // TODO 게시물 수정, 게시물 삭제도 구현
-    if (result !== 'move') {
-      return;
-    }
-
-    this.bottomSheetService.open(PostMoveComponent as Type<Component>, {
-      postIds: [this.post?.id],
-      hasSystemFolders: true,
+    const result = await this.bottomSheetService.open(ActionButtonsComponent as Type<Component>, {
+      type: 'post',
     });
+
+    switch (result) {
+      case 'update':
+        return this.router.navigateByUrl(`post/update/${this.collectionId}`);
+      case 'organize':
+        return this.bottomSheetService.open(PostMoveComponent as Type<Component>, {
+          postIds: [this.post?.id],
+          hasSystemFolders: true,
+        });
+      case 'delete':
+        const modalData = {
+          iconName: 'modal-trash',
+          subTitle: '선택한 게시물을 삭제합니다.',
+          content: '이 작업은 되돌릴 수 없습니다. 삭제를 원하지 않을 경우 취소를 눌러주세요.',
+          buttons: ['취소', '삭제'],
+        };
+
+        const result = await this.modalReactiveService.open(modalData);
+        if (result !== '삭제') {
+          return;
+        }
+        if (!this.post?.id) {
+          return;
+        }
+        this.postApi.deletePost([this.post?.id]).subscribe({
+          next: () => {
+            const modalData = {
+              title: '게시물 삭제 완료',
+              subTitle: '게시물 삭제가 완료되었습니다.',
+              content: '확인 버튼을 누르시면 홈화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
+              buttons: ['확인'],
+            };
+
+            this.modalReactiveService.open(modalData).then(() => {
+              this.router.navigateByUrl('/home');
+            });
+          },
+        });
+    }
   }
 }

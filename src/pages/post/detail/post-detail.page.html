@@ -1,11 +1,11 @@
-<div class="bg-layer40 flex min-h-screen flex-col border-x">
+<div class="flex flex-col min-h-screen border-x bg-layer40">
   <app-header [title]="post?.title ?? ''">
-    <button rightContent (click)="openBottomSheet()" class="text-lg font-bold">
-      <app-icon name="more" />
+    <button rightContent (click)="openBottomSheet()" class="flex size-5 items-center justify-center rounded-full border border-primary50 bg-[#182B28] px-1 text-primary20">
+      <app-icon name="more" [size]="13" />
     </button>
   </app-header>
 
-  <main class="w-full flex-1 px-4 py-5">
+  <main class="flex-1 w-full px-4 py-5">
     @defer {
       @if (post) {
         <div class="flex flex-col gap-5">
@@ -14,25 +14,25 @@
           </div>
 
           <section class="mb-5 rounded-[8px] bg-white px-4 py-5">
-            <div class="flex items-center justify-between border-b border-b-gray40 pb-4">
+            <div class="flex items-center justify-between pb-4 border-b border-b-gray40">
               <app-tag [tagName]="post.category?.name" />
               <p class="flex items-center gap-2">
                 <app-icon name="folder" />
-                <span class="text-detail-l font-bold text-gray90">{{ post.collection.title }}</span>
+                <span class="font-bold text-detail-l text-gray90">{{ post.collection.title }}</span>
               </p>
             </div>
 
             <div class="flex flex-col gap-2.5 border-b border-b-gray40 py-5 text-gray90">
-              <span class="text-body-s font-bold">게시물 내용</span>
+              <span class="font-bold text-body-s">게시물 내용</span>
               <p class="text-detail-l">{{ post.content }}</p>
             </div>
 
             <div class="flex flex-col gap-2.5 pt-5">
-              <span class="text-body-s font-bold">사진 내용</span>
+              <span class="font-bold text-body-s">사진 내용</span>
               <ul class="flex flex-col gap-2.5">
                 @for (imgContent of post.metadataList; track $index) {
                   @if (imgContent.isPublic) {
-                    <li class="text-detail-l list-inside list-disc">{{ imgContent.content }}</li>
+                    <li class="list-disc list-inside text-detail-l">{{ imgContent.content }}</li>
                   }
                 }
               </ul>
@@ -41,7 +41,7 @@
         </div>
       }
     } @loading {
-      <div class="flex min-h-screen flex-col items-center justify-center bg-white text-center">게시물 정보를 찾을 수 없습니다. 다시 시도해주세요.</div>
+      <div class="flex flex-col items-center justify-center min-h-screen text-center bg-white">게시물 정보를 찾을 수 없습니다. 다시 시도해주세요.</div>
     }
     <app-button text="목록으로 돌아가기" width="full" (click)="goPage()" />
   </main>

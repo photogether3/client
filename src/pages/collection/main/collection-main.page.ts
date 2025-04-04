@@ -115,9 +115,10 @@ export class CollectionMainPage implements OnInit {
     });
   }
 
-  // TODO 바텀시트 버튼 아이콘 넣기
   async openBottomSheet() {
-    const result = await this.bottomSheetService.open(ActionButtonsComponent as Type<Component>);
+    const result = await this.bottomSheetService.open(ActionButtonsComponent as Type<Component>, {
+      type: 'collection',
+    });
 
     switch (result) {
       case 'update':
