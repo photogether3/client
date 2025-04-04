@@ -6,7 +6,7 @@ import { PostApi, PostType } from 'src/entities/post';
 import { BottomSheetService, ButtonComponent, IconComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
-import { ActionButtonsComponent } from 'src/pages/collection';
+import { ActionButtonsComponent, ActionButtonType } from 'src/widgets/action-buttons';
 
 import { PostMoveComponent } from './ui';
 
@@ -42,9 +42,27 @@ export class PostDetailPage {
   }
 
   async openBottomSheet() {
-    const result = await this.bottomSheetService.open(ActionButtonsComponent as Type<Component>, {
-      type: 'post',
-    });
+    const actionButtons: ActionButtonType[] = [
+      {
+        type: 'organize',
+        icon: 'album',
+        text: '게시물 정리',
+        appearance: 'primary',
+      },
+      {
+        type: 'update',
+        icon: 'post',
+        text: '게시물 수정',
+        appearance: 'secondary',
+      },
+      {
+        type: 'delete',
+        icon: 'trash',
+        text: '게시물 삭제',
+        appearance: 'danger',
+      },
+    ];
+    const result = await this.bottomSheetService.open(ActionButtonsComponent as Type<Component>, actionButtons);
 
     switch (result) {
       case 'update':

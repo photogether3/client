@@ -1,0 +1,5 @@
+<div class="divide-y-gray40 flex w-full flex-col divide-y [&>*]:py-4">
+  @for (action of actionTypes(); track $index) {
+    <app-button [text]="action.text" [leftIcon]="action.icon" [iconSize]="15" [appearance]="action.appearance" (click)="handleClick(action.type)" />
+  }
+</div>

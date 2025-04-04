@@ -10,8 +10,9 @@ import { PostMoveComponent } from 'src/pages/post';
 import { BottomSheetService, ButtonComponent, IconComponent, ModalReactiveService, SearchBarComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
+import { ActionButtonsComponent, ActionButtonType } from 'src/widgets/action-buttons';
 
-import { ActionButtonsComponent, PostCardComponent } from '../ui';
+import { PostCardComponent } from '../ui';
 
 @Component({
   selector: 'app-collection-main',
@@ -116,9 +117,28 @@ export class CollectionMainPage implements OnInit {
   }
 
   async openBottomSheet() {
-    const result = await this.bottomSheetService.open(ActionButtonsComponent as Type<Component>, {
-      type: 'collection',
-    });
+    const actionButtons: ActionButtonType[] = [
+      {
+        type: 'organize',
+        icon: 'album',
+        text: '사진첩 정리',
+        appearance: 'primary',
+      },
+      {
+        type: 'update',
+        icon: 'post',
+        text: '사진첩 수정',
+        appearance: 'secondary',
+      },
+      {
+        type: 'delete',
+        icon: 'trash',
+        text: '사진첩 삭제',
+        appearance: 'danger',
+      },
+    ];
+
+    const result = await this.bottomSheetService.open(ActionButtonsComponent as Type<Component>, actionButtons);
 
     switch (result) {
       case 'update':
