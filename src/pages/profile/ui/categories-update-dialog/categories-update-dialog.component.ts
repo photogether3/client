@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+
 import { CategoriesGetDTO } from 'src/entities/category';
 import { BottomSheetService, ButtonComponent } from 'src/shared/components';
 import { CategorySelectorWidget } from 'src/widgets/category-selector';
@@ -16,11 +17,11 @@ import { CategorySelectorWidget } from 'src/widgets/category-selector';
 export class CategoriesUpdateDialog {
   private readonly bottomSheetService = inject(BottomSheetService);
 
-  selectedCategoryList = signal(this.bottomSheetService.data());
+  selectedCategoryList = signal<CategoriesGetDTO[]>(this.bottomSheetService.data());
 
   constructor() {}
 
-  updateSelectedCategories(updatedList: number[]) {
+  updateSelectedCategories(updatedList: CategoriesGetDTO[]) {
     this.selectedCategoryList.set(updatedList);
   }
 
