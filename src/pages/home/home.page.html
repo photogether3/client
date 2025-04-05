@@ -1,25 +1,29 @@
-<div class="bg-layer40 flex min-h-screen flex-col border-x">
+<div class="flex flex-col min-h-screen border-x bg-layer40">
   <app-header [hasBackButton]="false" [hasLogo]="true">
     <app-button rightContent appearance="primary" text="사진첩 추가" size="xs" rightIcon="plus" [iconSize]="12" (click)="createCollection()" class="ml-auto" />
   </app-header>
 
-  <main class="flex flex-grow flex-col gap-5 px-4 py-5">
+  <main class="flex flex-col flex-grow gap-5 px-4 py-5">
     <!-- <app-button (click)="toggleTheme()" [text]="themeService.theme() === 'dark' ? '🌙 Light Mode' : '☀️ Light Mode'" /> -->
     <app-search-bar placeholder="사진첩 전체 검색하기" [value]="searchValue()" />
     <div class="">
-      <p class="mb-5 flex items-center justify-between text-white">
-        <span class="text-body-s font-bold">{{ nickname }}의 사진첩</span>
-        <!-- TODO 태그필터 생성 -->
-        <button class="text-detail-l flex items-center gap-1 font-bold">
+      <p class="flex items-center justify-between mb-5 text-white">
+        <span class="font-bold text-body-s">{{ nickname }}의 사진첩</span>
+        <button (click)="openBottomSheet()" class="relative flex items-center gap-1 font-bold text-detail-l">
           태그필터
           <app-icon name="filter" styleClass="size-5" class="text-white" />
+          @if (filteredCategory().length > 0) {
+            <span class="absolute -right-2 -top-2 flex size-[18px] items-center justify-center rounded-full bg-primary50 text-detail-m font-bold text-white">
+              {{ filteredCategory().length }}
+            </span>
+          }
         </button>
       </p>
       <div class="flex flex-col gap-5">
-        @for (collection of defaultCollections; track $index) {
+        @for (collection of defaultCollections(); track $index) {
           <app-collection-card [collection]="collection" />
         } @empty {
-          <div class="bg-layer20 col-span-full h-[275px] rounded-[12px] p-4 text-white">등록된 사진첩이 없습니다</div>
+          <div class="col-span-full h-[275px] rounded-[12px] bg-layer20 p-4 text-white">등록된 사진첩이 없습니다</div>
         }
       </div>
     </div>

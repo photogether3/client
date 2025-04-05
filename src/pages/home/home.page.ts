@@ -1,18 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, Type } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { filter, forkJoin, switchMap, tap } from 'rxjs';
 
-import { CategoryApi } from 'src/entities/category';
+import { CategoriesGetDTO, CategoryApi } from 'src/entities/category';
 import { CollectionApi, CollectionType } from 'src/entities/collection';
 import { UserApi } from 'src/entities/user';
-import { ButtonComponent, IconComponent, SearchBarComponent } from 'src/shared/components';
+import { BottomSheetService, ButtonComponent, IconComponent, SearchBarComponent } from 'src/shared/components';
 import { ThemeService } from 'src/shared/services';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 import { SystemFoldersComponent } from 'src/widgets/system-folders/system-folders.component';
 
+import { CategoriesUpdateDialog } from '../profile';
 import { CollectionCardComponent } from './ui';
 
 @Component({
@@ -26,10 +27,20 @@ export class HomePage implements OnInit {
   private readonly userApi = inject(UserApi);
   private readonly categoryApi = inject(CategoryApi);
   private readonly collectionApi = inject(CollectionApi);
+  private readonly bottomSheetService = inject(BottomSheetService);
 
   nickname: string = '';
-  defaultCollections: CollectionType[] = [];
+  filteredCategory = signal<CategoriesGetDTO[]>([]);
   searchValue = signal<string>('');
+  allDefaultCollections = signal<CollectionType[]>([]);
+  defaultCollections = computed(() => {
+    const collections = this.allDefaultCollections();
+    const filters = this.filteredCategory();
+
+    if (filters.length === 0) return collections;
+
+    return collections.filter((c) => filters.some((f) => f.id === c.category?.id));
+  });
 
   constructor() {}
 
@@ -38,7 +49,6 @@ export class HomePage implements OnInit {
       .fetchFavCategories()
       .pipe(
         tap((res) => {
-          console.log(res);
           if (res.length === 0) {
             this.router.navigateByUrl('/onboarding');
           }
@@ -53,7 +63,8 @@ export class HomePage implements OnInit {
       )
       .subscribe(({ profile, collections }) => {
         this.nickname = profile.nickname;
-        this.defaultCollections = collections.filter((collection: CollectionType) => collection.type === 'DEFAULT');
+        const defaultCollections = collections.filter((collection: CollectionType) => collection.type === 'DEFAULT');
+        this.allDefaultCollections.set(defaultCollections);
       });
   }
 
@@ -63,5 +74,10 @@ export class HomePage implements OnInit {
 
   toggleTheme() {
     this.themeService.toggleTheme();
+  }
+
+  async openBottomSheet() {
+    const result: CategoriesGetDTO[] = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, this.filteredCategory());
+    this.filteredCategory.set(result);
   }
 }
