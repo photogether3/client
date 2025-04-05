@@ -11,9 +11,7 @@ export type CollectionType = {
   type: CollectionTypeEnum;
   category: CategoriesGetDTO | null;
   postCount: number;
-  createdAt: Date;
-  updatedAt: Date;
-  imageUrls: string[];
+  imageUrls: ImgUrlType[];
 };
 
 export enum CollectionTypeEnum {
@@ -21,3 +19,9 @@ export enum CollectionTypeEnum {
   TRASH = 'TRASH',
   DEFAULT = 'DEFAULT',
 }
+
+export type ImgUrlType = {
+  id: number;
+  blur: string;
+  grid: string;
+};

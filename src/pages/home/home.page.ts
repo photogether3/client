@@ -8,18 +8,17 @@ import { CategoryApi } from 'src/entities/category';
 import { CollectionApi, CollectionType } from 'src/entities/collection';
 import { UserApi } from 'src/entities/user';
 import { ButtonComponent, IconComponent, SearchBarComponent } from 'src/shared/components';
+import { ThemeService } from 'src/shared/services';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
-import { ThemeService } from 'src/shared/services';
 import { SystemFoldersComponent } from 'src/widgets/system-folders/system-folders.component';
 
 import { CollectionCardComponent } from './ui';
-import { ActionButtonsComponent } from '../collection';
 
 @Component({
   selector: 'home-page',
   templateUrl: './home.page.html',
-  imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule, HeaderWidget, SearchBarComponent, SystemFoldersComponent, ActionButtonsComponent],
+  imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule, HeaderWidget, SearchBarComponent, SystemFoldersComponent],
 })
 export class HomePage implements OnInit {
   private readonly themeService = inject(ThemeService);

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, computed, inject, input, OnInit, output, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { TagComponent } from 'src/entities/category';
@@ -14,7 +14,7 @@ import { PopoverComponent, PopoverItemType } from '../popover';
   templateUrl: './collection-card.component.html',
   imports: [CommonModule, TagComponent, IconComponent, PopoverComponent, ClickOutsideDirective],
 })
-export class CollectionCardComponent {
+export class CollectionCardComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly collectionApi = inject(CollectionApi);
@@ -23,9 +23,11 @@ export class CollectionCardComponent {
   isCheckable = input<boolean>(false);
   isChecked = input<boolean>(false);
   clickEvent = output<number>();
+
   isOpenPopover = signal<boolean>(false);
+  imageLoadStatus = signal<boolean[]>([]);
+  allImagesLoaded = computed(() => this.imageLoadStatus().every(Boolean));
   readonly popoverItems: PopoverItemType[] = [
-    // TODO 사진첩 정리 필요없는 기능 -> 삭제 확인
     {
       icon: 'album',
       label: '사진첩 정리',
@@ -47,6 +49,17 @@ export class CollectionCardComponent {
   ];
 
   constructor() {}
+
+  ngOnInit() {
+    const count = this.collection().postCount;
+    this.imageLoadStatus.set(Array(count).fill(false));
+  }
+
+  onImageLoaded(index: number) {
+    const status = this.imageLoadStatus();
+    status[index] = true;
+    this.imageLoadStatus.set([...status]);
+  }
 
   handlePopover(event: Event) {
     event.stopPropagation();
