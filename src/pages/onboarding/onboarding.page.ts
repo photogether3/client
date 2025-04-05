@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ProfileUpdateFormType } from 'src/entities/user/model/user.type';
-import { ButtonComponent } from 'src/shared/components';
+import { CategoriesGetDTO } from 'src/entities/category';
+import { ProfileFormType } from 'src/entities/user/model/user.type';
+import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
 import { CategorySelectorWidget } from 'src/widgets/category-selector';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
@@ -13,45 +14,41 @@ import { ProfileUpdateForm } from 'src/widgets/profile-update-form';
 @Component({
   selector: 'onboarding-page',
   templateUrl: './onboarding.page.html',
-  imports: [ButtonComponent, ProfileUpdateForm, CategorySelectorWidget, CommonModule, HeaderWidget, ProfileUpdateButton, ProfileUpdateForm, FooterWidget],
+  standalone: true,
+  imports: [CommonModule, ButtonComponent, ProfileUpdateForm, CategorySelectorWidget, HeaderWidget, FooterWidget, ProfileUpdateButton],
 })
 export class OnboardingPage {
   private readonly router = inject(Router);
+  private readonly modalReactiveService = inject(ModalReactiveService);
 
   step = signal(1);
-  selectedCategoryList = signal<number[]>([]);
-  updatedForm = signal<ProfileUpdateFormType>({
-    nickname: '',
-    bio: '',
-    file: null,
-    categoryIds: [],
-  });
+  profileForm = viewChild.required<ProfileUpdateForm>('profileForm');
+  profileSnapshot = signal<ProfileFormType | undefined>(undefined);
+
+  get buttonDisabled(): boolean {
+    if (this.step() === 1) {
+      return !this.profileForm().getRawValue().nickname;
+    } else {
+      return this.profileSnapshot()?.categories.length === 0;
+    }
+  }
 
   constructor() {}
 
-  setStep(step: number) {
-    this.step.set(step);
-  }
-
-  updateSelectedCategories(updatedList: number[]) {
-    this.selectedCategoryList.set(updatedList);
-    this.updatedForm.update((prev) => ({ ...prev, categoryIds: this.selectedCategoryList() }));
-    console.log(this.updatedForm());
-  }
-
-  updateProfile() {
-    this.router.navigateByUrl('/home');
-  }
-
-  updateForm(updatedForm: ProfileUpdateFormType) {
-    this.updatedForm.set(updatedForm);
+  setCategories(categories: CategoriesGetDTO[]) {
+    this.profileSnapshot.update((prev) => ({ ...prev!, categories }));
   }
 
   clickFooterButton() {
     if (this.step() === 1) {
-      return this.setStep(2);
+      this.profileSnapshot.set(this.profileForm().getRawValue());
+      this.step.set(2);
     } else if (this.step() === 2) {
-      return this.router.navigateByUrl('/home');
+      this.updateProfile();
     }
+  }
+
+  updateProfile() {
+    this.router.navigateByUrl('/home');
   }
 }

@@ -18,6 +18,7 @@ export class ProfileUpdateButton {
 
   form = input.required<ProfileFormType>();
   buttonText = input<string>('');
+  isDisabled = input<boolean>(false);
   handleButton = output<void>();
 
   updateProfile() {
