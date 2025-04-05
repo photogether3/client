@@ -4,7 +4,7 @@ import { forkJoin } from 'rxjs';
 
 import { CategoryApi } from 'src/entities/category';
 import { UserApi } from 'src/entities/user';
-import { ProfileUpdateFormType } from 'src/entities/user/model/user.type';
+import { ProfileFormType } from 'src/entities/user/model/user.type';
 import { ButtonComponent } from 'src/shared/components';
 
 @Component({
@@ -16,12 +16,12 @@ export class ProfileUpdateButton {
   private readonly categoryApi = inject(CategoryApi);
   private readonly userApi = inject(UserApi);
 
-  form = input.required<ProfileUpdateFormType>();
+  form = input.required<ProfileFormType>();
   buttonText = input<string>('');
   handleButton = output<void>();
 
   updateProfile() {
-    const { nickname, bio, file, categoryIds } = this.form();
+    const { nickname, bio, file, categories } = this.form();
     const updateProfileDTO = {
       nickname: nickname ?? '',
       bio: bio ?? '',
@@ -31,7 +31,7 @@ export class ProfileUpdateButton {
     console.log(updateProfileDTO);
 
     const updateCategoryDTO = {
-      categoryIds: categoryIds ?? [],
+      categoryIds: categories.map((c) => c.id) ?? [],
     };
 
     forkJoin({

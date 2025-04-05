@@ -1,4 +1,5 @@
-import { Component, inject, signal, Type } from '@angular/core';
+import { Component, inject, Type, viewChild } from '@angular/core';
+import { FormArray, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { forkJoin } from 'rxjs';
@@ -8,10 +9,9 @@ import { UserApi } from 'src/entities/user';
 import { BottomSheetService, ButtonComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
-import { ProfileUpdateButton } from 'src/widgets/porfile-update-button';
 import { ProfileUpdateForm } from 'src/widgets/profile-update-form';
+import { ProfileUpdateButton } from 'src/widgets/porfile-update-button';
 
-import { ProfileInitFormType, ProfileUpdateFormType } from 'src/entities/user/model/user.type';
 import { CategoriesUpdateDialog } from '../ui';
 
 @Component({
@@ -26,44 +26,32 @@ export class ProfileUpdatePage {
   private readonly bottomSheetService = inject(BottomSheetService);
   private readonly modalReactiveService = inject(ModalReactiveService);
 
-  categories = signal<CategoriesGetDTO[]>([]);
-  profileForm = signal<ProfileInitFormType>({
-    nickname: '',
-    bio: '',
-    imageUrl: '',
-    categoryIds: [],
-  });
-  updatedForm = signal<ProfileUpdateFormType>({
-    nickname: '',
-    bio: '',
-    file: null,
-    categoryIds: [],
-  });
+  profileForm = viewChild.required<ProfileUpdateForm>('profileForm');
+
+  get categories() {
+    return this.profileForm().form.get('categories') as FormArray<FormControl<CategoriesGetDTO>>;
+  }
 
   constructor() {
     forkJoin({
       profile: this.userApi.getProfile(),
       categories: this.categoryApi.fetchFavCategories(),
     }).subscribe(({ profile, categories }) => {
-      this.profileForm.set({
+      this.profileForm().form.patchValue({
         nickname: profile.nickname,
         bio: profile.bio ?? '',
-        imageUrl: profile.imageUrl ?? '',
-        categoryIds: categories.map((c) => c.id),
+        file: null,
+        previewUrl: profile.imageUrl,
       });
-      this.categories.set(categories);
-      console.log(this.categories());
+      categories.forEach((c) => this.categories.push(new FormControl(c, { nonNullable: true })));
     });
   }
 
   async updateCategory() {
-    const categoryIds = this.categories().map((c) => c.id);
-    const result = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, categoryIds);
+    const result = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, this.categories.value);
 
-    this.profileForm.update((prev) => ({
-      ...prev,
-      categoryIds: result.map((category: CategoriesGetDTO) => category.id),
-    }));
+    this.categories.clear();
+    result.forEach((c: CategoriesGetDTO) => this.categories.push(new FormControl(c, { nonNullable: true })));
   }
 
   updateProfile() {
@@ -76,9 +64,5 @@ export class ProfileUpdatePage {
     this.modalReactiveService.open(modalData).then(() => {
       this.router.navigateByUrl('/profile');
     });
-  }
-
-  updateForm(updatedForm: ProfileUpdateFormType) {
-    this.updatedForm.set(updatedForm);
   }
 }

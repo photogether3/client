@@ -1,21 +1,19 @@
-<div class="bg-layer40 flex min-h-screen flex-col border-x">
-  <app-header title="프로필 수정" />
+<div class="flex flex-col min-h-screen border-x bg-layer40">
+  <app-header title="프로필 편집" />
 
-  <div class="flex w-full flex-1 flex-col gap-5 px-4 py-6">
-    <app-profile-update-form [profileInitForm]="profileForm()" (profileUpdatedForm)="updateForm($event)" />
-
-    <div class="flex gap-2">
-      @for (category of categories(); track $index) {
-        <app-tag [tagName]="category.name" appearance="solid" size="md" />
-      }
-    </div>
-
-    <div class="flex flex-col gap-2">
-      <app-button text="관심태그 변경" width="full" (click)="updateCategory()" class="w-full" />
-      <app-profile-update-button buttonText="프로필 편집 완료" [form]="updatedForm()" (handleButton)="updateProfile()" />
+  <div class="flex flex-col flex-1 w-full gap-5 px-4 py-6">
+    <app-profile-update-form #profileForm />
+    <div class="rounded-[8px] border border-gray70 bg-layer30 px-4 py-5 text-white outline-none">
+      <div class="flex flex-wrap gap-2 pb-5 border-b border-b-white/20">
+        @for (category of categories.value; track $index) {
+          <app-tag [tagName]="category.name" type="solid" size="md" />
+        }
+      </div>
+      <app-button text="관심태그 변경" appearance="secondary" (click)="updateCategory()" class="pt-5" />
     </div>
   </div>
 
-  <!-- footer -->
-  <app-footer class="sticky bottom-0 mt-auto" />
+  <app-footer [hasButton]="true">
+    <app-profile-update-button button buttonText="저장하기" [form]="profileForm.getRawValue()" (handleButton)="updateProfile()" />
+  </app-footer>
 </div>
