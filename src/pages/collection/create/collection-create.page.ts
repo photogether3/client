@@ -25,7 +25,11 @@ export class CollectionCreatePage {
   // 사진첩 생성
   createCollection() {
     const collectionCreateDTO = this.collectionCreateForm()!.getRawValue();
-    this.collectionApi.createCollection(collectionCreateDTO).subscribe(() => {
+    const reqDTO = {
+      title: collectionCreateDTO.title,
+      categoryId: collectionCreateDTO.category.id,
+    };
+    this.collectionApi.createCollection(reqDTO).subscribe(() => {
       const modalData = {
         iconName: 'modal-create',
         subTitle: '사진첩 생성이 완료되었습니다.',

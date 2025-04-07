@@ -1,6 +1,7 @@
 import { Component, input } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 
+import { CategoriesGetDTO } from 'src/entities/category';
 import { CollectionFormType } from 'src/entities/collection';
 import { InputComponent } from 'src/shared/components';
 import { BaseForm, FormControls } from 'src/shared/lib';
@@ -31,11 +32,11 @@ export class CollectionFormComponent extends BaseForm<CollectionFormType> {
   protected initForm() {
     this.form = this.fb.group<FormControls<CollectionFormType>>({
       title: this.fb.control(null, [Validators.required]),
-      categoryId: this.fb.control(null, [Validators.required]),
+      category: this.fb.control(null, [Validators.required]),
     });
   }
 
-  toggleCategory(category: number[]) {
-    this.form.patchValue({ categoryId: category[0] });
+  toggleCategory(category: CategoriesGetDTO[]) {
+    this.form.patchValue({ category: category[0] });
   }
 }

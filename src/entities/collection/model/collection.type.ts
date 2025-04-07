@@ -2,7 +2,7 @@ import { CategoriesGetDTO } from 'src/entities/category';
 
 export type CollectionFormType = {
   title: string;
-  categoryId: number;
+  category: CategoriesGetDTO;
 };
 
 export type CollectionType = {

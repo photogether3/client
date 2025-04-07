@@ -30,7 +30,7 @@ export class CollectionUpdatePage {
 
       this.collectionUpdateForm().form.patchValue({
         title: res.title,
-        categoryId: res.category.id,
+        category: res.category,
       });
     });
   }
@@ -41,7 +41,12 @@ export class CollectionUpdatePage {
 
     if (!this.collectionId) return;
 
-    this.collectionApi.updateCollection(this.collectionId, collectionUpdateDTO).subscribe(() => {
+    const reqDTO = {
+      title: collectionUpdateDTO.title,
+      categoryId: collectionUpdateDTO.category.id,
+    };
+
+    this.collectionApi.updateCollection(this.collectionId, reqDTO).subscribe(() => {
       const modalData = {
         iconName: 'modal-create',
         subTitle: '사진첩 수정이 완료되었습니다.',
