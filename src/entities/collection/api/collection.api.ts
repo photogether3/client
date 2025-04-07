@@ -40,4 +40,8 @@ export class CollectionApi {
   updateCollection(collectionId: string, collectionReqDTO: CollectionReqDTO) {
     return this.http.put(`${environment.serverUrl}/v1/collections/${collectionId}`, collectionReqDTO);
   }
+
+  deleteCollection(collectionId: number) {
+    return this.http.delete(`${environment.serverUrl}/v1/collections/${collectionId}`);
+  }
 }
