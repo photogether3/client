@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, model } from '@angular/core';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
 import { debounceTime } from 'rxjs';
 
 import { ImageApi } from 'src/entities/image';
 import { ImgContentType, PostCreateFormType } from 'src/entities/post';
-import { IconComponent, InputComponent } from 'src/shared/components';
+import { IconComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
 import { BaseForm, FormControls } from 'src/shared/lib';
 
 @Component({
@@ -15,6 +16,7 @@ import { BaseForm, FormControls } from 'src/shared/lib';
 })
 export class PostFormComponent extends BaseForm<PostCreateFormType> {
   private readonly imageApi = inject(ImageApi);
+  private readonly modalReactiveService = inject(ModalReactiveService);
 
   previewUrl: string | ArrayBuffer | null | undefined = null;
   formValue = model<PostCreateFormType>();
@@ -67,9 +69,18 @@ export class PostFormComponent extends BaseForm<PostCreateFormType> {
   }
 
   deleteText(index: number) {
-    // TODO 게시글 사진 내용 삭제
-    const control = this.metadataArray.at(index);
-    console.log(control.value);
+    const modalData = {
+      iconName: 'modal-trash',
+      subTitle: '선택하신 텍스트를 삭제합니다.',
+      content: '이 작업은 되돌릴 수 없습니다. 삭제를 원하시지 않을 경우 취소를 눌러주세요.',
+      buttons: ['취소', '확인'],
+    };
+    this.modalReactiveService.open(modalData).then((res) => {
+      if (res !== '확인' || !res) {
+        return;
+      }
+      this.metadataArray.removeAt(index);
+    });
   }
 
   private addMetadata(content: string = '', isPublic: boolean = false, hasLink: boolean = false) {
