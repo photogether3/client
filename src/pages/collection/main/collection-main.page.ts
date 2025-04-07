@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnInit, QueryList, signal, Type, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, QueryList, signal, Type, ViewChild, viewChildren, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { forkJoin } from 'rxjs';
@@ -32,6 +32,7 @@ export class CollectionMainPage implements OnInit {
   postList: PostType[] | undefined = undefined;
   isEditMode = signal<boolean>(false);
   selectedPostIds = signal<number[]>([]);
+  postCardList = viewChildren<PostCardComponent>('postCard');
 
   // *---------------- 마손리 레이아아웃 변수 --------------------
   // TODO 마소니 레이아웃 간격, 너비 수정
@@ -75,6 +76,18 @@ export class CollectionMainPage implements OnInit {
     } else {
       this.selectedPostIds.set([...currentIds, updatedId]);
     }
+  }
+
+  selectAll(event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+
+    if (!this.isEditMode()) {
+      return;
+    }
+
+    this.postCardList().forEach((card) => {
+      card.checkboxRef().nativeElement.checked = isChecked;
+    });
   }
 
   postMove() {
