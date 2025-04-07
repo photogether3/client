@@ -1,0 +1,84 @@
+import { CommonModule } from '@angular/common';
+import { Component, inject, model } from '@angular/core';
+import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime } from 'rxjs';
+
+import { ImageApi } from 'src/entities/image';
+import { ImgContentType, PostCreateFormType } from 'src/entities/post';
+import { IconComponent, InputComponent } from 'src/shared/components';
+import { BaseForm, FormControls } from 'src/shared/lib';
+
+@Component({
+  selector: 'app-post-form',
+  templateUrl: './post-form.component.html',
+  imports: [ReactiveFormsModule, InputComponent, IconComponent, CommonModule],
+})
+export class PostFormComponent extends BaseForm<PostCreateFormType> {
+  private readonly imageApi = inject(ImageApi);
+
+  previewUrl: string | ArrayBuffer | null | undefined = null;
+  formValue = model<PostCreateFormType>();
+
+  get metadataArray(): FormArray<FormGroup> {
+    return this.form.get('metadataStringify') as FormArray<FormGroup>;
+  }
+
+  constructor() {
+    super();
+  }
+
+  protected override initForm(): void {
+    this.form = this.fb.group({
+      collectionId: this.fb.control(0),
+      title: this.fb.control(''),
+      content: this.fb.control(''),
+      metadataStringify: this.fb.array<FormGroup<FormControls<ImgContentType>>>([]),
+      file: this.fb.control<File | null>(null),
+    });
+
+    this.form.valueChanges.pipe(debounceTime(300)).subscribe((value) => {
+      this.formValue.set(value as PostCreateFormType);
+    });
+  }
+
+  upload(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    this.form.patchValue({ file });
+
+    const reader = new FileReader();
+    reader.onload = ({ target }) => {
+      this.previewUrl = target?.result;
+    };
+
+    reader.readAsDataURL(file);
+
+    this.imageApi.extractImgText({ file }).subscribe((textArray) => {
+      const { lines } = textArray;
+      lines.forEach((content: string) => {
+        this.addMetadata(content, false, false);
+      });
+    });
+  }
+
+  deleteText(index: number) {
+    // TODO 게시글 사진 내용 삭제
+    const control = this.metadataArray.at(index);
+    console.log(control.value);
+  }
+
+  private addMetadata(content: string = '', isPublic: boolean = false, hasLink: boolean = false) {
+    const metadataGroup = this.fb.group({
+      content: [content],
+      isPublic: [isPublic],
+      hasLink: [hasLink],
+    });
+
+    this.metadataArray.push(metadataGroup);
+  }
+}
