@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, model } from '@angular/core';
+import { Component, inject, input, model } from '@angular/core';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { debounceTime } from 'rxjs';
@@ -20,6 +20,7 @@ export class PostFormComponent extends BaseForm<PostCreateFormType> {
 
   previewUrl: string | ArrayBuffer | null | undefined = null;
   formValue = model<PostCreateFormType>();
+  isEditMode = input<boolean>(false);
 
   get metadataArray(): FormArray<FormGroup> {
     return this.form.get('metadataStringify') as FormArray<FormGroup>;
@@ -83,7 +84,7 @@ export class PostFormComponent extends BaseForm<PostCreateFormType> {
     });
   }
 
-  private addMetadata(content: string = '', isPublic: boolean = false, hasLink: boolean = false) {
+  addMetadata(content: string = '', isPublic: boolean = false, hasLink: boolean = false) {
     const metadataGroup = this.fb.group({
       content: [content],
       isPublic: [isPublic],

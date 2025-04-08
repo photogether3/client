@@ -63,7 +63,7 @@ export class PostDetailPage {
 
     switch (result) {
       case 'update':
-        return this.router.navigateByUrl(`post/update/${this.collectionId}`);
+        return this.router.navigateByUrl(`post/update/${this.post!.id}`);
       case 'organize':
         return this.bottomSheetService.open(PostMoveComponent as Type<Component>, {
           postIds: [this.post?.id],

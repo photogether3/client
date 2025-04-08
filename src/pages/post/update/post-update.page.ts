@@ -1,46 +1,30 @@
-import { JsonPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ImgContentType, PostApi, PostUpdateFormType } from 'src/entities/post';
-import { ButtonComponent, IconComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
-import { BaseForm, FormControls } from 'src/shared/lib';
+import { PostApi } from 'src/entities/post';
+import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
+
+import { PostFormComponent } from '../create';
 
 @Component({
   selector: 'post-update-page',
   templateUrl: './post-update.page.html',
-  imports: [ButtonComponent, FooterWidget, ReactiveFormsModule, IconComponent, JsonPipe, HeaderWidget, InputComponent],
+  imports: [ButtonComponent, FooterWidget, HeaderWidget, PostFormComponent],
 })
-export class PostUpdatePage extends BaseForm<PostUpdateFormType> {
-  // TODO 게시물 수정, 생성 공통 메서드 부모 클래스로 관리
+export class PostUpdatePage {
   private readonly router = inject(Router);
   private readonly postApi = inject(PostApi);
   private readonly modalReactiveService = inject(ModalReactiveService);
 
-  postId?: number = undefined;
+  postForm = viewChild.required<PostFormComponent>('postForm');
+  postId: number = 0;
   previewUrl: string | ArrayBuffer | null | undefined = null;
 
-  get metadataArray(): FormArray<FormGroup> {
-    return this.form.get('metadataStringify') as FormArray<FormGroup>;
-  }
-
   constructor() {
-    super();
-
-    const postId = this.router.url.at(-1);
+    const postId = this.router.url.split('/').at(-1);
     this.postId = Number(postId) || 0;
-  }
-
-  protected override initForm(): void {
-    this.form = this.fb.group({
-      postId: this.fb.control(this.postId || 0),
-      title: this.fb.control(''),
-      content: this.fb.control(''),
-      metadataStringify: this.fb.array<FormGroup<FormControls<ImgContentType>>>([]),
-    });
   }
 
   ngOnInit(): void {
@@ -50,45 +34,21 @@ export class PostUpdatePage extends BaseForm<PostUpdateFormType> {
     }
 
     this.postApi.getPost(this.postId).subscribe((res) => {
-      this.form.patchValue({
+      this.postForm().form.patchValue({
         title: res?.title,
         content: res?.content,
       });
 
-      res?.metadataList.forEach((img: any) => this.addMetadata(img.content, img.isPublic));
+      res?.metadataList.forEach((metadata: any) => this.postForm().addMetadata(metadata.content, metadata.isPublic));
       this.previewUrl = res?.imageUrl;
-      this.addMetadata();
-    });
-  }
-
-  addMetadata(content: string = '', isPublic: boolean = false) {
-    const metadataGroup = this.fb.group({
-      content: [content],
-      isPublic: [isPublic],
-    });
-
-    this.metadataArray.push(metadataGroup);
-  }
-
-  deleteText(index: number) {
-    const modalData = {
-      iconName: 'modal-trash',
-      subTitle: '선택하신 텍스트를 삭제합니다.',
-      content: '이 작업은 되돌릴 수 없습니다. 삭제를 원하시지 않을 경우 취소를 눌러주세요.',
-      buttons: ['취소', '확인'],
-    };
-    this.modalReactiveService.open(modalData).then((res) => {
-      if (res !== '확인' || !res) {
-        return;
-      }
-      this.metadataArray.removeAt(index);
     });
   }
 
   updatePost() {
-    const dto = this.getRawValue();
+    const dto = this.postForm().getRawValue();
     const updateDTO = {
       ...dto,
+      postId: this.postId,
       metadataStringify: dto.metadataStringify.filter((metadata: any) => metadata.content.trim() !== ''),
     };
 
