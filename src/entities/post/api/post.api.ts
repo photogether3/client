@@ -31,8 +31,8 @@ export class PostApi {
   }
 
   // 게시물 조회
-  getPost(collectionId: string, postId: number): Observable<any | undefined> {
-    return this.getCollection(collectionId).pipe(map((res) => res.find((post: PostType) => post.id == postId)));
+  getPost(postId: number): Observable<PostType | undefined> {
+    return this.http.get<PostType>(`${environment.serverUrl}/v1/posts/${postId}`);
   }
 
   // 게시물 생성

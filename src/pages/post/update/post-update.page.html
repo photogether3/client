@@ -1,51 +1,55 @@
-<div class="bg-layer40 flex min-h-screen flex-col border-x">
+<div class="flex flex-col min-h-screen border-x bg-layer40">
   <app-header title="게시물 수정" />
 
-  <div class="w-full flex-1 px-4 py-6">
+  <div class="flex-1 w-full px-5 py-10">
+    <div class="mx-auto mb-10 flex h-[480px] w-[270px] items-center justify-center rounded-[12px] border-2 border-primary50 bg-[#182B28] shadow-custom">
+      @if (previewUrl) {
+        <img [src]="previewUrl" alt="임시 이미지" class="h-full w-full overflow-hidden rounded-[12px] shadow-custom" />
+      } @else {
+        <p class="text-white">사진을 불러오지 못 했습니다.</p>
+      }
+    </div>
     <form [formGroup]="form" class="flex flex-col gap-5">
-      <div class="flex h-[485px] items-center justify-center rounded-[8px] border bg-white shadow-custom">
-        @if (previewUrl) {
-          <img [src]="previewUrl" alt="임시 이미지" class="h-[485px] w-full rounded-[8px] shadow-custom" />
-        } @else {
-          <p>사진을 불러오지 못 했습니다.</p>
-        }
-      </div>
       <app-input label="게시물 제목" placeholder="게시물 제목을 입력해주세요." info="게시물 제목은 추후에 변경이 가능합니다." [hasInfoIcon]="true" formControlName="title" />
       <app-input type="textarea" label="게시물 내용" placeholder="게시물 내용을 입력해주세요." info="게시물에 대한 간단한 메모를 남겨주세요." formControlName="content" />
 
-      <div formArrayName="metadataStringify">
-        <p class="mb-2 text-body-s">사진내용</p>
-        <div class="min-w-full rounded-[12px]">
-          <div class="flex rounded-t-[12px] border border-gray40 bg-primary5 font-bold text-primary70">
+      <div formArrayName="metadataStringify" class="mt-5">
+        <p class="mb-2 text-white text-body-s">사진내용</p>
+        <!-- TODO 테두리 변경 -->
+        <div class="min-w-full rounded-[12px] border border-gray70">
+          <div class="flex rounded-t-[12px] bg-[#182B28] text-detail-m font-bold text-primary20">
             <span class="px-2.5 py-2">노출</span>
             <span class="flex-1 px-1 py-2">텍스트</span>
-            <span class="px-2.5 py-2">링크</span>
+            @if (metadataArray.controls.length > 0) {
+              <span class="px-2.5 py-2"></span>
+            }
           </div>
           @for (imgContent of metadataArray.controls; track $index) {
-            <div
-              [formGroup]="imgContent"
-              class="[&>div]:typo-body-s border-b-gray-30 [&>div]:text-body_s flex items-center border-b bg-white px-2.5 hover:cursor-pointer hover:bg-gray5 [&>td]:border-b [&>td]:border-b-gray30 [&>td]:px-4 [&>td]:py-3 [&>td]:text-left">
+            <div [formGroup]="imgContent" class="flex items-center gap-2.5 bg-layer40 px-2.5">
               <div class="py-2">
                 <input type="checkbox" formControlName="isPublic" />
               </div>
               <div class="flex-1 px-2.5 py-2">
-                <app-input formControlName="content" class="flex-1" />
+                <app-input size="xs" formControlName="content" class="flex-1" />
               </div>
-              <div (click)="toggleLink($index)" class="py-2">
-                <app-icon
-                  [name]="metadataArray.at($index).value.hasLink ? 'link' : 'no-link'"
-                  [size]="20"
-                  [class]="metadataArray.at($index).value.hasLink ? 'text-primary50' : 'text-gray50'" />
-              </div>
+              <button (click)="deleteText($index)" class="py-2">
+                <app-icon name="delete" [size]="16" />
+              </button>
             </div>
+          } @empty {
+            <!-- TODO border-t 테두리 변경 -->
+            <div class="rounded-b-[12px] border-t-gray70 px-2.5 py-2 text-detail-l text-gray40">사진 내용이 존재하지 않습니다.</div>
           }
         </div>
       </div>
-      <app-button text="수정된 내용 저장하기" width="full" (click)="updatePost()" />
     </form>
   </div>
 
-  {{ form.value | json }}
+  <div class="text-white">
+    {{ form.value | json }}
+  </div>
 
-  <app-footer class="sticky bottom-0 mt-auto" />
+  <app-footer [hasButton]="true">
+    <app-button button text="수정된 내용 저장하기" width="full" (click)="updatePost()" />
+  </app-footer>
 </div>

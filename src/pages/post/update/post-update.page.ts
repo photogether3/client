@@ -20,8 +20,7 @@ export class PostUpdatePage extends BaseForm<PostUpdateFormType> {
   private readonly postApi = inject(PostApi);
   private readonly modalReactiveService = inject(ModalReactiveService);
 
-  postId: number | undefined = undefined;
-  collectionId: string | undefined = undefined;
+  postId?: number = undefined;
   previewUrl: string | ArrayBuffer | null | undefined = null;
 
   get metadataArray(): FormArray<FormGroup> {
@@ -31,9 +30,8 @@ export class PostUpdatePage extends BaseForm<PostUpdateFormType> {
   constructor() {
     super();
 
-    const state = this.router.getCurrentNavigation()?.extras.state;
-    this.collectionId = state?.['collectionId'];
-    this.postId = state?.['postId'];
+    const postId = this.router.url.at(-1);
+    this.postId = Number(postId) || 0;
   }
 
   protected override initForm(): void {
@@ -46,20 +44,21 @@ export class PostUpdatePage extends BaseForm<PostUpdateFormType> {
   }
 
   ngOnInit(): void {
-    if (this.collectionId && this.postId) {
-      this.postApi.getPost(this.collectionId, this.postId).subscribe((res) => {
-        this.form.patchValue({
-          title: res?.title,
-          content: res?.content,
-        });
-
-        res?.metadataList.forEach((img: any) => this.addMetadata(img.content, img.isPublic));
-        this.previewUrl = res?.imageUrl;
-        this.addMetadata();
-      });
-    } else {
-      console.log('사진첩 Id 또는 게시물 Id가 이상합니다!');
+    if (!this.postId) {
+      console.log('postId가 없습니다.');
+      return;
     }
+
+    this.postApi.getPost(this.postId).subscribe((res) => {
+      this.form.patchValue({
+        title: res?.title,
+        content: res?.content,
+      });
+
+      res?.metadataList.forEach((img: any) => this.addMetadata(img.content, img.isPublic));
+      this.previewUrl = res?.imageUrl;
+      this.addMetadata();
+    });
   }
 
   addMetadata(content: string = '', isPublic: boolean = false) {
@@ -71,13 +70,19 @@ export class PostUpdatePage extends BaseForm<PostUpdateFormType> {
     this.metadataArray.push(metadataGroup);
   }
 
-  toggleLink(index: number) {
-    const control = this.metadataArray.at(index);
-    if (control) {
-      control.patchValue({
-        hasLink: !control.value.hasLink,
-      });
-    }
+  deleteText(index: number) {
+    const modalData = {
+      iconName: 'modal-trash',
+      subTitle: '선택하신 텍스트를 삭제합니다.',
+      content: '이 작업은 되돌릴 수 없습니다. 삭제를 원하시지 않을 경우 취소를 눌러주세요.',
+      buttons: ['취소', '확인'],
+    };
+    this.modalReactiveService.open(modalData).then((res) => {
+      if (res !== '확인' || !res) {
+        return;
+      }
+      this.metadataArray.removeAt(index);
+    });
   }
 
   updatePost() {
@@ -91,7 +96,7 @@ export class PostUpdatePage extends BaseForm<PostUpdateFormType> {
 
     this.postApi.updatePost(this.postId, updateDTO).subscribe(() => {
       const modalData = {
-        title: '게시물 수정 완료',
+        iconName: 'modal-create',
         subTitle: '게시물 수정이 완료되었습니다.',
         content: '확인 버튼을 누르시면 홈 화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
         buttons: ['확인'],

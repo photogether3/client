@@ -29,12 +29,9 @@ export class PostDetailPage {
     const postId = this.route.snapshot.paramMap.get('id') as string;
     this.collectionId = this.router.getCurrentNavigation()?.extras.state?.['collectionId'];
 
-    if (this.collectionId) {
-      this.postApi.getPost(this.collectionId, Number(postId)).subscribe((res) => {
-        this.post = res;
-        console.log(this.post);
-      });
-    }
+    this.postApi.getPost(Number(postId)).subscribe((res) => {
+      this.post = res;
+    });
   }
 
   goPage() {
