@@ -25,6 +25,10 @@ import { CategorySelectorWidget } from 'src/widgets/category-selector';
 export class CollectionFormComponent extends BaseForm<CollectionFormType> {
   mode = input.required<string>();
 
+  get category() {
+    return this.form.get('category')?.value ?? { id: 0, name: '' };
+  }
+
   constructor() {
     super();
   }
