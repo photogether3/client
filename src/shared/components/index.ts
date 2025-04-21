@@ -5,3 +5,4 @@ export * from './bottom-sheet';
 export * from './input';
 export * from './loading';
 export * from './search-bar';
+export * from './toast';

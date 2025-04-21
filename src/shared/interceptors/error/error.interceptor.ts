@@ -1,18 +1,30 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { catchError, EMPTY, throwError } from 'rxjs';
+import { inject } from '@angular/core';
 
-// 500에러가 아니라면 에러가 난 컴포넌트에서 susbscribe catchError 처리 
+import { catchError, throwError } from 'rxjs';
+
+import { ErrorService } from 'src/shared/services';
+
+// 500에러가 아니라면 에러가 난 컴포넌트에서 subscribe catchError 처리
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-  return next(req).pipe(
-    catchError(res => {
-      const errorMsg = res.status === 500 ? '서버 오류가 생겼습니다. 💩' : `${res.error.message}`
+  const errorService = inject(ErrorService);
 
-      if(res.status === 500){
-        alert(errorMsg);
-        return EMPTY;
-      } else {
-        return throwError(() => res);
+  return next(req).pipe(
+    catchError((err) => {
+      const status = err.status;
+
+      let message = '';
+      if (status >= 500) {
+        message = '서버 오류가 생겼습니다. 💩';
+      } else if (status >= 400) {
+        message = err.error?.message || '요청이 잘못되었습니다.';
       }
-    })
+
+      if (message) {
+        errorService.open(message);
+      }
+
+      return throwError(() => err);
+    }),
   );
 };
