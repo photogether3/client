@@ -63,9 +63,9 @@ export class PostFormComponent extends BaseForm<PostCreateFormType> {
 
     this.imageApi.extractImgText({ file }).subscribe((textArray) => {
       const { lines } = textArray;
-      lines.forEach((content: string) => {
-        this.addMetadata(content, false, false);
-      });
+
+      lines.forEach((content: string) => this.addMetadata(content, true, false));
+      this.addMetadata();
     });
   }
 
@@ -84,7 +84,14 @@ export class PostFormComponent extends BaseForm<PostCreateFormType> {
     });
   }
 
-  addMetadata(content: string = '', isPublic: boolean = false, hasLink: boolean = false) {
+  addText(index: number) {
+    const newText = this.metadataArray.at(index).get('content')?.value || '';
+
+    if (!newText.trim()) return;
+    this.addMetadata();
+  }
+
+  addMetadata(content: string = '', isPublic: boolean = true, hasLink: boolean = false) {
     const metadataGroup = this.fb.group({
       content: [content],
       isPublic: [isPublic],

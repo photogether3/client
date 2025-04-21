@@ -9,7 +9,7 @@
       } @else {
         <div class="flex flex-col items-center gap-5">
           <app-icon name="plus" [size]="30" class="text-primary20" />
-          <div class="w-full h-full text-body-s text-primary20">사진을 선택해주세요.</div>
+          <div class="h-full w-full text-body-s text-primary20">사진을 선택해주세요.</div>
         </div>
       }
     </button>
@@ -21,10 +21,10 @@
     placeholder="게시물 내용을 입력해주세요."
     info="게시물에 대한 간단한 메모를 남겨주세요."
     formControlName="content"
-    class="block mt-5" />
+    class="mt-5 block" />
 
   <div formArrayName="metadataStringify" class="mt-5">
-    <p class="mb-2 text-white text-body-s">사진내용</p>
+    <p class="mb-2 text-body-s text-white">사진내용</p>
     <!-- TODO 테두리 변경 -->
     <div class="min-w-full rounded-[12px] border border-gray70">
       <div class="flex rounded-t-[12px] bg-[#182B28] text-detail-m font-bold text-primary20">
@@ -34,28 +34,36 @@
           <span class="px-2.5 py-2"></span>
         }
       </div>
-      @for (imgContent of metadataArray.controls; track $index) {
-        <div [formGroup]="imgContent" class="flex items-center gap-2.5 rounded-b-[12px] bg-layer40 px-2.5">
-          <div class="py-2">
-            <input type="checkbox" formControlName="isPublic" />
+      <div class="space-y-3 px-2.5 py-2">
+        @for (imgContent of metadataArray.controls; track $index; let last = $last) {
+          <div [formGroup]="imgContent" class="flex items-center gap-2.5 bg-layer40">
+            @if (!last) {
+              <input type="checkbox" formControlName="isPublic" />
+            } @else {
+              <app-icon name="text" [size]="16" />
+            }
+            <app-input size="xs" [placeholder]="last ? '추가하실 텍스트를 입력해주세요' : ''" formControlName="content" class="block flex-1" />
+            @if (!last) {
+              <button (click)="deleteText($index)">
+                <app-icon name="delete" [size]="16" />
+              </button>
+            } @else {
+              <button (click)="addText($index)">
+                <app-icon name="plus" [size]="16" class="text-primary40" />
+              </button>
+            }
           </div>
-          <div class="flex-1 px-2.5 py-2">
-            <app-input size="xs" formControlName="content" class="flex-1" />
+        } @empty {
+          <!-- TODO border-t 테두리 변경 -->
+          <div class="rounded-b-[12px] border-t-gray70 text-detail-l text-gray40">
+            @if (!isEditMode()) {
+              사진을 선택해주세요.
+            } @else {
+              사진 내용이 존재하지 않습니다.
+            }
           </div>
-          <button (click)="deleteText($index)" class="py-2">
-            <app-icon name="delete" [size]="16" />
-          </button>
-        </div>
-      } @empty {
-        <!-- TODO border-t 테두리 변경 -->
-        <div class="rounded-b-[12px] border-t-gray70 px-2.5 py-2 text-detail-l text-gray40">
-          @if (!isEditMode()) {
-            사진을 선택해주세요.
-          } @else {
-            사진 내용이 존재하지 않습니다.
-          }
-        </div>
-      }
+        }
+      </div>
     </div>
   </div>
 </form>

@@ -1,18 +1,18 @@
-<div class="flex flex-col min-h-screen border-x bg-layer40">
+<div class="flex min-h-screen flex-col border-x bg-layer40">
   <app-header title="게시물 생성">
-    <span rightContent class="flex text-white text-body-m">
+    <span rightContent class="flex text-body-m text-white">
       <span class="font-bold text-primary60">{{ step() }}</span>
       /2
     </span>
   </app-header>
 
-  <div class="flex-1 w-full py-5">
+  <div class="w-full flex-1 py-5">
     @if (step() === 1) {
       <app-post-form [(formValue)]="postFormValue" />
     } @else {
       <div class="px-5">
         <div class="flex flex-col gap-5">
-          <p class="font-bold text-white text-body-s">{{ nickname }}의 사진첩</p>
+          <p class="text-body-s font-bold text-white">{{ nickname }}의 사진첩</p>
           <div class="flex flex-col gap-5">
             @for (collection of myCollections().default; track $index) {
               <app-collection-card
@@ -33,9 +33,9 @@
       </div>
     }
   </div>
-  <span class="text-white">
+  <!-- <span class="text-white">
     {{ postFormValue() | json }}
-  </span>
+  </span> -->
 
   <app-footer [hasButton]="true" class="sticky bottom-0 mt-auto">
     <app-button button [text]="getButtonText" size="lg" (click)="clickFooterButton()" />
