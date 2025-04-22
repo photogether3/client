@@ -3,11 +3,12 @@ import { Component, ElementRef, inject, input, output, viewChild } from '@angula
 import { Router } from '@angular/router';
 
 import { PostType } from 'src/entities/post';
+import { IconComponent } from 'src/shared/components';
 
 @Component({
   selector: 'app-post-card',
   templateUrl: './post-card.component.html',
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
 })
 export class PostCardComponent {
   private readonly router = inject(Router);
