@@ -1,19 +1,22 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
-import { AuthApi, RegisterFormType } from 'src/entities/auth';
+import { AuthApi, RegisterDTO, RegisterFormType } from 'src/entities/auth';
 import { AuthValidators } from 'src/entities/auth/custom-validators';
 import { UserApi } from 'src/entities/user';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
 import { VALIDATION_SERVICE } from 'src/shared/lib/validation.service';
+import { HeaderWidget } from 'src/widgets/header';
+
+import { RegisterStepService } from 'src/pages/register/services';
 
 @Component({
-  selector: 'app-register-form',
-  templateUrl: './register-form.component.html',
-  imports: [ReactiveFormsModule, ButtonComponent, InputComponent],
+  selector: 'register-page',
+  templateUrl: './register-form.page.html',
+  imports: [ReactiveFormsModule, ButtonComponent, InputComponent, RouterLink, HeaderWidget],
   providers: [
     {
       provide: VALIDATION_SERVICE,
@@ -21,13 +24,28 @@ import { VALIDATION_SERVICE } from 'src/shared/lib/validation.service';
     },
   ],
 })
-export class RegisterFormComponent extends BaseForm<RegisterFormType> {
+export class RegisterFormPage extends BaseForm<RegisterFormType> {
+  /** -------------------------------------------------------
+   * PRIVATE PROPERTIES
+   * -------------------------------------------------------*/
   private readonly authApi = inject(AuthApi);
   private readonly userApi = inject(UserApi);
-  private readonly router = inject(Router);
+
+  private readonly registerStepService = inject(RegisterStepService);
+
+  /** -------------------------------------------------------
+   * PUBLIC PROPERTIES
+   * -------------------------------------------------------*/
+
+  readonly totalSteps = this.registerStepService.totalSteps;
+  readonly currentStep = this.registerStepService.currentStep;
 
   constructor() {
     super();
+
+    // 확인용으로 콘솔찍음
+    const policyIds = this.registerStepService.getExtraData('policyIds');
+    console.log(policyIds);
 
     this.errorMessages = {
       email: {
@@ -62,16 +80,20 @@ export class RegisterFormComponent extends BaseForm<RegisterFormType> {
     });
   }
 
-  onRegister() {
-    // form.value와 form.getRawValue의 차이점 !
+  onNext() {
     const formData = this.getRawValue();
+    const policyIds = this.registerStepService.getExtraData('policyIds') as number[];
 
-    this.authApi.register(formData).subscribe(() => {
-      this.router.navigateByUrl('/otp/verify', {
-        state: {
-          email: formData.email,
-        },
-      });
+    const dto: RegisterDTO = {
+      email: formData.email,
+      password: formData.password,
+      policyIds
+    };
+
+    this.authApi.register(dto).subscribe(() => {
+      this.registerStepService
+        .setExtraData('email', formData.email)
+        .nextStep();
     });
   }
 }

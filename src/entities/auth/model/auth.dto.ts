@@ -6,6 +6,7 @@ export type loginDTO = {
 export type RegisterDTO = {
   email: string;
   password: string;
+  policyIds: number[];
 };
 
 export type GenerateOtpDTO = {

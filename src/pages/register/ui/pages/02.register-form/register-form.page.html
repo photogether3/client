@@ -1,0 +1,69 @@
+<div class="flex flex-col min-h-screen border-x bg-layer40">
+  <app-header title="신규 회원가입">
+    <div rightContent class="flex items-center gap-2 text-white">
+      <span class="font-bold whitespace-nowrap text-body-m">정보입력</span>
+      <p class="flex text-body-m">
+        <span class="text-primary60">{{ currentStep() }}</span
+        >/<span>{{ totalSteps() }}</span>
+      </p>
+    </div>
+  </app-header>
+
+  <main class="flex-1 px-4">
+    <p class="pb-10 pt-2.5 text-body-s text-gray40">
+      포토게더에 오신 것을 환영합니다. <br />
+      서비스를 이용하기 위해서 회원가입이 필요합니다.
+    </p>
+
+    <!-- 회원가입 폼 -->
+    <form [formGroup]="form" class="flex h-full flex-col gap-2.5">
+      <div>
+        <app-input
+          label="이메일"
+          info="ex)abc@qwer.com"
+          [hasInfoIcon]="true"
+          formControlName="email"
+          [hasError]="!!getErrorMessage('email')"
+          placeholder="이메일을 입력해주세요." />
+        @if (form.get('email')?.pending) {
+          <span class="block mt-2">로딩중 ..</span>
+        }
+        @if (getErrorMessage('email')) {
+          <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('email') }}</p>
+        }
+      </div>
+      <div>
+        <app-input
+          label="비밀번호"
+          info="숫자, 영문자, 특수문자를 포함 8~15자"
+          [hasInfoIcon]="true"
+          inputType="password"
+          formControlName="password"
+          [hasError]="!!getErrorMessage('password')"
+          placeholder="비밀번호" />
+        @if (getErrorMessage('password')) {
+          <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('password') }}</p>
+        }
+      </div>
+      <div>
+        <app-input
+          label="비밀번호 확인"
+          info="숫자, 영문자, 특수문자를 포함 8~15자"
+          [hasInfoIcon]="true"
+          inputType="password"
+          formControlName="confirmPassword"
+          [hasError]="!!getErrorMessage('confirmPassword')"
+          placeholder="비밀번호 확인" />
+        @if (getErrorMessage('confirmPassword')) {
+          <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('confirmPassword') }}</p>
+        }
+      </div>
+      <app-button text="다음으로" [isDisabled]="!isValid()" (click)="onNext()" />
+    </form>
+
+    <p class="text-white">
+      계정이 있으신가요?
+      <a routerLink="/login" class="text-blue-600">로그인 페이지</a>로 이동하기
+    </p>
+  </main>
+</div>

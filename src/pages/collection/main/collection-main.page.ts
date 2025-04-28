@@ -10,6 +10,8 @@ import { HeaderWidget } from 'src/widgets/header';
 
 import { ActionButtonsComponent, PostCardComponent } from '../ui';
 import { PostMoveComponent } from 'src/pages/post';
+import { delay, of } from 'rxjs';
+import { generateMockPosts } from './post-mock';
 
 @Component({
   selector: 'app-collection-main',
@@ -54,15 +56,19 @@ export class CollectionMainPage implements OnInit {
       this.collection = res;
     });
 
-    this.postApi.getCollection(this.collectionId).subscribe((res) => {
-      this.postList = res;
+    // 가짜 데이터 연결 (실제 API 대신 사용)
+    // API 호출을 시뮬레이션하기 위해 of()와 delay() 사용
+    of(generateMockPosts(this.collectionId))
+      .pipe(delay(500)) // API 호출 지연 시간 시뮬레이션 (0.5초)
+      .subscribe((res) => {
+        this.postList = res;
 
-      this.items.changes.subscribe(() => {
-        if (this.items.length > 0) {
-          this.initializeLayout();
-        }
+        this.items.changes.subscribe(() => {
+          if (this.items.length > 0) {
+            this.initializeLayout();
+          }
+        });
       });
-    });
   }
 
   private async initializeLayout() {
