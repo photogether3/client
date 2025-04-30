@@ -2,6 +2,7 @@ export type RegisterFormType = {
   email: string;
   password: string;
   confirmPassword: string;
+  policyIds: number[];
 };
 
 export type LoginFormType = {

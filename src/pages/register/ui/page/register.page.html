@@ -16,10 +16,6 @@
         서비스를 이용하기 위해서 회원가입이 필요합니다.
       </p>
       <app-register-form (isFormValid)="isRegisterFormValid.set($event)" />
-      <p class="mt-2 text-white">
-        계정이 있으신가요?
-        <a routerLink="/login" class="text-blue-600">로그인 페이지</a>로 이동하기
-      </p>
     } @else if (step() === 2) {
       <p class="mb-10 pt-2.5 text-body-s text-gray40">
         이메일로 인증코드가 발송되었습니다.<br />

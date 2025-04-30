@@ -1,17 +1,17 @@
 import { Component, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
-import { HeaderWidget } from 'src/widgets/header';
-import { FooterWidget } from 'src/widgets/footer';
-import { ButtonComponent, IconComponent } from 'src/shared/components';
 import { OtpVerifyFormComponent } from 'src/pages/otp-verify';
+import { ButtonComponent, IconComponent } from 'src/shared/components';
+import { FooterWidget } from 'src/widgets/footer';
+import { HeaderWidget } from 'src/widgets/header';
 
 import { RegisterFormComponent } from '../form';
 
 @Component({
   selector: 'register-page',
   templateUrl: './register.page.html',
-  imports: [RouterLink, RegisterFormComponent, HeaderWidget, FooterWidget, ButtonComponent, OtpVerifyFormComponent, IconComponent],
+  imports: [RegisterFormComponent, HeaderWidget, FooterWidget, ButtonComponent, OtpVerifyFormComponent, IconComponent],
 })
 export class RegisterPage {
   private readonly router = inject(Router);

@@ -2,10 +2,10 @@
   <div>
     <app-input label="이메일" info="ex)abc@qwer.com" [hasInfoIcon]="true" formControlName="email" [hasError]="!!getErrorMessage('email')" placeholder="이메일을 입력해주세요." />
     @if (form.get('email')?.pending) {
-      <span class="mt-2 block">로딩중 ..</span>
+      <span class="mt-2 block text-white">로딩중 ..</span>
     }
     @if (getErrorMessage('email')) {
-      <p class="text-detail-l mt-2 text-accent60">{{ getErrorMessage('email') }}</p>
+      <p class="mt-2 text-detail-l text-accent60">{{ getErrorMessage('email') }}</p>
     }
   </div>
   <div>
@@ -18,7 +18,7 @@
       [hasError]="!!getErrorMessage('password')"
       placeholder="비밀번호" />
     @if (getErrorMessage('password')) {
-      <p class="text-detail-l mt-2 text-accent60">{{ getErrorMessage('password') }}</p>
+      <p class="mt-2 text-detail-l text-accent60">{{ getErrorMessage('password') }}</p>
     }
   </div>
   <div>
@@ -31,7 +31,7 @@
       [hasError]="!!getErrorMessage('confirmPassword')"
       placeholder="비밀번호 확인" />
     @if (getErrorMessage('confirmPassword')) {
-      <p class="text-detail-l mt-2 text-accent60">{{ getErrorMessage('confirmPassword') }}</p>
+      <p class="mt-2 text-detail-l text-accent60">{{ getErrorMessage('confirmPassword') }}</p>
     }
   </div>
 </form>

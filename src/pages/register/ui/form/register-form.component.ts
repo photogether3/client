@@ -1,12 +1,12 @@
 import { Component, inject, output } from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { RegisterFormType } from 'src/entities/auth';
 import { AuthValidators } from 'src/entities/auth/custom-validators';
 import { UserApi } from 'src/entities/user';
 import { InputComponent } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
-import { BaseForm } from 'src/shared/lib';
+import { BaseForm, FormControls } from 'src/shared/lib';
 import { VALIDATION_SERVICE } from 'src/shared/lib/validation.service';
 
 @Component({
@@ -24,6 +24,10 @@ export class RegisterFormComponent extends BaseForm<RegisterFormType> {
   private readonly userApi = inject(UserApi);
 
   readonly isFormValid = output<boolean>();
+
+  get policyIds() {
+    return this.form.get('policyIds') as FormArray<FormControl<number>>;
+  }
 
   constructor() {
     super();
@@ -47,21 +51,24 @@ export class RegisterFormComponent extends BaseForm<RegisterFormType> {
     this.form.statusChanges.subscribe(() => {
       this.isFormValid.emit(this.isValid());
     });
+
+    [1, 2, 3].forEach((p) => this.policyIds.push(new FormControl(p, { nonNullable: true })));
   }
 
-  protected initForm() {
+  protected override initForm() {
     this.form = this.fb.group({
-      email: new FormControl('', {
+      email: this.fb.control('', {
         validators: [Validators.required, Validators.email],
         asyncValidators: [this.validationService.asyncValidateField((email) => this.userApi.checkDuplicatedEmail(email))],
       }),
-      password: new FormControl('', {
+      password: this.fb.control('', {
         validators: [Validators.required, Validators.pattern(PASSWORD_REGEX)],
       }),
-      confirmPassword: new FormControl('', {
+      confirmPassword: this.fb.control('', {
         validators: [Validators.required],
         asyncValidators: [this.validationService.validateMatchingFields('password', 'confirmPassword')],
       }),
+      policyIds: this.fb.array<FormGroup<FormControls<number>>>([]),
     });
   }
 }

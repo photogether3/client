@@ -1,6 +1,5 @@
 import { Component, effect, inject, input, OnDestroy, output, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 
 import { interval, Subscription, take, takeWhile } from 'rxjs';
 
@@ -16,7 +15,6 @@ import { BaseForm } from 'src/shared/lib';
 })
 export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnDestroy {
   private authApi = inject(AuthApi);
-  private router = inject(Router);
   private readonly forgotPasswordService = inject(ForgotPasswordService);
 
   email = input<string>('');
@@ -46,7 +44,9 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
 
     effect(() => {
       const email = this.email();
-      if (!email) return;
+      if (!email) {
+        console.log('이메일이 없습니다.');
+      }
 
       this.authApi
         .generateOtp({ email })
