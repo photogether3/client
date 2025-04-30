@@ -1,3 +1,4 @@
+import { ActionButtonsComponent } from './../../../widgets/action-buttons/action-buttons.component';
 import { Component, ElementRef, inject, OnInit, QueryList, signal, Type, ViewChild, viewChildren, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -10,7 +11,7 @@ import { PostMoveComponent } from 'src/pages/post';
 import { BottomSheetService, ButtonComponent, IconComponent, ModalReactiveService, SearchBarComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
-import { ActionButtonsComponent, ActionButtonType } from 'src/widgets/action-buttons';
+import { ActionButtonType } from 'src/widgets/action-buttons';
 
 import { PostCardComponent } from '../ui';
 
