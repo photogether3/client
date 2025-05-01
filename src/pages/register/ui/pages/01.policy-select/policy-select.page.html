@@ -1,7 +1,7 @@
 <div class="flex min-h-screen flex-col border-x bg-layer40">
   <app-header title="신규 회원가입">
     <div rightContent class="flex items-center gap-2 text-white">
-      <span class="whitespace-nowrap text-body-m font-bold">정보입력</span>
+      <span class="whitespace-nowrap text-body-m font-bold">약관동의</span>
       <p class="flex text-body-m">
         <span class="text-primary60">{{ currentStep() }}</span
         >/<span>{{ totalSteps() }}</span>
@@ -20,6 +20,6 @@
   </main>
 
   <app-footer [hasButton]="true">
-    <app-button button text="다음으로" [isDisabled]="!isValid()" (click)="onNext()" />
+    <app-button button text="다음으로" [isDisabled]="!isValid()" rightIcon="arrow-right" [iconSize]="16" (click)="onNext()" />
   </app-footer>
 </div>
