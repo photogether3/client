@@ -7,7 +7,7 @@ import { environment } from 'src/shared/environments';
 import { skipAuth } from 'src/shared/interceptors';
 import { ErrorType } from 'src/shared/models';
 
-import { GenerateOtpDTO, jwtSourceDTO, loginDTO, RegisterDTO, VerifyOtpDTO } from '../model';
+import { GenerateOtpDTO, jwtSourceDTO, loginDTO, PoliciesDTO, RegisterDTO, VerifyOtpDTO } from '../model';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +25,16 @@ export class AuthApi {
   // 회원가입
   register(registerObj: RegisterDTO) {
     return this.http.post(`${environment.serverUrl}/v1/auth/register`, registerObj, { context: skipAuth() });
+  }
+
+  // 회원가입 정책 목록 조회
+  getPolicies() {
+    return this.http.get<PoliciesDTO[]>(`${environment.serverUrl}/v1/policies`, { context: skipAuth() });
+  }
+
+  // 회원가입 특정 정책 상세 조회
+  getPolicy(id: number) {
+    return this.http.get<PoliciesDTO>(`${environment.serverUrl}/v1/policies/${id}`, { context: skipAuth() });
   }
 
   // OTP 발급

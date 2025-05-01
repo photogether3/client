@@ -24,3 +24,13 @@ export type jwtSourceDTO = {
   expiresIn: number;
   refreshToken: string;
 };
+
+export type PoliciesDTO = {
+  id: number;
+  title: string;
+  kind: string;
+  version: string;
+  isRequired: boolean;
+  effectiveDate: Date;
+  contentPreview: string;
+};

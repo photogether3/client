@@ -9,14 +9,38 @@
     </div>
   </app-header>
 
-  <main class="flex-1 px-4">
+  <main class="flex-1 px-5">
     <p class="pb-10 pt-2.5 text-body-s text-gray40">
       포토게더에 오신 것을 환영합니다. <br />
       서비스를 이용하기 위해서 약관동의가 필요합니다.
     </p>
 
-    <!-- TODO 약관 동의 컨텐츠 -->
-    <div class="text-gray40">약관 동의 컨텐츠으으으</div>
+    <section class="">
+      <ul class="[&>li:not(:first-child)]:py-4 [&>li]:border-b [&>li]:border-b-white/20">
+        <li class="pb-4">
+          <label class="flex items-center gap-2 text-body-s font-bold text-white">
+            <input type="checkbox" class="size-6" />
+            전체 동의합니다.
+          </label>
+          <p class="ml-8 mt-2 text-detail-l text-gray40">
+            전체동의는 필수 및 선택정보에 대한 동의도 포함되어 있으며, 개별적으로도 동의를 선택하실 수 있습니다. 선택항목에 대한 동의를 거부하는 경우에도 회원가입 서비스는 이용
+            가능합니다.
+          </p>
+        </li>
+        @for (policy of policies(); track $index) {
+          <li class="flex items-center justify-between">
+            <label class="flex items-center gap-2">
+              <input type="checkbox" class="size-6" />
+              <p class="text-body-s font-bold text-white">
+                {{ policy.title }}
+                <span class="text-detail-m text-accent40">{{ policy.isRequired && '(필수)' }}</span>
+              </p>
+            </label>
+            <button class="text-body-s text-primary40 underline underline-offset-4" (click)="openDetail(policy.id)">내용보기</button>
+          </li>
+        }
+      </ul>
+    </section>
   </main>
 
   <app-footer [hasButton]="true">
