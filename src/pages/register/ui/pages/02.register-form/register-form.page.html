@@ -1,7 +1,7 @@
-<div class="flex flex-col min-h-screen border-x bg-layer40">
+<div class="flex min-h-screen flex-col border-x bg-layer40">
   <app-header title="신규 회원가입">
     <div rightContent class="flex items-center gap-2 text-white">
-      <span class="font-bold whitespace-nowrap text-body-m">정보입력</span>
+      <span class="whitespace-nowrap text-body-m font-bold">정보입력</span>
       <p class="flex text-body-m">
         <span class="text-primary60">{{ currentStep() }}</span
         >/<span>{{ totalSteps() }}</span>
@@ -16,7 +16,7 @@
     </p>
 
     <!-- 회원가입 폼 -->
-    <form [formGroup]="form" class="flex h-full flex-col gap-2.5">
+    <form [formGroup]="form" class="flex flex-col gap-y-2.5">
       <div>
         <app-input
           label="이메일"
@@ -26,10 +26,10 @@
           [hasError]="!!getErrorMessage('email')"
           placeholder="이메일을 입력해주세요." />
         @if (form.get('email')?.pending) {
-          <span class="block mt-2">로딩중 ..</span>
+          <span class="mt-2 block text-white">로딩중 ..</span>
         }
         @if (getErrorMessage('email')) {
-          <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('email') }}</p>
+          <p class="text-detail mt-2 text-accent60">{{ getErrorMessage('email') }}</p>
         }
       </div>
       <div>
@@ -42,7 +42,7 @@
           [hasError]="!!getErrorMessage('password')"
           placeholder="비밀번호" />
         @if (getErrorMessage('password')) {
-          <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('password') }}</p>
+          <p class="text-detail mt-2 text-accent60">{{ getErrorMessage('password') }}</p>
         }
       </div>
       <div>
@@ -55,15 +55,12 @@
           [hasError]="!!getErrorMessage('confirmPassword')"
           placeholder="비밀번호 확인" />
         @if (getErrorMessage('confirmPassword')) {
-          <p class="mt-2 text-detail text-accent60">{{ getErrorMessage('confirmPassword') }}</p>
+          <p class="text-detail mt-2 text-accent60">{{ getErrorMessage('confirmPassword') }}</p>
         }
       </div>
-      <app-button text="다음으로" [isDisabled]="!isValid()" (click)="onNext()" />
     </form>
-
-    <p class="text-white">
-      계정이 있으신가요?
-      <a routerLink="/login" class="text-blue-600">로그인 페이지</a>로 이동하기
-    </p>
   </main>
+  <app-footer [hasButton]="true">
+    <app-button button text="다음으로" [isDisabled]="!isValid()" (click)="onNext()" />
+  </app-footer>
 </div>

@@ -1,8 +1,11 @@
-<div class="flex flex-col min-h-screen border-x bg-layer40">
+<div class="flex min-h-screen flex-col border-x bg-layer40">
   <app-header title="신규 회원가입">
     <div rightContent class="flex items-center gap-2 text-white">
-      <span class="font-bold whitespace-nowrap text-body-m">정보입력</span>
-      <p class="flex text-body-m"><span class="text-primary60">{{currentStep()}}</span>/<span>{{totalSteps()}}</span></p>
+      <span class="whitespace-nowrap text-body-m font-bold">정보입력</span>
+      <p class="flex text-body-m">
+        <span class="text-primary60">{{ currentStep() }}</span
+        >/<span>{{ totalSteps() }}</span>
+      </p>
     </div>
   </app-header>
 
@@ -12,12 +15,11 @@
       서비스를 이용하기 위해서 약관동의가 필요합니다.
     </p>
 
-    <div class="text-gray40">
-      약관 동의 컨텐츠으으으
-    </div>
+    <!-- TODO 약관 동의 컨텐츠 -->
+    <div class="text-gray40">약관 동의 컨텐츠으으으</div>
   </main>
 
-  <footer class="p-4">
-    <app-button text="다음으로" [isDisabled]="!isValid()" (click)="onNext()" />
-  </footer>
+  <app-footer [hasButton]="true">
+    <app-button button text="다음으로" [isDisabled]="!isValid()" (click)="onNext()" />
+  </app-footer>
 </div>

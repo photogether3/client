@@ -1,22 +1,21 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 
 import { AuthApi, RegisterDTO, RegisterFormType } from 'src/entities/auth';
 import { AuthValidators } from 'src/entities/auth/custom-validators';
 import { UserApi } from 'src/entities/user';
+import { RegisterStepService } from 'src/pages/register/services';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
 import { BaseForm, FormControls } from 'src/shared/lib';
 import { VALIDATION_SERVICE } from 'src/shared/lib/validation.service';
+import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
-
-import { RegisterStepService } from 'src/pages/register/services';
 
 @Component({
   selector: 'register-page',
   templateUrl: './register-form.page.html',
-  imports: [ReactiveFormsModule, ButtonComponent, InputComponent, RouterLink, HeaderWidget],
+  imports: [ReactiveFormsModule, ButtonComponent, InputComponent, HeaderWidget, FooterWidget],
   providers: [
     {
       provide: VALIDATION_SERVICE,

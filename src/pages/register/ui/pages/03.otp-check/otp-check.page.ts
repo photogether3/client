@@ -2,13 +2,14 @@ import { Component, inject, signal } from '@angular/core';
 
 import { ButtonComponent } from 'src/shared/components';
 import { HeaderWidget } from 'src/widgets/header';
-
 import { RegisterStepService } from 'src/pages/register/services';
+import { OtpVerifyFormComponent } from 'src/pages/otp-verify';
+import { FooterWidget } from 'src/widgets/footer';
 
 @Component({
   selector: 'otp-check-page',
   templateUrl: './otp-check.page.html',
-  imports: [HeaderWidget, ButtonComponent],
+  imports: [HeaderWidget, ButtonComponent, OtpVerifyFormComponent, FooterWidget],
 })
 export class OtpCheckPage {
   /** -------------------------------------------------------

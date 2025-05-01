@@ -1,15 +1,29 @@
-<div class="flex flex-col min-h-screen border-x bg-layer40">
+<div class="flex min-h-screen flex-col border-x bg-layer40">
   <app-header title="신규 회원가입">
     <div rightContent class="flex items-center gap-2 text-white">
-      <span class="font-bold whitespace-nowrap text-body-m">정보입력</span>
-      <p class="flex text-body-m"><span class="text-primary60">{{currentStep()}}</span>/<span>{{totalSteps()}}</span></p>
+      <span class="whitespace-nowrap text-body-m font-bold">정보입력</span>
+      <p class="flex text-body-m">
+        <span class="text-primary60">{{ currentStep() }}</span
+        >/<span>{{ totalSteps() }}</span>
+      </p>
     </div>
   </app-header>
 
-  <main class="flex-1 px-4">
-
-    <div class="text-gray40">
-      회원가입 축하 컨텐츠츠츠츠츠츠
-    </div>
+  <main class="mt-10 flex flex-1 flex-col items-center px-4">
+    <app-icon name="logo-md" />
+    <p class="mt-5 text-display-s font-bold text-white">회원가입 완료!</p>
+    <p class="mb-2.5 mt-10 text-body-l text-white">반가워요, <span class="font-bold text-primary40">user_1216님!</span></p>
+    <p class="text-center text-body-s text-gray40">
+      아래의 시작하기 버튼을 누르시면<br />
+      사진첩을 들어내고 정리하실 수 있습니다!
+    </p>
+    <p class="mb-10 mt-auto text-center text-body-s font-bold text-primary40">
+      지금 즉시 <br />
+      사진첩을 덜어내보세요!
+    </p>
   </main>
+
+  <app-footer [hasButton]="true">
+    <app-button button text="시작하기" (click)="goMainPage()" />
+  </app-footer>
 </div>

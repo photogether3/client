@@ -28,7 +28,7 @@ export class RegisterPage {
     this.registerStepService.addComponent(OtpCheckPage);
     this.registerStepService.addComponent(CompletePage);
 
-    effect(() => this.render())
+    effect(() => this.render());
   }
 
   /** -------------------------------------------------------
