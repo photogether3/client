@@ -33,4 +33,5 @@ export type PoliciesDTO = {
   isRequired: boolean;
   effectiveDate: Date;
   contentPreview: string;
+  content: string;
 };
