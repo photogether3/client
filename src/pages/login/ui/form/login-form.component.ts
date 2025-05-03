@@ -61,9 +61,7 @@ export class LoginFormComponent extends BaseForm<LoginFormType> {
       .login(loginDTO)
       .pipe(
         catchError((error) => {
-          // TODO 백엔드 에러 코드에 따라 에러 메시지 처리
-          console.log('Login error:', error.error.message);
-          if (error.error.message === '이메일 인증을 완료해주세요.') {
+          if (error.error.errorCode === 'EMAIL_NOT_VERIFIED') {
             this.router.navigateByUrl('/otp-verify');
           }
           throw error;

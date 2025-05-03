@@ -47,8 +47,13 @@ export class AuthApi {
   }
 
   // OTP 검증 및 토큰 발급
-  verifyOtp(otpObj: VerifyOtpDTO): Observable<jwtSourceDTO> {
-    return this.http.post<jwtSourceDTO>(`${environment.serverUrl}/v1/auth/otp/verify`, otpObj, { context: skipAuth() });
+  verifyOtpWithJwt(otpObj: VerifyOtpDTO): Observable<jwtSourceDTO> {
+    return this.http.post<jwtSourceDTO>(`${environment.serverUrl}/v1/auth/otp/verify-and-login`, otpObj, { context: skipAuth() });
+  }
+
+  // OTP 검증
+  sendOtpVerification(otpObj: VerifyOtpDTO): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${environment.serverUrl}/v1/auth/otp/verify`, otpObj, { context: skipAuth() });
   }
 
   // 토큰 재발급

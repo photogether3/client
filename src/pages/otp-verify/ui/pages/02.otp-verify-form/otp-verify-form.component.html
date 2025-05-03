@@ -37,5 +37,5 @@
 </main>
 
 <app-footer [hasButton]="true">
-  <app-button button text="다음으로" rightIcon="arrow-right" [iconSize]="16" [isDisabled]="!isValid()" (click)="goMainPage()" />
+  <app-button button text="다음으로" rightIcon="arrow-right" [iconSize]="16" [isDisabled]="!isVerified()" (click)="onNext()" />
 </app-footer>

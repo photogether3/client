@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { interval, Subscription, take, takeWhile } from 'rxjs';
 
 import { AuthApi, AuthService, ForgotPasswordService, OtpFormType } from 'src/entities/auth';
-import { ButtonComponent, InputComponent } from 'src/shared/components';
+import { ButtonComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
 import { OTP_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
 import { StepService } from 'src/shared/services';
@@ -21,6 +21,7 @@ import { FooterWidget } from 'src/widgets/footer';
 })
 export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnDestroy {
   private readonly authApi = inject(AuthApi);
+  private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly forgotPasswordService = inject(ForgotPasswordService);
   private readonly router = inject(Router);
   private readonly stepService = inject(StepService);
@@ -28,7 +29,6 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
   isFormValid = output<boolean>();
   isVerified = signal<boolean>(false);
   email = signal<string>('');
-  errorMessage = signal<string>('');
   private timeLeft = 300;
   private timerSubscription!: Subscription;
 
@@ -42,7 +42,6 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
     super();
 
     const email = this.stepService.getExtraData('email');
-    console.log(email);
     this.email.set(email);
 
     this.errorMessages = {
@@ -64,7 +63,6 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
         .pipe(take(1))
         .subscribe({
           next: () => this.startTimer(),
-          error: (err) => this.errorMessage.set(err),
         });
     });
   }
@@ -85,16 +83,20 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
       otp: otp,
     };
 
-    this.authApi.verifyOtp(formValue).subscribe({
+    this.authApi.sendOtpVerification(formValue).subscribe({
       next: (res) => {
-        const instance = AuthService.getInstance();
-        instance.store(res);
-
-        // TODO 비밀번호 찾기 페이지 한정 => 수정해야
-        this.forgotPasswordService.setOtp(otp);
-        this.isVerified.set(true);
+        if (res.message === '성공') {
+          const modalData = {
+            iconName: 'modal-security',
+            subTitle: 'OTP 인증이 완료 되었습니다.',
+            content: '확인 버튼을 누르시면 계속 진행하실수 있습니다. 확인버튼을 눌러주세요.',
+            buttons: ['확인'],
+          };
+          this.modalReactiveService.open(modalData).then(() => {
+            this.isVerified.set(true);
+          });
+        }
       },
-      error: (err) => this.errorMessage.set(err),
     });
   }
 
@@ -113,7 +115,22 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
       });
   }
 
-  goMainPage() {
-    this.router.navigateByUrl('/main');
+  onNext() {
+    const otp = this.getRawValue().otp;
+    const formValue = {
+      email: this.email(),
+      otp: otp,
+    };
+
+    this.authApi.verifyOtpWithJwt(formValue).subscribe({
+      next: (res) => {
+        const instance = AuthService.getInstance();
+        instance.store(res);
+
+        // TODO 비밀번호 찾기 페이지 한정 => 수정해야
+        this.forgotPasswordService.setOtp(otp);
+        this.router.navigateByUrl('/onboarding');
+      },
+    });
   }
 }
