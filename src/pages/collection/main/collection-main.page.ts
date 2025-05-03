@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, inject, signal, Type, viewChild, viewChildren } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, signal, Type, viewChild, viewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { forkJoin } from 'rxjs';
@@ -28,11 +28,14 @@ export class CollectionMainPage {
   private readonly modalReactiveService = inject(ModalReactiveService);
   private resizeObserver: ResizeObserver | null = null;
 
-  postList: PostType[] | undefined = undefined;
+  postList = signal<PostType[]>([]);
   isEditMode = signal<boolean>(false);
   collection = signal<CollectionDetailResDTO | undefined>(undefined);
   selectedPostIds = signal<number[]>([]);
   postCardList = viewChildren<PostCardComponent>('postCard');
+
+  readonly title = computed(() => this.collection()?.title ?? '');
+  readonly categoryName = computed(() => this.collection()?.category?.name ?? '');
 
   // *---------------- 마손리 레이아아웃 변수 --------------------
   // TODO 마소니 레이아웃 간격, 너비 수정
@@ -55,7 +58,7 @@ export class CollectionMainPage {
       postList: this.postApi.getCollection(this.collectionId),
     }).subscribe(({ collection, postList }) => {
       this.collection.set(collection);
-      this.postList = postList;
+      this.postList.set(postList);
     });
 
     effect(() => {

@@ -24,6 +24,10 @@ export const routes: Routes = [
     loadComponent: () => import('../pages/forgot-password').then((m) => m.ForgotPasswordPage),
   },
   {
+    path: 'password-update',
+    loadComponent: () => import('../pages/password-update').then((m) => m.PasswordUpdatePage),
+  },
+  {
     path: 'onboarding',
     loadComponent: () => import('../pages/onboarding').then((m) => m.OnboardingPage),
   },

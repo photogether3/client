@@ -6,10 +6,12 @@ import { forkJoin } from 'rxjs';
 import { AuthApi, AuthService } from 'src/entities/auth';
 import { CategoriesGetDTO, CategoryApi, TagComponent } from 'src/entities/category';
 import { ProfileGetDTO, UserApi } from 'src/entities/user';
-import { BottomSheetService, IconComponent } from 'src/shared/components';
+import { BottomSheetService, IconComponent, ModalService } from 'src/shared/components';
 import { ActionButtonsComponent, ActionButtonType } from 'src/widgets/action-buttons';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
+
+import { AccountSettingComponent } from '../ui';
 
 @Component({
   selector: 'profile-page',
@@ -22,6 +24,7 @@ export class ProfilePage {
   private readonly authApi = inject(AuthApi);
   private readonly userApi = inject(UserApi);
   private readonly categoryApi = inject(CategoryApi);
+  private readonly modalService = inject(ModalService);
 
   profile: (ProfileGetDTO & { tags: CategoriesGetDTO[] }) | undefined = undefined;
 
@@ -73,8 +76,17 @@ export class ProfilePage {
       case 'update':
         return this.router.navigateByUrl('/profile/update');
       case 'privacy':
-        // TODO 개인정보 관리 모달 띄우기
-        return console.log('adf');
+        return this.modalService.open(AccountSettingComponent).subscribe((res) => {
+          console.log(res);
+
+          if (res == 'withdraw') {
+            this.withdraw();
+          } else if (res === 'reset') {
+            this.reset();
+          } else {
+            this.updatePassword();
+          }
+        });
       case 'logout':
         return this.onLogout();
     }
@@ -82,26 +94,8 @@ export class ProfilePage {
     this.bottomSheetService.open(ActionButtonsComponent as Type<Component>);
   }
 
-  // TODO 비밀번호 변경 실패했을 때 보여줘야 함
   updatePassword() {
-    // this.modalService
-    //   .open(PasswordUpdateDialog)
-    //   .pipe(
-    //     map((res) => res ?? false),
-    //     filter((res) => res === true),
-    //     switchMap(() => {
-    //       const modalData = {
-    //         title: '비밀번호 변경 완료',
-    //         subTitle: '비밀번호 변경이 완료되었습니다.',
-    //         content: '확인 버튼을 누르시면 프로필 화면으로 돌아갑니다.',
-    //         buttons: ['확인'],
-    //       };
-    //       return this.modalReactiveService.open(modalData);
-    //     }),
-    //   )
-    //   .subscribe(() => {
-    //     this.router.navigateByUrl('/profile');
-    //   });
+    this.router.navigateByUrl('password-update');
   }
 
   // TODO 기록초기화
