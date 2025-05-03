@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { interval, Subscription, take, takeWhile } from 'rxjs';
 
-import { AuthApi, AuthService, ForgotPasswordService, OtpFormType } from 'src/entities/auth';
+import { AuthApi, AuthService, OtpFormType } from 'src/entities/auth';
 import { ButtonComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
 import { OTP_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
@@ -22,7 +22,6 @@ import { FooterWidget } from 'src/widgets/footer';
 export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnDestroy {
   private readonly authApi = inject(AuthApi);
   private readonly modalReactiveService = inject(ModalReactiveService);
-  private readonly forgotPasswordService = inject(ForgotPasswordService);
   private readonly router = inject(Router);
   private readonly stepService = inject(StepService);
 
@@ -127,9 +126,13 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
         const instance = AuthService.getInstance();
         instance.store(res);
 
-        // TODO 비밀번호 찾기 페이지 한정 => 수정해야
-        this.forgotPasswordService.setOtp(otp);
-        this.router.navigateByUrl('/onboarding');
+        const router = this.stepService.getExtraData('page');
+
+        if (router === 'otp-verify') {
+          this.router.navigateByUrl('/onboarding');
+        } else {
+          this.stepService.setExtraData('otp', otp).nextStep();
+        }
       },
     });
   }

@@ -25,6 +25,8 @@ export class OtpVerifyPage {
     this.stepService.addComponent(EmailCheckComponent);
     this.stepService.addComponent(OtpVerifyFormComponent);
 
+    this.stepService.setExtraData('page', 'otp-verify');
+
     effect(() => this.render());
   }
 

@@ -30,3 +30,7 @@ export type UpdateProfileDTO = {
 export type DuplicateEmailDTO = {
   isDuplicated: boolean;
 };
+
+export type WithDrawDTO = {
+  otp: string;
+};
