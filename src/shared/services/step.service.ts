@@ -1,8 +1,7 @@
 import { computed, Injectable, signal } from '@angular/core';
 
 @Injectable()
-export class RegisterStepService {
-
+export class StepService {
   /** -------------------------------------------------------
    * PRIVATE PROPERTIES
    * -------------------------------------------------------*/

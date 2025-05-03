@@ -2,9 +2,9 @@ import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { GenerateOtpDTO } from 'src/entities/auth';
-import { RegisterStepService } from 'src/pages/register/services';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { BaseForm } from 'src/shared/lib';
+import { StepService } from 'src/shared/services';
 import { FooterWidget } from 'src/widgets/footer';
 
 @Component({
@@ -16,10 +16,10 @@ import { FooterWidget } from 'src/widgets/footer';
   },
 })
 export class EmailCheckComponent extends BaseForm<GenerateOtpDTO> {
-  private readonly registerStepService = inject(RegisterStepService);
+  private readonly stepService = inject(StepService);
 
-  readonly totalSteps = this.registerStepService.totalSteps;
-  readonly currentStep = this.registerStepService.currentStep;
+  readonly totalSteps = this.stepService.totalSteps;
+  readonly currentStep = this.stepService.currentStep;
   errorMessage = signal<string>('');
 
   constructor() {
@@ -45,6 +45,6 @@ export class EmailCheckComponent extends BaseForm<GenerateOtpDTO> {
   }
 
   onNext() {
-    this.registerStepService.setExtraData('email', this.form.getRawValue().email).nextStep();
+    this.stepService.setExtraData('email', this.form.getRawValue().email).nextStep();
   }
 }

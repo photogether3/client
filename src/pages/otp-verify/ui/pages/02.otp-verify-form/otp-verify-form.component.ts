@@ -5,10 +5,10 @@ import { Router } from '@angular/router';
 import { interval, Subscription, take, takeWhile } from 'rxjs';
 
 import { AuthApi, AuthService, ForgotPasswordService, OtpFormType } from 'src/entities/auth';
-import { RegisterStepService } from 'src/pages/register/services';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { OTP_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
+import { StepService } from 'src/shared/services';
 import { FooterWidget } from 'src/widgets/footer';
 
 @Component({
@@ -23,7 +23,7 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
   private readonly authApi = inject(AuthApi);
   private readonly forgotPasswordService = inject(ForgotPasswordService);
   private readonly router = inject(Router);
-  private readonly stepService = inject(RegisterStepService);
+  private readonly stepService = inject(StepService);
 
   isFormValid = output<boolean>();
   isVerified = signal<boolean>(false);

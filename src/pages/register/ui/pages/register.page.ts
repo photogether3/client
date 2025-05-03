@@ -1,6 +1,7 @@
 import { Component, effect, inject, viewChild, ViewContainerRef } from '@angular/core';
 
-import { RegisterStepService } from '../../services';
+import { StepService } from 'src/shared/services';
+
 import { PolicySelectPage } from './01.policy-select';
 import { RegisterFormPage } from './02.register-form';
 import { OtpCheckPage } from './03.otp-check';
@@ -9,24 +10,24 @@ import { CompletePage } from './04.complete';
 @Component({
   selector: 'register-page',
   templateUrl: './register.page.html',
-  providers: [RegisterStepService],
+  providers: [StepService],
 })
 export class RegisterPage {
   /** -------------------------------------------------------
    * PRIVATE PROPERTIES
    * -------------------------------------------------------*/
 
-  private readonly registerStepService = inject(RegisterStepService);
+  private readonly stepService = inject(StepService);
 
   private readonly dynamicViewRef = viewChild.required('dynamicView', {
     read: ViewContainerRef,
   });
 
   constructor() {
-    this.registerStepService.addComponent(PolicySelectPage);
-    this.registerStepService.addComponent(RegisterFormPage);
-    this.registerStepService.addComponent(OtpCheckPage);
-    this.registerStepService.addComponent(CompletePage);
+    this.stepService.addComponent(PolicySelectPage);
+    this.stepService.addComponent(RegisterFormPage);
+    this.stepService.addComponent(OtpCheckPage);
+    this.stepService.addComponent(CompletePage);
 
     effect(() => this.render());
   }
@@ -46,7 +47,7 @@ export class RegisterPage {
     // 현재 컴포넌트 불러오기
     // effect 내부에서 자동으로 바뀌는 이유는
     // currentComponent 의 computed 에서 currentIndex가 변경되는걸 트리거함.
-    const component = this.registerStepService.currentComponent();
+    const component = this.stepService.currentComponent();
     if (!component) {
       throw new Error('컴포넌트를 찾을 수 없습니다.');
     }

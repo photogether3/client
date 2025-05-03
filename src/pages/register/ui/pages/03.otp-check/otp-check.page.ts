@@ -2,9 +2,9 @@ import { Component, inject, signal } from '@angular/core';
 
 import { ButtonComponent } from 'src/shared/components';
 import { HeaderWidget } from 'src/widgets/header';
-import { RegisterStepService } from 'src/pages/register/services';
 import { OtpVerifyFormComponent } from 'src/pages/otp-verify';
 import { FooterWidget } from 'src/widgets/footer';
+import { StepService } from 'src/shared/services';
 
 @Component({
   selector: 'otp-check-page',
@@ -16,19 +16,19 @@ export class OtpCheckPage {
    * PRIVATE PROPERTIES
    * -------------------------------------------------------*/
 
-  private readonly registerStepService = inject(RegisterStepService);
+  private readonly stepService = inject(StepService);
 
   /** -------------------------------------------------------
    * PUBLIC PROPERTIES
    * -------------------------------------------------------*/
 
   readonly isValid = signal<boolean>(true);
-  readonly totalSteps = this.registerStepService.totalSteps;
-  readonly currentStep = this.registerStepService.currentStep;
+  readonly totalSteps = this.stepService.totalSteps;
+  readonly currentStep = this.stepService.currentStep;
 
   constructor() {
     // 확인용으로 콘솔찍음
-    const email = this.registerStepService.getExtraData('email');
+    const email = this.stepService.getExtraData('email');
     console.log(email);
   }
 
@@ -37,6 +37,6 @@ export class OtpCheckPage {
    * -------------------------------------------------------*/
 
   onNext() {
-    this.registerStepService.nextStep();
+    this.stepService.nextStep();
   }
 }

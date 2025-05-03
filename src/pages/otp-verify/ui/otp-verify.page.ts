@@ -1,29 +1,29 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject, viewChild, ViewContainerRef } from '@angular/core';
 
-import { RegisterStepService } from 'src/pages/register/services';
 import { HeaderWidget } from 'src/widgets/header';
 
 import { EmailCheckComponent, OtpVerifyFormComponent } from './pages';
+import { StepService } from 'src/shared/services';
 
 @Component({
   selector: 'otp-verify-page',
   templateUrl: './otp-verify.page.html',
   imports: [CommonModule, HeaderWidget],
-  providers: [RegisterStepService, HeaderWidget],
+  providers: [StepService, HeaderWidget],
 })
 export class OtpVerifyPage {
-  private readonly registerStepService = inject(RegisterStepService);
+  private readonly stepService = inject(StepService);
 
-  readonly totalSteps = this.registerStepService.totalSteps;
-  readonly currentStep = this.registerStepService.currentStep;
+  readonly totalSteps = this.stepService.totalSteps;
+  readonly currentStep = this.stepService.currentStep;
   private readonly dynamicViewRef = viewChild.required('dynamicView', {
     read: ViewContainerRef,
   });
 
   constructor() {
-    this.registerStepService.addComponent(EmailCheckComponent);
-    this.registerStepService.addComponent(OtpVerifyFormComponent);
+    this.stepService.addComponent(EmailCheckComponent);
+    this.stepService.addComponent(OtpVerifyFormComponent);
 
     effect(() => this.render());
   }
@@ -35,7 +35,7 @@ export class OtpVerifyPage {
 
     this.dynamicViewRef().clear();
 
-    const component = this.registerStepService.currentComponent();
+    const component = this.stepService.currentComponent();
     if (!component) {
       throw new Error('컴포넌트를 찾을 수 없습니다.');
     }

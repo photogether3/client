@@ -4,11 +4,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthApi, RegisterDTO, RegisterFormType } from 'src/entities/auth';
 import { AuthValidators } from 'src/entities/auth/custom-validators';
 import { UserApi } from 'src/entities/user';
-import { RegisterStepService } from 'src/pages/register/services';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
 import { BaseForm, FormControls } from 'src/shared/lib';
 import { VALIDATION_SERVICE } from 'src/shared/lib/validation.service';
+import { StepService } from 'src/shared/services';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 
@@ -30,20 +30,20 @@ export class RegisterFormPage extends BaseForm<RegisterFormType> {
   private readonly authApi = inject(AuthApi);
   private readonly userApi = inject(UserApi);
 
-  private readonly registerStepService = inject(RegisterStepService);
+  private readonly stepService = inject(StepService);
 
   /** -------------------------------------------------------
    * PUBLIC PROPERTIES
    * -------------------------------------------------------*/
 
-  readonly totalSteps = this.registerStepService.totalSteps;
-  readonly currentStep = this.registerStepService.currentStep;
+  readonly totalSteps = this.stepService.totalSteps;
+  readonly currentStep = this.stepService.currentStep;
 
   constructor() {
     super();
 
     // 확인용으로 콘솔찍음
-    const policyIds = this.registerStepService.getExtraData('policyIds');
+    const policyIds = this.stepService.getExtraData('policyIds');
     console.log(policyIds);
 
     this.errorMessages = {
@@ -82,7 +82,7 @@ export class RegisterFormPage extends BaseForm<RegisterFormType> {
 
   onNext() {
     const formData = this.getRawValue();
-    const policyIds = this.registerStepService.getExtraData('policyIds') as number[];
+    const policyIds = this.stepService.getExtraData('policyIds') as number[];
 
     const dto: RegisterDTO = {
       email: formData.email,
@@ -91,7 +91,7 @@ export class RegisterFormPage extends BaseForm<RegisterFormType> {
     };
 
     this.authApi.register(dto).subscribe(() => {
-      this.registerStepService.setExtraData('email', formData.email).nextStep();
+      this.stepService.setExtraData('email', formData.email).nextStep();
     });
   }
 }

@@ -2,9 +2,9 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { HeaderWidget } from 'src/widgets/header';
-import { RegisterStepService } from 'src/pages/register/services';
 import { ButtonComponent, IconComponent } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
+import { StepService } from 'src/shared/services';
 
 @Component({
   selector: 'complete-page',
@@ -17,14 +17,14 @@ export class CompletePage {
    * -------------------------------------------------------*/
 
   private readonly router = inject(Router);
-  private readonly registerStepService = inject(RegisterStepService);
+  private readonly stepService = inject(StepService);
 
   /** -------------------------------------------------------
    * PUBLIC PROPERTIES
    * -------------------------------------------------------*/
 
-  readonly totalSteps = this.registerStepService.totalSteps;
-  readonly currentStep = this.registerStepService.currentStep;
+  readonly totalSteps = this.stepService.totalSteps;
+  readonly currentStep = this.stepService.currentStep;
 
   goMainPage() {
     this.router.navigateByUrl('/home');
