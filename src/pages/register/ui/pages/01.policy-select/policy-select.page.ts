@@ -1,5 +1,5 @@
 import { Dialog } from '@angular/cdk/dialog';
-import { Component, ElementRef, inject, signal, viewChildren } from '@angular/core';
+import { Component, effect, ElementRef, inject, signal, viewChildren } from '@angular/core';
 
 import { AuthApi, PoliciesDTO } from 'src/entities/auth';
 import { RegisterStepService } from 'src/pages/register/services';
@@ -38,6 +38,16 @@ export class PolicySelectPage {
   constructor() {
     this.authApi.getPolicies().subscribe((res) => {
       this.policies.set(res);
+    });
+
+    effect(() => {
+      const requiredIds = this.policies()
+        .filter((p) => p.isRequired)
+        .map((p) => p.id as number);
+
+      const agreedIds = this.policyAgreedId();
+      const valid = requiredIds.every((id) => agreedIds.includes(id));
+      this.isValid.set(valid);
     });
   }
 
