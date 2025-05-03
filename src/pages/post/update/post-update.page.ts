@@ -6,7 +6,7 @@ import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 
-import { PostFormComponent } from '../create';
+import { PostFormComponent } from '../ui';
 
 @Component({
   selector: 'post-update-page',

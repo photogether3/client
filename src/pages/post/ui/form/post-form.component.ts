@@ -2,21 +2,25 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, input, model } from '@angular/core';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { debounceTime } from 'rxjs';
-
 import { ImageApi } from 'src/entities/image';
 import { ImgContentType, PostCreateFormType } from 'src/entities/post';
-import { IconComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
+import { ButtonComponent, IconComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
 import { BaseForm, FormControls } from 'src/shared/lib';
+import { StepService } from 'src/shared/services';
+import { FooterWidget } from 'src/widgets/footer';
 
 @Component({
   selector: 'app-post-form',
   templateUrl: './post-form.component.html',
-  imports: [ReactiveFormsModule, InputComponent, IconComponent, CommonModule],
+  imports: [ReactiveFormsModule, InputComponent, IconComponent, CommonModule, FooterWidget, ButtonComponent],
+  host: {
+    class: 'flex min-h-screen flex-1 flex-col border-x bg-layer40',
+  },
 })
 export class PostFormComponent extends BaseForm<PostCreateFormType> {
   private readonly imageApi = inject(ImageApi);
   private readonly modalReactiveService = inject(ModalReactiveService);
+  private readonly stepService = inject(StepService);
 
   previewUrl: string | ArrayBuffer | null | undefined = null;
   formValue = model<PostCreateFormType>();
@@ -37,10 +41,6 @@ export class PostFormComponent extends BaseForm<PostCreateFormType> {
       content: this.fb.control(''),
       metadataStringify: this.fb.array<FormGroup<FormControls<ImgContentType>>>([]),
       file: this.fb.control<File | null>(null),
-    });
-
-    this.form.valueChanges.pipe(debounceTime(300)).subscribe((value) => {
-      this.formValue.set(value as PostCreateFormType);
     });
   }
 
@@ -99,5 +99,16 @@ export class PostFormComponent extends BaseForm<PostCreateFormType> {
     });
 
     this.metadataArray.push(metadataGroup);
+  }
+
+  onNext() {
+    const raw = this.form.getRawValue();
+    const filteredMetadata = this.form.getRawValue().metadataStringify.filter((item) => item.content?.trim() !== '');
+
+    const formValue = {
+      ...raw,
+      metadataStringify: filteredMetadata,
+    };
+    this.stepService.setExtraData('form', formValue).nextStep();
   }
 }

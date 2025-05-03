@@ -1,43 +1,11 @@
 <div class="flex min-h-screen flex-col border-x bg-layer40">
   <app-header title="게시물 생성">
-    <span rightContent class="flex text-body-m text-white">
-      <span class="font-bold text-primary60">{{ step() }}</span>
-      /2
-    </span>
+    <p rightContent class="flex text-body-m text-white">
+      <span class="text-primary60">{{ currentStep() }}</span
+      >/<span>{{ totalSteps() }}</span>
+    </p>
   </app-header>
+  <ng-template #dynamicView />
 
-  <div class="w-full flex-1 py-5">
-    @if (step() === 1) {
-      <app-post-form [(formValue)]="postFormValue" />
-    } @else {
-      <div class="px-5">
-        <div class="flex flex-col gap-5">
-          <p class="text-body-s font-bold text-white">{{ nickname }}의 사진첩</p>
-          <div class="flex flex-col gap-5">
-            @for (collection of myCollections().default; track $index) {
-              <app-collection-card
-                [collection]="collection"
-                [isCheckable]="true"
-                [isChecked]="selectedCollectionId() === collection.id"
-                (clickEvent)="onCardChecked(collection.id)" />
-            } @empty {
-              <div class="col-span-full h-[275px] rounded-[12px] bg-layer20 p-4 text-white">등록된 사진첩이 없습니다</div>
-            }
-          </div>
-        </div>
-
-        <section class="mt-5">
-          <h4 class="mb-2.5 text-body-s font-bold text-white">정리가 필요한 사진첩</h4>
-          <app-system-folders [isCheckable]="true" (clickFolder)="onCardChecked($event)" />
-        </section>
-      </div>
-    }
-  </div>
-  <!-- <span class="text-white">
-    {{ postFormValue() | json }}
-  </span> -->
-
-  <app-footer [hasButton]="true" class="sticky bottom-0 mt-auto">
-    <app-button button [text]="getButtonText" size="lg" (click)="clickFooterButton()" />
-  </app-footer>
+  <!-- TODO main class와 footer 디자인 공통으로 관리하기 -->
 </div>

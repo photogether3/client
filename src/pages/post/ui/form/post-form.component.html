@@ -1,4 +1,4 @@
-<form [formGroup]="form" class="px-5">
+<form [formGroup]="form" class="px-5 py-10">
   @if (!isEditMode()) {
     <input #fileRef type="file" (change)="upload($event)" class="hidden" />
     <button
@@ -67,3 +67,7 @@
     </div>
   </div>
 </form>
+
+<app-footer [hasButton]="true">
+  <app-button button text="다음으로" rightIcon="arrow-right" [iconSize]="16" [isDisabled]="!isValid()" (click)="onNext()" />
+</app-footer>
