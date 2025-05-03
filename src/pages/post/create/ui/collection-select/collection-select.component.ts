@@ -51,6 +51,7 @@ export class CollectionSelectComponent {
         ...formValue,
         collectionId: collections.find((collection) => collection.type === 'UNCATEGORIZED')?.id ?? 0,
       });
+      this.collections.set(collections);
 
       console.log(this.postFormValue());
     });
