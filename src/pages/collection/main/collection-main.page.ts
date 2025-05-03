@@ -1,5 +1,4 @@
-import { ActionButtonsComponent } from './../../../widgets/action-buttons/action-buttons.component';
-import { Component, ElementRef, inject, OnInit, QueryList, signal, Type, ViewChild, viewChildren, ViewChildren } from '@angular/core';
+import { Component, effect, ElementRef, inject, signal, Type, viewChild, viewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { forkJoin } from 'rxjs';
@@ -9,9 +8,9 @@ import { CollectionApi, CollectionDetailResDTO } from 'src/entities/collection';
 import { PostApi, PostType } from 'src/entities/post';
 import { PostMoveComponent } from 'src/pages/post';
 import { BottomSheetService, ButtonComponent, IconComponent, ModalReactiveService, SearchBarComponent } from 'src/shared/components';
+import { ActionButtonsComponent, ActionButtonType } from 'src/widgets/action-buttons';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
-import { ActionButtonType } from 'src/widgets/action-buttons';
 
 import { PostCardComponent } from '../ui';
 
@@ -20,7 +19,7 @@ import { PostCardComponent } from '../ui';
   templateUrl: './collection-main.page.html',
   imports: [TagComponent, FooterWidget, HeaderWidget, IconComponent, SearchBarComponent, PostCardComponent, ButtonComponent],
 })
-export class CollectionMainPage implements OnInit {
+export class CollectionMainPage {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly collectionApi = inject(CollectionApi);
@@ -29,9 +28,9 @@ export class CollectionMainPage implements OnInit {
   private readonly modalReactiveService = inject(ModalReactiveService);
   private resizeObserver: ResizeObserver | null = null;
 
-  collection: CollectionDetailResDTO | undefined = undefined;
   postList: PostType[] | undefined = undefined;
   isEditMode = signal<boolean>(false);
+  collection = signal<CollectionDetailResDTO | undefined>(undefined);
   selectedPostIds = signal<number[]>([]);
   postCardList = viewChildren<PostCardComponent>('postCard');
 
@@ -43,13 +42,11 @@ export class CollectionMainPage implements OnInit {
   private columnGap = 10;
   private rowGap = 10;
   private collectionId: string | undefined = undefined;
-  @ViewChild('grid') grid!: ElementRef<HTMLElement>;
-  @ViewChildren('item') items!: QueryList<ElementRef<HTMLElement>>;
+  private grid = viewChild.required<ElementRef<HTMLElement>>('grid');
+  private items = viewChildren<ElementRef<HTMLElement>>('item');
   // *---------------- 마손리 레이아아웃 변수 // --------------------
 
-  constructor() {}
-
-  ngOnInit(): void {
+  constructor() {
     this.collectionId = this.route.snapshot.paramMap.get('id') as string;
     if (!this.collectionId) return;
 
@@ -57,14 +54,15 @@ export class CollectionMainPage implements OnInit {
       collection: this.collectionApi.getCollection(this.collectionId),
       postList: this.postApi.getCollection(this.collectionId),
     }).subscribe(({ collection, postList }) => {
-      this.collection = collection;
+      this.collection.set(collection);
       this.postList = postList;
+    });
 
-      this.items.changes.subscribe(() => {
-        if (this.items.length > 0) {
-          this.initializeLayout();
-        }
-      });
+    effect(() => {
+      const currentItems = this.items();
+      if (currentItems.length > 0) {
+        this.initializeLayout();
+      }
     });
   }
 
@@ -177,23 +175,23 @@ export class CollectionMainPage implements OnInit {
       this.positionAllItems();
     });
 
-    this.resizeObserver.observe(this.grid.nativeElement);
+    this.resizeObserver.observe(this.grid().nativeElement);
   }
 
   private positionAllItems() {
-    const gridWidth = this.grid.nativeElement.clientWidth;
+    const gridWidth = this.grid().nativeElement.clientWidth;
     const brickWidth = this.columnWidth + this.columnGap;
     const nCol = Math.max(1, Math.floor(gridWidth / brickWidth));
 
     // container 초기화
-    const container = this.grid.nativeElement.querySelector('.container') as HTMLElement;
+    const container = this.grid().nativeElement.querySelector('.container') as HTMLElement;
     container.style.width = brickWidth * nCol - this.columnGap + 'px';
 
     // 컬럼의 높이 초기화
     const colHeights = Array(nCol).fill(0);
 
     // 각 아이템 포지셔닝
-    this.items.forEach((item) => {
+    this.items().forEach((item) => {
       const brick = item.nativeElement.closest('.brick') as HTMLElement;
 
       // 각 brick의 실제 높이를 정확하게 측정하기 위해 강제 리플로우
@@ -231,7 +229,7 @@ export class CollectionMainPage implements OnInit {
 
   private wrapAllItems() {
     // 기존의 컨테이너 있다면 삭제
-    const existingContainer = this.grid.nativeElement.querySelector('.container');
+    const existingContainer = this.grid().nativeElement.querySelector('.container');
     if (existingContainer) {
       existingContainer.remove();
     }
@@ -244,7 +242,7 @@ export class CollectionMainPage implements OnInit {
       margin: '0 auto',
     });
 
-    this.items.forEach((item) => {
+    this.items().forEach((item) => {
       // 2. wrapper 생성
       const wrapper = document.createElement('div');
       wrapper.classList.add('wrapper');
@@ -263,7 +261,7 @@ export class CollectionMainPage implements OnInit {
       container.appendChild(brick);
     });
 
-    this.grid.nativeElement.appendChild(container);
+    this.grid().nativeElement.appendChild(container);
   }
 
   private setElementStyle(element: HTMLElement, styles: Partial<CSSStyleDeclaration>) {
@@ -276,7 +274,7 @@ export class CollectionMainPage implements OnInit {
   }
 
   private waitForImagesToLoad(): Promise<void[]> {
-    const images = Array.from(this.grid.nativeElement.querySelectorAll('img'));
+    const images = Array.from(this.grid().nativeElement.querySelectorAll('img'));
 
     return Promise.all(
       images.map(

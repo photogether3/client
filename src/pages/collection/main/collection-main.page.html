@@ -1,24 +1,24 @@
-<div class="flex flex-col min-h-screen border-x bg-layer40">
-  <app-header [title]="collection?.title ?? ''">
+<div class="flex min-h-screen flex-col border-x bg-layer40">
+  <app-header [title]="collection()!.title">
     @if (!isEditMode()) {
       <button rightContent (click)="openBottomSheet()" class="flex size-5 items-center justify-center rounded-full border border-primary50 bg-[#182B28] px-1 text-primary20">
         <app-icon name="more" [size]="13" />
       </button>
     } @else {
-      <label rightContent class="flex gap-2 font-bold whitespace-nowrap text-body-s">
+      <label rightContent class="flex gap-2 whitespace-nowrap text-body-s font-bold">
         <input type="checkbox" (change)="selectAll($event)" />
         전체선택
       </label>
     }
   </app-header>
 
-  <main class="flex flex-col flex-1 gap-5 px-5 mt-5">
+  <main class="mt-5 flex flex-1 flex-col gap-5 px-5">
     @if (!isEditMode()) {
       <app-search-bar placeholder="사진첩 검색하기" />
     }
     <div class="flex items-center justify-between">
-      <app-tag [tagName]="collection?.category?.name ?? collection?.title" size="md" [type]="collection?.category?.name ? 'solid' : 'outline'" />
-      <p class="font-bold text-white text-body-s">
+      <app-tag [tagName]="collection()?.category?.name ?? collection()?.title" size="md" [type]="collection()?.category?.name ? 'solid' : 'outline'" />
+      <p class="text-body-s font-bold text-white">
         <span class="text-primary40">{{ postList?.length }}</span>
         개의 게시물
       </p>
@@ -30,7 +30,7 @@
         </div>
       } @empty {
         <p class="text-body-s text-gray40">
-          @if (collection?.title === '휴지통') {
+          @if (collection()?.title === '휴지통') {
             휴지통이 비었습니다.
           } @else {
             등록된 사진이 없습니다.
@@ -46,7 +46,7 @@
     <app-footer [hasButton]="true">
       <div button class="flex items-center justify-between">
         <app-button text="삭제" size="sm" appearance="danger" [isDisabled]="selectedPostIds().length === 0" (click)="postDelete()" />
-        <p class="font-bold text-white text-body-s">
+        <p class="text-body-s font-bold text-white">
           <span class="text-primary60">{{ selectedPostIds().length }}</span>
           개 선택됨
         </p>
