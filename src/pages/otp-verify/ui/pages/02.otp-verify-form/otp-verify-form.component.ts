@@ -1,25 +1,33 @@
-import { Component, effect, inject, input, OnDestroy, output, signal } from '@angular/core';
+import { Component, effect, inject, OnDestroy, output, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { interval, Subscription, take, takeWhile } from 'rxjs';
 
 import { AuthApi, AuthService, ForgotPasswordService, OtpFormType } from 'src/entities/auth';
+import { RegisterStepService } from 'src/pages/register/services';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { OTP_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
+import { FooterWidget } from 'src/widgets/footer';
 
 @Component({
   selector: 'otp-verify-form',
   templateUrl: './otp-verify-form.component.html',
-  imports: [ReactiveFormsModule, ButtonComponent, InputComponent],
+  imports: [ReactiveFormsModule, ButtonComponent, InputComponent, FooterWidget],
+  host: {
+    class: 'flex min-h-screen flex-1 flex-col border-x bg-layer40',
+  },
 })
 export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnDestroy {
-  private authApi = inject(AuthApi);
+  private readonly authApi = inject(AuthApi);
   private readonly forgotPasswordService = inject(ForgotPasswordService);
+  private readonly router = inject(Router);
+  private readonly stepService = inject(RegisterStepService);
 
-  email = input<string>('');
   isFormValid = output<boolean>();
   isVerified = signal<boolean>(false);
+  email = signal<string>('');
   errorMessage = signal<string>('');
   private timeLeft = 300;
   private timerSubscription!: Subscription;
@@ -33,6 +41,10 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
   constructor() {
     super();
 
+    const email = this.stepService.getExtraData('email');
+    console.log(email);
+    this.email.set(email);
+
     this.errorMessages = {
       otp: {
         required: 'otp인증은 필수입니다.',
@@ -43,13 +55,12 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
     };
 
     effect(() => {
-      const email = this.email();
-      if (!email) {
+      if (!this.email()) {
         console.log('이메일이 없습니다.');
       }
 
       this.authApi
-        .generateOtp({ email })
+        .generateOtp({ email: this.email() })
         .pipe(take(1))
         .subscribe({
           next: () => this.startTimer(),
@@ -100,5 +111,9 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
       .subscribe(() => {
         this.timeLeft--;
       });
+  }
+
+  goMainPage() {
+    this.router.navigateByUrl('/main');
   }
 }

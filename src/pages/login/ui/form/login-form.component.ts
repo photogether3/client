@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { catchError } from 'rxjs';
 
 import { AuthApi, AuthService, LoginFormType } from 'src/entities/auth';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
@@ -56,17 +57,29 @@ export class LoginFormComponent extends BaseForm<LoginFormType> {
   onLogin() {
     const loginDTO = this.getRawValue();
 
-    this.authApi.login(loginDTO).subscribe((res) => {
-      if (res) {
-        alert('로그인 성공! ✨');
+    this.authApi
+      .login(loginDTO)
+      .pipe(
+        catchError((error) => {
+          // TODO 백엔드 에러 코드에 따라 에러 메시지 처리
+          console.log('Login error:', error.error.message);
+          if (error.error.message === '이메일 인증을 완료해주세요.') {
+            this.router.navigateByUrl('/otp-verify');
+          }
+          throw error;
+        }),
+      )
+      .subscribe((res) => {
+        if (res) {
+          alert('로그인 성공! ✨');
 
-        const instance = AuthService.getInstance();
-        instance.store(res);
+          const instance = AuthService.getInstance();
+          instance.store(res);
 
-        this.router.navigateByUrl('/home');
-      } else {
-        alert('로그인 실패 😥');
-      }
-    });
+          this.router.navigateByUrl('/home');
+        } else {
+          alert('로그인 실패 😥');
+        }
+      });
   }
 }

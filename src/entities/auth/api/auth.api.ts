@@ -13,7 +13,7 @@ import { GenerateOtpDTO, jwtSourceDTO, loginDTO, PoliciesDTO, RegisterDTO, Verif
   providedIn: 'root',
 })
 export class AuthApi {
-  private http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
 
   // 로그인
   login(loginObj: loginDTO): Observable<jwtSourceDTO> {
