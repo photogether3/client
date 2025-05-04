@@ -30,12 +30,26 @@ export class PostDetailPage {
     this.collectionId = this.router.getCurrentNavigation()?.extras.state?.['collectionId'];
 
     this.postApi.getPost(Number(postId)).subscribe((res) => {
-      this.post = res;
+      if (!res) {
+        throw new Error('게시물을 찾을 수 없습니다.');
+      }
+      this.post = {
+        ...res,
+        metadataList: res.metadataList.filter((meta) => meta.isPublic),
+      };
     });
   }
 
   goPage() {
     this.router.navigateByUrl(`collection/${this.collectionId}`);
+  }
+
+  isLink(content: string): boolean {
+    return /^(https?:\/\/)?(www\.)?[a-z0-9-]+\.[a-z]{2,}([/?].*)?$/i.test(content.trim());
+  }
+
+  getHref(content: string): string {
+    return content.startsWith('http') ? content : `https://${content}`;
   }
 
   async openBottomSheet() {

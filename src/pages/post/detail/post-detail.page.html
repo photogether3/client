@@ -31,9 +31,15 @@
             <span class="font-bold text-white text-body-s">사진 내용</span>
             <ul class="mt-2.5 flex flex-col gap-2.5">
               @for (imgContent of post.metadataList; track $index) {
-                @if (imgContent.isPublic) {
-                  <li class="list-disc list-inside text-detail-l text-gray40">{{ imgContent.content }}</li>
-                }
+                <li class="list-disc list-inside text-detail-l text-gray40">
+                  @if (isLink(imgContent.content)) {
+                    <a [href]="getHref(imgContent.content)" target="_blank" rel="noopener noreferrer" class="underline text-primary40">
+                      {{ imgContent.content }}
+                    </a>
+                  } @else {
+                    {{ imgContent.content }}
+                  }
+                </li>
               }
             </ul>
           </div>
