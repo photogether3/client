@@ -8,6 +8,7 @@ import { CollectionSelectComponent } from './ui/collection-select/collection-sel
   selector: 'post-create-page',
   templateUrl: './post-create.page.html',
   imports: [HeaderWidget],
+  providers: [StepService],
 })
 export class PostCreatePage {
   private readonly stepService = inject(StepService);

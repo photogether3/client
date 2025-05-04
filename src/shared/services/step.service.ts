@@ -1,6 +1,6 @@
 import { computed, Injectable, signal } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class StepService {
   /** -------------------------------------------------------
    * PRIVATE PROPERTIES
