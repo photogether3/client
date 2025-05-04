@@ -1,7 +1,0 @@
-<div class="bg-layer40 flex min-h-screen flex-col border-x">
-  <app-header title="사진첩 생성" />
-  <app-collection-form #collectionCreateForm mode="create" />
-  <app-footer [hasButton]="true">
-    <app-button button text="사진첩 생성하기" [isDisabled]="!collectionCreateForm.isValid()" (click)="createCollection()" />
-  </app-footer>
-</div>

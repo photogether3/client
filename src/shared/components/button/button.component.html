@@ -1,9 +1,0 @@
-<button [class]="computedClass()" [type]="type()" [disabled]="isDisabled()" class="flex items-center gap-1.5 whitespace-nowrap">
-  @if (leftIcon()) {
-    <app-icon [name]="leftIcon()" [size]="iconSize()" />
-  }
-  {{ text() }}
-  @if (rightIcon()) {
-    <app-icon [name]="rightIcon()" [size]="iconSize()" />
-  }
-</button>

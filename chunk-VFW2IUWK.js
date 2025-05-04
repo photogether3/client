@@ -1,0 +1,1 @@
+var e=r=>{let n=new FormData;return console.log(n),Object.keys(r).forEach(a=>{let o=r[a];console.log(a,o),o instanceof File?n.append(a,o):Array.isArray(o)?n.append(a,JSON.stringify(o)):n.append(a,o)}),console.log("\u{1F4CC} FormData \uCD9C\uB825:"),n.forEach((a,o)=>{console.log(`${o}:`,a)}),n};export{e as a};
