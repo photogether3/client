@@ -89,9 +89,9 @@ export class ProfilePage {
         });
       case 'logout':
         return this.onLogout();
+      default:
+        return;
     }
-
-    this.bottomSheetService.open(ActionButtonsComponent as Type<Component>);
   }
 
   updatePassword() {

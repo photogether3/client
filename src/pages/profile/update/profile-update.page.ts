@@ -50,6 +50,9 @@ export class ProfileUpdatePage {
   async updateCategory() {
     const result = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, this.categories.value);
 
+    if (!result) {
+      return;
+    }
     this.categories.clear();
     result.forEach((c: CategoriesGetDTO) => this.categories.push(new FormControl(c, { nonNullable: true })));
   }

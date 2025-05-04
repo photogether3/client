@@ -92,13 +92,11 @@ export class PostDetailPage {
         };
 
         const result = await this.modalReactiveService.open(modalData);
-        if (result !== '삭제') {
+        if (result !== '삭제' || !this.post?.id) {
           return;
         }
-        if (!this.post?.id) {
-          return;
-        }
-        this.postApi.deletePost([this.post?.id]).subscribe({
+
+        return this.postApi.deletePost([this.post?.id]).subscribe({
           next: () => {
             const modalData = {
               title: '게시물 삭제 완료',
@@ -112,6 +110,8 @@ export class PostDetailPage {
             });
           },
         });
+      default:
+        return;
     }
   }
 }

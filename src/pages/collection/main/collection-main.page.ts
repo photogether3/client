@@ -162,6 +162,8 @@ export class CollectionMainPage {
         return this.isEditMode.set(true);
       case 'delete':
         return this.postDelete();
+      default:
+        return;
     }
   }
 
