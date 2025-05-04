@@ -103,8 +103,7 @@ export class ProfilePage {
     alert('기능 개발중 ..');
   }
 
-  // TODO 회원탈퇴
   withdraw() {
-    alert('기능 개발중 ...');
+    this.router.navigateByUrl('withdraw');
   }
 }

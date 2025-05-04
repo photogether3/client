@@ -61,7 +61,7 @@ export class LoginFormComponent extends BaseForm<LoginFormType> {
       .login(loginDTO)
       .pipe(
         catchError((error) => {
-          if (error.error.errorCode === 'EMAIL_NOT_VERIFIED') {
+          if (error.error.code === 'EMAIL_NOT_VERIFIED') {
             this.router.navigateByUrl('/otp-verify');
           }
           throw error;
