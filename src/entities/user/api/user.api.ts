@@ -45,6 +45,11 @@ export class UserApi {
     return this.http.patch<ProfileGetDTO>(`${environment.serverUrl}/v1/users/password`, recoverPasswordDTO);
   }
 
+  // 기록 초기화
+  reset(resetDTO: WithDrawDTO) {
+    return this.http.delete(`${environment.serverUrl}/v1/users/me/reset`, { body: resetDTO });
+  }
+
   // 회원탈퇴
   withdraw(withDrawDTO: WithDrawDTO) {
     return this.http.delete(`${environment.serverUrl}/v1/users/me/withdraw`, { body: withDrawDTO });
