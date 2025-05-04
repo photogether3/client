@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { IconComponent } from 'src/shared/components';
 
@@ -16,7 +16,7 @@ export type PopoverItemType = {
   imports: [CommonModule, IconComponent],
 })
 export class PopoverComponent {
-  items = input<PopoverItemType[]>([]);
+  @Input() items: PopoverItemType[] = [];
 
   constructor() {}
 }

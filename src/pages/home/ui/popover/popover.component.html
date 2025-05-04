@@ -1,7 +1,7 @@
 <!-- TODO 구분선 추가해야 함 -->
-<ul class="text-detail-l whitespace-nowrap rounded-[12px] bg-[#2A2C3499]/60 px-3 py-2 ring-2 ring-primary50">
-  @for (item of items(); track $index) {
-    <li [ngClass]="item.color">
+<ul class="whitespace-nowrap rounded-[12px] bg-[#2A2C3499]/60 px-3 py-2 text-detail-l ring-2 ring-primary50 backdrop-blur-[45px]">
+  @for (item of items; track $index) {
+    <li [ngClass]="item.color" class="py-1 border-b border-b-white/20 first:pb-1 last:border-b-0 last:pt-1">
       <button (click)="item.action()" class="flex items-center gap-1">
         <app-icon [name]="item.icon" [size]="12" />
         <span>{{ item.label }}</span>
