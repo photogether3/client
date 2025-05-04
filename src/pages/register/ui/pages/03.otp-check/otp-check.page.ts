@@ -5,6 +5,7 @@ import { HeaderWidget } from 'src/widgets/header';
 import { OtpVerifyFormComponent } from 'src/pages/otp-verify';
 import { FooterWidget } from 'src/widgets/footer';
 import { StepService } from 'src/shared/services';
+import { AuthApi, AuthService } from 'src/entities/auth';
 
 @Component({
   selector: 'otp-check-page',
@@ -17,19 +18,21 @@ export class OtpCheckPage {
    * -------------------------------------------------------*/
 
   private readonly stepService = inject(StepService);
+  private readonly authApi = inject(AuthApi);
 
   /** -------------------------------------------------------
    * PUBLIC PROPERTIES
    * -------------------------------------------------------*/
 
   readonly isValid = signal<boolean>(true);
+  readonly email = signal<string>('');
+  readonly otp = signal<string>('');
   readonly totalSteps = this.stepService.totalSteps;
   readonly currentStep = this.stepService.currentStep;
 
   constructor() {
-    // 확인용으로 콘솔찍음
     const email = this.stepService.getExtraData('email');
-    console.log(email);
+    this.email.set(email);
   }
 
   /** -------------------------------------------------------
@@ -37,6 +40,18 @@ export class OtpCheckPage {
    * -------------------------------------------------------*/
 
   onNext() {
-    this.stepService.nextStep();
+    const formValue = {
+      email: this.email(),
+      otp: this.otp(),
+    };
+
+    this.authApi.verifyOtpWithJwt(formValue).subscribe({
+      next: (res) => {
+        const instance = AuthService.getInstance();
+        instance.store(res);
+        console.log('토큰 저장 완료?', res);
+        this.stepService.nextStep();
+      },
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnDestroy, output, signal } from '@angular/core';
+import { Component, effect, inject, input, OnDestroy, output, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -16,16 +16,18 @@ import { FooterWidget } from 'src/widgets/footer';
   templateUrl: './otp-verify-form.component.html',
   imports: [ReactiveFormsModule, ButtonComponent, InputComponent, FooterWidget],
   host: {
-    class: 'flex min-h-screen flex-1 flex-col border-x bg-layer40',
+    class: 'flex min-h-screen flex-1 flex-col',
   },
 })
 export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnDestroy {
   private readonly authApi = inject(AuthApi);
-  private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly router = inject(Router);
+  private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly stepService = inject(StepService);
 
-  isFormValid = output<boolean>();
+  page = input<string>('');
+  emailInput = input<string>('');
+  otp = output<string>();
   isVerified = signal<boolean>(false);
   email = signal<string>('');
   private timeLeft = 300;
@@ -42,6 +44,7 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
 
     const email = this.stepService.getExtraData('email');
     this.email.set(email);
+    console.log('이메일:', this.email() || this.emailInput());
 
     this.errorMessages = {
       otp: {
@@ -52,18 +55,21 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
       },
     };
 
-    effect(() => {
-      if (!this.email()) {
-        console.log('이메일이 없습니다.');
-      }
+    effect(
+      () => {
+        const email = this.email() || this.emailInput();
 
-      this.authApi
-        .generateOtp({ email: this.email() })
-        .pipe(take(1))
-        .subscribe({
-          next: () => this.startTimer(),
-        });
-    });
+        if (email) {
+          this.authApi
+            .generateOtp({ email })
+            .pipe(take(1))
+            .subscribe({
+              next: () => this.startTimer(),
+            });
+        }
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   protected override initForm(): void {
@@ -78,7 +84,7 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
     const otp = this.getRawValue().otp;
 
     const formValue = {
-      email: this.email(),
+      email: this.email() || this.emailInput(),
       otp: otp,
     };
 
@@ -93,6 +99,7 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
           };
           this.modalReactiveService.open(modalData).then(() => {
             this.isVerified.set(true);
+            this.otp.emit(otp);
           });
         }
       },
@@ -114,6 +121,7 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
       });
   }
 
+  // TODO 버튼 페이지에서 넘어가는 로직 리펙토링
   onNext() {
     const otp = this.getRawValue().otp;
     const formValue = {
@@ -125,6 +133,7 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
       next: (res) => {
         const instance = AuthService.getInstance();
         instance.store(res);
+        console.log('토큰 저장 완료?', res);
 
         const router = this.stepService.getExtraData('page');
 
