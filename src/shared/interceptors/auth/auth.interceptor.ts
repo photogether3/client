@@ -2,7 +2,7 @@ import { HttpContext, HttpContextToken, HttpInterceptorFn } from '@angular/commo
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { EMPTY, lastValueFrom, Observable, tap } from 'rxjs';
+import { catchError, EMPTY, lastValueFrom, Observable, tap } from 'rxjs';
 
 import { AuthApi, AuthService } from 'src/entities/auth';
 
@@ -93,9 +93,18 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       Authorization: `Bearer ${accessToken}`,
     },
   });
-  return next(cloneReq);
 
-  // TODO 서버에서 커스텀 에러 줄 때에 대한 처리 필요
+  return next(cloneReq).pipe(
+    catchError((err) => {
+      if (err.error.errorCode === 401) {
+        alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+        router.navigateByUrl('/login');
+        return EMPTY;
+      }
+
+      throw err;
+    }),
+  );
 };
 
 // 토큰 만료 확인 함수
