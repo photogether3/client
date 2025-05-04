@@ -98,9 +98,8 @@ export class ProfilePage {
     this.router.navigateByUrl('password-update');
   }
 
-  // TODO 기록초기화
   reset() {
-    alert('기능 개발중 ..');
+    this.router.navigateByUrl('reset');
   }
 
   withdraw() {

@@ -24,7 +24,6 @@ export abstract class BaseForm<T> {
     return this.form.getRawValue() as unknown as T;
   }
 
-  // TODO input 컴포넌트에서 에러 메시지 처리
   getErrorMessage(controlName: keyof T): string | null {
     const control = this.form.get(controlName as string);
 

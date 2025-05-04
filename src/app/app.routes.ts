@@ -24,6 +24,10 @@ export const routes: Routes = [
     loadComponent: () => import('../pages/withdraw').then((m) => m.WithdrawPage),
   },
   {
+    path: 'reset',
+    loadComponent: () => import('../pages/reset').then((m) => m.ResetPage),
+  },
+  {
     path: 'forgot-password',
     loadComponent: () => import('../pages/forgot-password').then((m) => m.ForgotPasswordPage),
   },

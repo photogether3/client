@@ -43,7 +43,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const refreshToken = instance.getRefreshToken();
 
   if (!refreshToken) {
-    alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+    alert('세션이 만료되었습니다. 다시 로그인해주세요. (리프레쉬토큰 없음)');
     router.navigateByUrl('/login');
     return EMPTY;
   }
@@ -97,7 +97,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(cloneReq).pipe(
     catchError((err) => {
       if (err.error.errorCode === 401) {
-        alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+        alert('(401 ERROR) 세션이 만료되었습니다. 다시 로그인해주세요.');
         router.navigateByUrl('/login');
         return EMPTY;
       }
