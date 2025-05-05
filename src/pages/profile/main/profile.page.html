@@ -1,6 +1,6 @@
 <div class="flex flex-col min-h-screen border-x bg-layer40">
   @if (profile) {
-    <app-header title="내 정보">
+    <app-header title="내 정보" [hasBackButton]="false">
       <button rightContent (click)="openBottomSheet()" class="flex size-5 items-center justify-center rounded-full border border-primary50 bg-[#182B28] px-1 text-primary20">
         <app-icon name="more" [size]="13" />
       </button>

@@ -3,13 +3,13 @@
     <input #fileRef type="file" (change)="upload($event)" class="hidden" />
     <button
       (click)="fileRef.click()"
-      class="mx-auto mb-10 flex h-[480px] w-[270px] items-center justify-center rounded-[12px] border-2 border-primary50 bg-[#182B28] shadow-custom">
+      class="mx-auto mb-10 flex h-[480px] w-[270px] items-center justify-center overflow-hidden rounded-[12px] border-2 border-primary50 bg-[#182B28] shadow-custom">
       @if (previewUrl) {
-        <img [src]="previewUrl" alt="임시 이미지" class="h-full w-full overflow-hidden rounded-[12px] shadow-custom" />
+        <img [src]="previewUrl" alt="임시 이미지" class="w-full h-full" />
       } @else {
         <div class="flex flex-col items-center gap-5">
           <app-icon name="plus" [size]="30" class="text-primary20" />
-          <div class="h-full w-full text-body-s text-primary20">사진을 선택해주세요.</div>
+          <div class="w-full h-full text-body-s text-primary20">사진을 선택해주세요.</div>
         </div>
       }
     </button>
@@ -21,10 +21,10 @@
     placeholder="게시물 내용을 입력해주세요."
     info="게시물에 대한 간단한 메모를 남겨주세요."
     formControlName="content"
-    class="mt-5 block" />
+    class="block mt-5" />
 
   <div formArrayName="metadataStringify" class="mt-5">
-    <p class="mb-2 text-body-s text-white">사진내용</p>
+    <p class="mb-2 text-white text-body-s">사진내용</p>
     <!-- TODO 테두리 변경 -->
     <div class="min-w-full rounded-[12px] border border-gray70">
       <div class="flex rounded-t-[12px] bg-[#182B28] text-detail-m font-bold text-primary20">
@@ -42,7 +42,7 @@
             } @else {
               <app-icon name="text" [size]="16" />
             }
-            <app-input size="xs" [placeholder]="last ? '추가하실 텍스트를 입력해주세요' : ''" formControlName="content" class="block flex-1" />
+            <app-input size="xs" [placeholder]="last ? '추가하실 텍스트를 입력해주세요' : ''" formControlName="content" class="flex-1 block" />
             @if (!last) {
               <button (click)="deleteText($index)">
                 <app-icon name="delete" [size]="16" />
