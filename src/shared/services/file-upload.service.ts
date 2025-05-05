@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Capacitor } from '@capacitor/core';
 
 export interface FileResult {
   file: File | null;
@@ -17,12 +18,51 @@ export class FileUploadService {
   constructor(private platform: Platform) {}
 
   /**
+   * 갤러리 접근 권한 확인
+   */
+  private async checkCameraPermission(): Promise<boolean> {
+    if (!Capacitor.isNativePlatform()) {
+      return true; // 웹에서는 권한이 필요 없음
+    }
+
+    try {
+      // 카메라 권한 확인
+      const permissionStatus = await Camera.checkPermissions();
+      
+      if (permissionStatus.photos === 'granted') {
+        return true;
+      } else if (permissionStatus.photos === 'prompt') {
+        // 권한 요청
+        const requestResult = await Camera.requestPermissions({
+          permissions: ['photos']
+        });
+        return requestResult.photos === 'granted';
+      } else if (permissionStatus.photos === 'denied') {
+        alert('갤러리 접근 권한이 필요합니다. 설정에서 권한을 허용해주세요.');
+        return false;
+      }
+      
+      return false;
+    } catch (e) {
+      console.error('권한 확인 중 오류 발생:', e);
+      return false;
+    }
+  }
+
+  /**
    * 플랫폼에 맞는 파일 선택 방법 제공
    * 웹: 파일 선택 다이얼로그
    * 모바일: 갤러리 접근
    */
   public async selectFile(): Promise<FileResult | null> {
     if (this.platform.ANDROID || this.platform.IOS) {
+      // 권한 확인 먼저 수행
+      const hasPermission = await this.checkCameraPermission();
+      if (!hasPermission) {
+        console.log('갤러리 접근 권한이 없습니다.');
+        return null;
+      }
+      
       return this.selectFileFromMobile();
     } else {
       return this.selectFileFromWeb();
@@ -75,7 +115,7 @@ export class FileUploadService {
         quality: 90,
         allowEditing: false,
         resultType: CameraResultType.Uri,
-        source: CameraSource.Photos,
+        source: CameraSource.Photos, // 갤러리만 사용
       });
 
       if (!image || !image.webPath) {
