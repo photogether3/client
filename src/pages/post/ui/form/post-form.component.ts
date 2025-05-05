@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, input, model } from '@angular/core';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { catchError, EMPTY } from 'rxjs';
 
 import { ImageApi } from 'src/entities/image';
 import { ImgContentType, PostCreateFormType } from 'src/entities/post';
@@ -63,12 +64,22 @@ export class PostFormComponent extends BaseForm<PostCreateFormType> {
 
   // 파일 처리 로직을 별도 메서드로 분리
   private processSelectedFile(file: File) {
-    this.imageApi.extractImgText({ file }).subscribe((textArray) => {
-      const { lines } = textArray;
+    this.imageApi
+      .extractImgText({ file })
+      .pipe(
+        catchError((error) => {
+          if (error.error.code === 'TEXT_EXTRACTION_NULL') {
+            this.addMetadata();
+          }
+          return EMPTY;
+        }),
+      )
+      .subscribe((textArray) => {
+        const { lines } = textArray;
 
-      lines.forEach((content: string) => this.addMetadata(content, true, false));
-      this.addMetadata();
-    });
+        lines.forEach((content: string) => this.addMetadata(content, true, false));
+        this.addMetadata();
+      });
   }
 
   // 기존 메서드는 유지하되 내부 로직을 변경
@@ -123,7 +134,7 @@ export class PostFormComponent extends BaseForm<PostCreateFormType> {
     this.metadataArray.push(metadataGroup);
   }
 
-  onNext() {
+  onCreate() {
     const raw = this.form.getRawValue();
     const filteredMetadata = this.form.getRawValue().metadataStringify.filter((item) => item.content?.trim() !== '');
 

@@ -6,7 +6,6 @@ import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 import { StepService } from 'src/shared/services';
-
 import { PostFormComponent } from '../ui';
 
 @Component({
@@ -42,6 +41,7 @@ export class PostUpdatePage {
       });
 
       res?.metadataList.forEach((metadata: any) => this.postForm().addMetadata(metadata.content, metadata.isPublic));
+      this.postForm().addMetadata();
       this.previewUrl = res?.imageUrl;
     });
   }
