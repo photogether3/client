@@ -54,6 +54,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
     if (!isRefreshing) {
       isRefreshing = true;
+      const refreshToken = instance.getRefreshToken() as string;
 
       lastValueFrom(authApi.refresh(refreshToken))
         .then(async (newToken) => {
