@@ -1,7 +1,7 @@
-<div class="flex min-h-screen flex-col border-x bg-layer40">
+<div class="flex flex-col min-h-screen border-x bg-layer40">
   <app-header title="신규 회원가입">
     <div rightContent class="flex items-center gap-2 text-white">
-      <span class="whitespace-nowrap text-body-m font-bold">정보입력</span>
+      <span class="font-bold whitespace-nowrap text-body-m">정보입력</span>
       <p class="flex text-body-m">
         <span class="text-primary60">{{ currentStep() }}</span
         >/<span>{{ totalSteps() }}</span>
@@ -26,10 +26,10 @@
           [hasError]="!!getErrorMessage('email')"
           placeholder="이메일을 입력해주세요." />
         @if (form.get('email')?.pending) {
-          <span class="mt-2 block text-white">로딩중 ..</span>
+          <span class="block mt-2 text-white">로딩중 ..</span>
         }
         @if (getErrorMessage('email')) {
-          <p class="text-detail mt-2 text-accent60">{{ getErrorMessage('email') }}</p>
+          <p class="mt-2 text-detail text-accent40">{{ getErrorMessage('email') }}</p>
         }
       </div>
       <div>
@@ -42,7 +42,7 @@
           [hasError]="!!getErrorMessage('password')"
           placeholder="비밀번호" />
         @if (getErrorMessage('password')) {
-          <p class="text-detail mt-2 text-accent60">{{ getErrorMessage('password') }}</p>
+          <p class="mt-2 text-detail text-accent40">{{ getErrorMessage('password') }}</p>
         }
       </div>
       <div>
@@ -55,7 +55,7 @@
           [hasError]="!!getErrorMessage('confirmPassword')"
           placeholder="비밀번호 확인" />
         @if (getErrorMessage('confirmPassword')) {
-          <p class="text-detail mt-2 text-accent60">{{ getErrorMessage('confirmPassword') }}</p>
+          <p class="mt-2 text-detail text-accent40">{{ getErrorMessage('confirmPassword') }}</p>
         }
       </div>
     </form>
