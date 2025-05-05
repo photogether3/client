@@ -1,0 +1,1 @@
+import{a}from"./chunk-4W7QMXG6.js";import"./chunk-XULJXHUF.js";import"./chunk-QO4O6M6N.js";import"./chunk-J2R7T3FX.js";import"./chunk-YY6RTYIR.js";import"./chunk-N2TFPFK4.js";import"./chunk-AYFBD63E.js";import"./chunk-LPDY3MY7.js";import"./chunk-KILQ3OA4.js";import"./chunk-CAIK5YDJ.js";import"./chunk-NJRJFF3H.js";import"./chunk-PMODK4HE.js";export{a as CollectionUpdatePage};
