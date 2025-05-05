@@ -1,7 +1,7 @@
 <form [formGroup]="form" class="flex flex-col gap-5">
   <div class="relative mx-auto w-fit">
     <img [src]="previewUrl" alt="사용자 프로필 이미지" class="mx-auto block size-[100px] rounded-full bg-white ring-2 ring-primary50" />
-    <button (click)="fileInput.click()" class="absolute top-0 right-0 flex items-center justify-center text-white rounded-full size-8 bg-primary50 ring-1 ring-white">
+    <button type="button" (click)="selectProfileImage()" class="absolute top-0 right-0 flex items-center justify-center text-white rounded-full size-8 bg-primary50 ring-1 ring-white">
       <app-icon name="plus" />
     </button>
     <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event)" hidden />
