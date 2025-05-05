@@ -6,7 +6,7 @@ import { ImageApi } from 'src/entities/image';
 import { ImgContentType, PostCreateFormType } from 'src/entities/post';
 import { ButtonComponent, IconComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
 import { BaseForm, FormControls } from 'src/shared/lib';
-import { StepService } from 'src/shared/services';
+import { FileUploadService, StepService } from 'src/shared/services';
 import { FooterWidget } from 'src/widgets/footer';
 
 @Component({
@@ -21,6 +21,7 @@ export class PostFormComponent extends BaseForm<PostCreateFormType> {
   private readonly imageApi = inject(ImageApi);
   private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly stepService = inject(StepService);
+  private readonly fileUploadService = inject(FileUploadService);
 
   previewUrl: string | ArrayBuffer | null | undefined = null;
   formValue = model<PostCreateFormType>();
@@ -44,6 +45,33 @@ export class PostFormComponent extends BaseForm<PostCreateFormType> {
     });
   }
 
+  // 새로운 메서드: 파일 선택 핸들러
+  async selectFile() {
+    const result = await this.fileUploadService.selectFile();
+    
+    if (!result) {
+      return;
+    }
+    
+    this.form.patchValue({ file: result.file });
+    this.previewUrl = result.dataUrl;
+    
+    if (result.file) {
+      this.processSelectedFile(result.file);
+    }
+  }
+
+  // 파일 처리 로직을 별도 메서드로 분리
+  private processSelectedFile(file: File) {
+    this.imageApi.extractImgText({ file }).subscribe((textArray) => {
+      const { lines } = textArray;
+      
+      lines.forEach((content: string) => this.addMetadata(content, true, false));
+      this.addMetadata();
+    });
+  }
+
+  // 기존 메서드는 유지하되 내부 로직을 변경
   upload(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -60,13 +88,7 @@ export class PostFormComponent extends BaseForm<PostCreateFormType> {
     };
 
     reader.readAsDataURL(file);
-
-    this.imageApi.extractImgText({ file }).subscribe((textArray) => {
-      const { lines } = textArray;
-
-      lines.forEach((content: string) => this.addMetadata(content, true, false));
-      this.addMetadata();
-    });
+    this.processSelectedFile(file);
   }
 
   deleteText(index: number) {

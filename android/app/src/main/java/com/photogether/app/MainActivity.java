@@ -1,4 +1,4 @@
-package com.example.app;
+package com.photogether.app;
 
 import com.getcapacitor.BridgeActivity;
 

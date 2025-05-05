@@ -29,15 +29,15 @@ export class PasswordUpdatePage extends BaseForm<PasswordUpdateType> {
     this.errorMessages = {
       currentPassword: {
         required: '기존 비밀번호는 필수입니다.',
-        pattern: '8~15자이며, 숫자, 영문자, 특수문자를 포함해야 합니다.',
+        pattern: '비밀번호는 8~15자이며, 숫자, 영문자, 특수문자를 포함해야 합니다.',
       },
       password: {
         required: '새 비밀번호는 필수입니다.',
-        pattern: '8~15자이며, 숫자, 영문자, 특수문자를 포함해야 합니다.',
+        pattern: '비밀번호는 8~15자이며, 숫자, 영문자, 특수문자를 포함해야 합니다.',
       },
       confirmPassword: {
         required: '새 비밀번호 확인은 필수입니다.',
-        pattern: '8~15자이며, 숫자, 영문자, 특수문자를 포함해야 합니다.',
+        pattern: '비밀번호는 8~15자이며, 숫자, 영문자, 특수문자를 포함해야 합니다.',
         fieldMismatch: '비밀번호가 일치하지 않습니다.',
       },
     };

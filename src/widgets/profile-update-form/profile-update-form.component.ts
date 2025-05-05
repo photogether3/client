@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { ProfileFormType } from 'src/entities/user/model/user.type';
 import { IconComponent, InputComponent } from 'src/shared/components';
 import { BaseForm, FormControls } from 'src/shared/lib';
+import { FileUploadService } from 'src/shared/services';
 
 @Component({
   selector: 'app-profile-update-form',
@@ -11,6 +12,8 @@ import { BaseForm, FormControls } from 'src/shared/lib';
   imports: [IconComponent, InputComponent, ReactiveFormsModule],
 })
 export class ProfileUpdateForm extends BaseForm<ProfileFormType> {
+  private readonly fileUploadService = inject(FileUploadService);
+
   get previewUrl() {
     return this.form.get('previewUrl')?.value;
   }
@@ -29,6 +32,7 @@ export class ProfileUpdateForm extends BaseForm<ProfileFormType> {
     });
   }
 
+  // 기존 메서드는 웹 환경에서만 사용
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
 
@@ -45,6 +49,18 @@ export class ProfileUpdateForm extends BaseForm<ProfileFormType> {
       };
 
       reader.readAsDataURL(file);
+    }
+  }
+
+  // 새로운 메서드: FileUploadService를 사용한 파일 선택
+  async selectProfileImage() {
+    const result = await this.fileUploadService.selectFile();
+
+    if (result) {
+      this.form.patchValue({
+        file: result.file,
+        previewUrl: result.dataUrl,
+      });
     }
   }
 }

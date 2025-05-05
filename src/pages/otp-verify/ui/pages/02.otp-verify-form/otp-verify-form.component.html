@@ -21,7 +21,7 @@
         <app-button text="확인" appearance="secondary" [isDisabled]="!isValid()" (click)="onVerify()" class="w-24" />
       </div>
       @if (getErrorMessage('otp')) {
-        <p class="mt-2 text-detail-l text-accent40">{{ getErrorMessage('otp') }}</p>
+        <p class="mt-2 text-detail-l text-accent50">{{ getErrorMessage('otp') }}</p>
       }
     </div>
     <span class="text-white text-body-s">
