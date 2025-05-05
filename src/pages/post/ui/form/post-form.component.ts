@@ -15,7 +15,7 @@ import { FooterWidget } from 'src/widgets/footer';
   templateUrl: './post-form.component.html',
   imports: [ReactiveFormsModule, InputComponent, IconComponent, CommonModule, FooterWidget, ButtonComponent],
   host: {
-    class: 'flex min-h-full flex-1 flex-col border-x bg-layer40',
+    class: 'flex min-h-full flex-1 flex-col bg-layer40',
   },
 })
 export class PostFormComponent extends BaseForm<PostCreateFormType> {

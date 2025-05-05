@@ -1,4 +1,4 @@
-<div class="flex flex-col min-h-screen border-x bg-layer40">
+<div class="flex min-h-screen flex-col bg-layer40">
   @if (profile) {
     <app-header title="내 정보" [hasBackButton]="false">
       <button rightContent (click)="openBottomSheet()" class="flex size-5 items-center justify-center rounded-full border border-primary50 bg-[#182B28] px-1 text-primary20">
@@ -12,15 +12,15 @@
         <img [src]="profile.imageUrl || 'assets/images/default-image.webp'" alt="프로필 이미지" class="mx-auto block size-[100px] rounded-full border-2 border-primary50" />
         <div class="mt-2.5">
           <span class="block text-center text-detail-l text-gray40">닉네임</span>
-          <span class="block font-bold text-center text-white text-body-m">&#64;{{ profile.nickname }}</span>
+          <span class="block text-center text-body-m font-bold text-white">&#64;{{ profile.nickname }}</span>
         </div>
       </div>
       <p class="py-5 text-body-s text-gray40">
-        <span class="mr-2 font-bold text-white text-body-s">이메일</span>
+        <span class="mr-2 text-body-s font-bold text-white">이메일</span>
         {{ profile.email }}
       </p>
       <div class="py-5">
-        <span class="font-bold text-white text-body-s">자기소개</span>
+        <span class="text-body-s font-bold text-white">자기소개</span>
         <p class="mt-1 text-body-s text-gray40">
           {{ profile.bio }}
         </p>

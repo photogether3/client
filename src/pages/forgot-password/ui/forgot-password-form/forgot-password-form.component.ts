@@ -14,7 +14,7 @@ import { FooterWidget } from 'src/widgets/footer';
   templateUrl: './forgot-password-form.component.html',
   imports: [ReactiveFormsModule, InputComponent, FooterWidget, ButtonComponent],
   host: {
-    class: 'flex min-h-screen flex-1 flex-col border-x bg-layer40',
+    class: 'flex min-h-screen flex-1 flex-col bg-layer40',
   },
 })
 export class PasswordForgotFormComponent extends BaseForm<PasswordForgotType> {
