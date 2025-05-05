@@ -5,6 +5,7 @@ import { PostApi } from 'src/entities/post';
 import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
+import { StepService } from 'src/shared/services';
 
 import { PostFormComponent } from '../ui';
 
@@ -12,6 +13,7 @@ import { PostFormComponent } from '../ui';
   selector: 'post-update-page',
   templateUrl: './post-update.page.html',
   imports: [ButtonComponent, FooterWidget, HeaderWidget, PostFormComponent],
+  providers: [StepService],
 })
 export class PostUpdatePage {
   private readonly router = inject(Router);
@@ -49,7 +51,7 @@ export class PostUpdatePage {
     const updateDTO = {
       ...dto,
       postId: this.postId,
-      metadataStringify: dto.metadataStringify.filter((metadata: any) => metadata.content.trim() !== ''),
+      metadataList: dto.metadataStringify.filter((metadata: any) => metadata.content.trim() !== ''),
     };
 
     if (!this.postId) return;

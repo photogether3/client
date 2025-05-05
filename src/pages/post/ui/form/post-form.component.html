@@ -1,7 +1,9 @@
 <form [formGroup]="form" class="px-5 py-10">
   @if (!isEditMode()) {
     <input #fileRef type="file" (change)="upload($event)" class="hidden" />
-    <button (click)="selectFile()" class="mx-auto mb-10 flex h-[480px] w-[270px] items-center justify-center rounded-[12px] border-2 border-primary50 bg-[#182B28] shadow-custom">
+    <button
+      (click)="selectFile()"
+      class="mx-auto mb-10 flex h-[480px] w-[270px] items-center justify-center overflow-hidden rounded-[12px] border-2 border-primary50 bg-[#182B28] shadow-custom">
       @if (previewUrl) {
         <img [src]="previewUrl" alt="임시 이미지" class="h-full w-full" />
       } @else {

@@ -14,7 +14,7 @@ import { FooterWidget } from 'src/widgets/footer';
   templateUrl: './post-form.component.html',
   imports: [ReactiveFormsModule, InputComponent, IconComponent, CommonModule, FooterWidget, ButtonComponent],
   host: {
-    class: 'flex min-h-screen flex-1 flex-col border-x bg-layer40',
+    class: 'flex min-h-full flex-1 flex-col border-x bg-layer40',
   },
 })
 export class PostFormComponent extends BaseForm<PostCreateFormType> {
@@ -48,14 +48,14 @@ export class PostFormComponent extends BaseForm<PostCreateFormType> {
   // 새로운 메서드: 파일 선택 핸들러
   async selectFile() {
     const result = await this.fileUploadService.selectFile();
-    
+
     if (!result) {
       return;
     }
-    
+
     this.form.patchValue({ file: result.file });
     this.previewUrl = result.dataUrl;
-    
+
     if (result.file) {
       this.processSelectedFile(result.file);
     }
@@ -65,7 +65,7 @@ export class PostFormComponent extends BaseForm<PostCreateFormType> {
   private processSelectedFile(file: File) {
     this.imageApi.extractImgText({ file }).subscribe((textArray) => {
       const { lines } = textArray;
-      
+
       lines.forEach((content: string) => this.addMetadata(content, true, false));
       this.addMetadata();
     });
