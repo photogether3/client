@@ -13,7 +13,14 @@
     <div class="relative flex items-center gap-2">
       <span class="text-detail-l text-gray40">{{ collection().postCount }}개 사진</span>
       @if (!isCheckable()) {
-        <button #popoverBtn (click)="togglePopover($event)" class="flex items-center justify-center rounded-full size-5" [ngClass]="isPopoverOpen() ? 'bg-primary50' : ''">
+        <button
+          appPopover
+          #popoverBtn
+          [button]="popoverBtn"
+          [popoverItems]="popoverItems"
+          [(isPopoverOpen)]="isPopoverOpen"
+          class="flex items-center justify-center rounded-full size-5"
+          [ngClass]="isPopoverOpen() ? 'bg-primary50' : ''">
           <app-icon name="kebab" [size]="20" class="text-white" />
         </button>
       } @else {

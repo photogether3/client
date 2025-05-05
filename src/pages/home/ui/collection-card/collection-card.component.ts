@@ -1,36 +1,33 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, inject, input, OnInit, output, signal, viewChild } from '@angular/core';
+import { Component, computed, ElementRef, inject, input, OnInit, output, signal, viewChild, ViewContainerRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
 
 import { TagComponent } from 'src/entities/category';
 import { CollectionApi, CollectionType } from 'src/entities/collection';
 import { IconComponent, ModalReactiveService } from 'src/shared/components';
+import { PopoverDirective } from 'src/shared/directives/popover.directive';
 
-import { PopoverComponent, PopoverItemType } from '../popover';
+import { PopoverItemType } from '../popover';
 
 @Component({
   selector: 'app-collection-card',
   templateUrl: './collection-card.component.html',
-  imports: [CommonModule, TagComponent, IconComponent],
+  imports: [CommonModule, TagComponent, IconComponent, PopoverDirective],
 })
 export class CollectionCardComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly collectionApi = inject(CollectionApi);
-  private readonly overlay = inject(Overlay);
 
   collection = input.required<CollectionType>();
   isCheckable = input<boolean>(false);
   isChecked = input<boolean>(false);
   clickEvent = output<number>();
 
-  popoverBtn = viewChild<ElementRef<HTMLElement>>('popoverBtn');
+  popoverBtn = viewChild.required<ElementRef<HTMLElement>>('popoverBtn');
 
   isPopoverOpen = signal<boolean>(false);
   imageLoadStatus = signal<boolean[]>([]);
-  private overlayRef = signal<OverlayRef | null>(null);
 
   allImagesLoaded = computed(() => this.imageLoadStatus().every(Boolean));
 
@@ -131,56 +128,7 @@ export class CollectionCardComponent implements OnInit {
     }
   }
 
-  togglePopover(event: MouseEvent) {
-    event.stopPropagation();
-
-    if (this.overlayRef()) {
-      this.closePopover();
-    } else {
-      this.openPopover();
-    }
-  }
-
-  private openPopover() {
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(this.popoverBtn()!.nativeElement)
-      .withPositions([
-        {
-          originX: 'end',
-          originY: 'bottom',
-          overlayX: 'end',
-          overlayY: 'top',
-          offsetY: 4,
-        },
-      ]);
-
-    const overlayRef = this.overlay.create({
-      positionStrategy,
-      hasBackdrop: true,
-      backdropClass: 'transparent-backdrop',
-      panelClass: 'z-[9999]',
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-    });
-
-    this.overlayRef.set(overlayRef);
-
-    // 팝오버 닫힘 처리
-    this.overlayRef()
-      ?.backdropClick()
-      .subscribe(() => this.closePopover());
-
-    // PopoverComponent 를 동적으로 붙이기
-    const portal = new ComponentPortal(PopoverComponent);
-    const cmpRef = this.overlayRef()!.attach(portal);
-    cmpRef.instance.items = this.popoverItems;
-
-    this.isPopoverOpen.set(true);
-  }
-
   private closePopover() {
-    this.overlayRef()?.dispose();
-    this.overlayRef.set(null);
     this.isPopoverOpen.set(false);
   }
 }
