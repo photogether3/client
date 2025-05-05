@@ -78,6 +78,10 @@ export class HomePage implements OnInit {
 
   async openBottomSheet() {
     const result: CategoriesGetDTO[] = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, this.filteredCategory());
+
+    if (!result) {
+      return;
+    }
     this.filteredCategory.set(result);
   }
 }
