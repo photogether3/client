@@ -1,14 +1,14 @@
-<form [formGroup]="form" class="mb-5 flex h-full w-full flex-col gap-4">
+<form [formGroup]="form" class="flex flex-col w-full h-full gap-4 mb-5">
   <div>
     <app-input formControlName="email" placeholder="포토게더 아이디" [hasError]="!!getErrorMessage('email')" />
     @if (getErrorMessage('email')) {
-      <p class="text-detail-l mt-2 text-accent60">{{ getErrorMessage('email') }}</p>
+      <p class="mt-2 text-detail-l text-accent40">{{ getErrorMessage('email') }}</p>
     }
   </div>
   <div>
     <app-input inputType="password" formControlName="password" placeholder="비밀번호" [hasError]="!!getErrorMessage('password')" />
     @if (getErrorMessage('password')) {
-      <p class="text-detail-l mt-2 text-accent60">{{ getErrorMessage('password') }}</p>
+      <p class="mt-2 text-detail-l text-accent40">{{ getErrorMessage('password') }}</p>
     }
   </div>
 </form>
