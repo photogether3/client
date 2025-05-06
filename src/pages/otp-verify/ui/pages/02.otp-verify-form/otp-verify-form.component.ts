@@ -16,7 +16,7 @@ import { FooterWidget } from 'src/widgets/footer';
   templateUrl: './otp-verify-form.component.html',
   imports: [ReactiveFormsModule, ButtonComponent, InputComponent, FooterWidget],
   host: {
-    class: 'flex min-h-screen flex-1 flex-col',
+    class: 'flex min-h-full flex-1 flex-col',
   },
 })
 export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnDestroy {
@@ -30,6 +30,7 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
   otp = output<string>();
   isVerified = signal<boolean>(false);
   email = signal<string>('');
+
   private timeLeft = 300;
   private timerSubscription!: Subscription;
 
@@ -55,21 +56,7 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
       },
     };
 
-    effect(
-      () => {
-        const email = this.email() || this.emailInput();
-
-        if (email) {
-          this.authApi
-            .generateOtp({ email })
-            .pipe(take(1))
-            .subscribe({
-              next: () => this.startTimer(),
-            });
-        }
-      },
-      { allowSignalWrites: true },
-    );
+    effect(() => this.requestOtp(), { allowSignalWrites: true });
   }
 
   protected override initForm(): void {
@@ -106,18 +93,18 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
     });
   }
 
-  // TODO timer 리펙토링
-  ngOnDestroy() {
-    if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe();
-    }
-  }
+  requestOtp() {
+    const email = this.email() || this.emailInput();
 
-  private startTimer() {
-    this.timerSubscription = interval(1000)
-      .pipe(takeWhile(() => this.timeLeft > 0))
-      .subscribe(() => {
-        this.timeLeft--;
+    if (!email) {
+      return;
+    }
+
+    this.authApi
+      .generateOtp({ email })
+      .pipe(take(1))
+      .subscribe({
+        next: () => this.startTimer(),
       });
   }
 
@@ -144,5 +131,26 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
         }
       },
     });
+  }
+
+  private startTimer() {
+    this.clearTimer();
+    this.timeLeft = 300;
+
+    this.timerSubscription = interval(1000)
+      .pipe(takeWhile(() => this.timeLeft > 0))
+      .subscribe(() => {
+        this.timeLeft--;
+      });
+  }
+
+  private clearTimer() {
+    if (this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+    }
+  }
+
+  ngOnDestroy() {
+    this.clearTimer();
   }
 }
