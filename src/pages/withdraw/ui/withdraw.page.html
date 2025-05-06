@@ -1,7 +1,7 @@
 <div class="flex min-h-screen flex-col bg-layer40">
   <app-header title="회원탈퇴" />
 
-  <otp-verify-form [emailInput]="email()" (otp)="otpValue.set($event)" />
+  <otp-verify-form [emailInput]="email()" page="withdraw" (otp)="otpValue.set($event)" />
 
   <app-footer [hasButton]="true">
     <app-button button text="회원탈퇴" (click)="withdraw()" />
