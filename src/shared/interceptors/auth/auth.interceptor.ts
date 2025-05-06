@@ -1,22 +1,13 @@
-import { HttpContext, HttpContextToken, HttpInterceptorFn } from '@angular/common/http';
+import { HttpContext, HttpContextToken, HttpInterceptorFn, HttpRequest, HttpHandlerFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { catchError, EMPTY, lastValueFrom, Observable, tap } from 'rxjs';
+import { catchError, EMPTY, Observable, from } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { AuthApi, AuthService } from 'src/entities/auth';
 
 const instance = AuthService.getInstance();
-
-// 토큰 재발급하는 경우
-// - 인증이 필요한 api의 경우만 해당됨, 인증이 필요하지 않은 경우는 해당 interceptor 건너뜀
-
-// api 호출 시, 액세스 토큰 확인 후 다음과 같은 경우 토큰 재발급 api 요청
-// 1. 액세스 토큰x, 리프레쉬 토큰o (액세스 토큰 유실)
-// 2. 만료기한 종료 전 5분
-
-// 여러 api 요청이 왔을 때 대기열에 저장했다가 순차대로 인증 필요한지 확인, 이후 api 요청
-
 const skipJwtContextToken = new HttpContextToken(() => false);
 
 const requestQueue: Array<() => void> = [];
@@ -26,96 +17,93 @@ export function skipAuth(): HttpContext {
   return new HttpContext().set(skipJwtContextToken, true);
 }
 
-export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authApi = inject(AuthApi);
+export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn) => {
   const router = inject(Router);
 
-  // 1. 인증이 필요하지 않은 요청은 interceptor 건너뜀
-  if (req.context.get(skipJwtContextToken)) {
+  if (req.context.get(skipJwtContextToken) || req.url.includes('assets/icons')) {
     return next(req);
   }
 
-  if (req.url.includes('assets/icons') && req.url.endsWith('.svg')) {
-    return next(req);
-  }
-
-  // 2. refresh token 확인
   const refreshToken = instance.getRefreshToken();
-
   if (!refreshToken) {
-    alert('세션이 만료되었습니다. 다시 로그인해주세요. (리프레쉬토큰 없음)');
+    alert('세션이 만료되었습니다. 다시 로그인해주세요.');
     router.navigateByUrl('/login');
     return EMPTY;
   }
 
-  // 3. 이 조건문에 걸린다는거는 5분미만 남아서 사실상 사용할 수는 있지만 이것 또한 실패될것으로 간주
-  if (isTokenExpired()) {
-    console.log('만료됨');
+  const handleRequest = (): Observable<any> => {
+    const accessToken = instance.getAccessToken();
+    const authReq = req.clone({
+      setHeaders: { Authorization: `Bearer ${accessToken}` },
+    });
+    return next(authReq).pipe(
+      catchError((err) => {
+        if (err.status === 401) {
+          if (!isRefreshing) {
+            isRefreshing = true;
+            return retryWithRefreshedToken(req, next);
+          } else {
+            return new Observable((subscriber) => {
+              requestQueue.push(() => {
+                const retryReq = req.clone({
+                  setHeaders: { Authorization: `Bearer ${instance.getAccessToken()}` },
+                });
+                next(retryReq).subscribe(subscriber);
+              });
+            });
+          }
+        }
 
+        return new Observable((observer) => observer.error(err));
+      }),
+    );
+  };
+
+  if (isTokenExpired()) {
     if (!isRefreshing) {
       isRefreshing = true;
-      const refreshToken = instance.getRefreshToken() as string;
-
-      lastValueFrom(authApi.refresh(refreshToken))
-        .then(async (newToken) => {
-          console.log('토큰 재발급중 ..');
-          await instance.store(newToken);
-          requestQueue.forEach((ck) => ck());
-        })
-        .catch(() => {
-          alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-          router.navigateByUrl('/login');
-        })
-        .finally(() => {
-          isRefreshing = false;
-          console.log(requestQueue);
-        });
+      return retryWithRefreshedToken(req, next);
     }
 
-    // 무조건 일단 실패했다고 보고 API 를 대기열 큐에 일단 저장
     return new Observable((subscriber) => {
       requestQueue.push(() => {
-        const accessToken = instance.getAccessToken();
-        const cloneReq = req.clone({
-          setHeaders: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        next(cloneReq).subscribe(subscriber); // 재요청 실행
+        handleRequest().subscribe(subscriber);
       });
-    }).pipe(tap(console.log));
+    });
   }
 
-  // 4. Access Token 유효한 경우 요청 실행
-  const accessToken = instance.getAccessToken();
-
-  const cloneReq = req.clone({
-    setHeaders: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  return next(cloneReq).pipe(
-    catchError((err) => {
-      if (err.error.errorCode === 401) {
-        alert('(401 ERROR) 세션이 만료되었습니다. 다시 로그인해주세요.');
-        router.navigateByUrl('/login');
-        return EMPTY;
-      }
-
-      throw err;
-    }),
-  );
+  // 정상 토큰일 경우 바로 요청
+  return handleRequest();
 };
 
-// 토큰 만료 확인 함수
+// 유효기간 5분 미만이면 만료로 간주
 const isTokenExpired = (): boolean => {
   const expiresIn = instance.getExpiresIn();
+  if (!expiresIn) return true;
+  const timeUntilExpiry = expiresIn * 1000 - Date.now();
+  return timeUntilExpiry < 10 * 60 * 1000;
+};
 
-  if (!expiresIn) {
-    return true;
-  } else {
-    const timeUntilExpiry = expiresIn * 1000 - Date.now();
-    return timeUntilExpiry < 5 * 60 * 1000;
-  }
+const retryWithRefreshedToken = (req: HttpRequest<any>, next: HttpHandlerFn) => {
+  const authApi = inject(AuthApi);
+  const router = inject(Router);
+
+  const refreshToken = instance.getRefreshToken() as string;
+
+  return from(authApi.refresh(refreshToken)).pipe(
+    switchMap(async (newToken) => {
+      await instance.store(newToken);
+      isRefreshing = false;
+      const newReq = req.clone({
+        setHeaders: { Authorization: `Bearer ${instance.getAccessToken()}` },
+      });
+      return next(newReq);
+    }),
+    catchError(() => {
+      isRefreshing = false;
+      alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+      router.navigateByUrl('/login');
+      return EMPTY;
+    }),
+  );
 };
