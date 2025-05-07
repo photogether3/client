@@ -13,9 +13,9 @@
   </app-header>
 
   <main class="mt-5 flex flex-1 flex-col gap-5 px-5">
-    @if (!isEditMode()) {
+    <!-- @if (!isEditMode()) {
       <app-search-bar placeholder="사진첩 검색하기" />
-    }
+    } -->
     <div class="flex items-center justify-between">
       <app-tag [tagName]="categoryName() || title()" size="md" [type]="categoryName() ? 'solid' : 'outline'" />
       <p class="text-body-s font-bold text-white">
