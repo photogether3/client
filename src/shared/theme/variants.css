@@ -54,4 +54,8 @@
   --color-layer20: #3c414d;
   --color-layer30: #2a2c34;
   --color-layer40: #1b1d21;
+
+  /* Safe-area */
+  --ion-safe-area-top: env(safe-area-inset-top);
+  --ion-safe-area-bottom: env(safe-area-inset-bottom);
 }
