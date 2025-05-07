@@ -11,6 +11,9 @@ import { AuthApi, AuthService } from 'src/entities/auth';
   selector: 'otp-check-page',
   templateUrl: './otp-check.page.html',
   imports: [HeaderWidget, ButtonComponent, OtpVerifyFormComponent, FooterWidget],
+  host: {
+    class: 'h-full flex flex-col',
+  },
 })
 export class OtpCheckPage {
   /** -------------------------------------------------------

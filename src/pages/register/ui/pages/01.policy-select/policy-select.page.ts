@@ -13,6 +13,9 @@ import { StepService } from 'src/shared/services';
   selector: 'policy-select-page',
   templateUrl: './policy-select.page.html',
   imports: [HeaderWidget, ButtonComponent, FooterWidget],
+  host: {
+    class: 'h-full flex flex-col',
+  },
 })
 export class PolicySelectPage {
   /** -------------------------------------------------------

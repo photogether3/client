@@ -11,6 +11,9 @@ import { StepService } from 'src/shared/services';
   templateUrl: './otp-verify.page.html',
   imports: [CommonModule, HeaderWidget],
   providers: [StepService, HeaderWidget],
+  host: {
+    class: 'flex h-screen flex-col',
+  },
 })
 export class OtpVerifyPage {
   private readonly stepService = inject(StepService);

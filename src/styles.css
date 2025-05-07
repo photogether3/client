@@ -13,4 +13,7 @@ input[type='number'] {
 body {
   padding-top: var(--ion-safe-area-top);
   padding-bottom: var(--ion-safe-area-bottom);
+  padding-left: var(--ion-safe-area-left);
+  padding-right: var(--ion-safe-area-right);
+  background-color: var(--color-layer40);
 }

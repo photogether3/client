@@ -1,9 +1,7 @@
-<div class="flex min-h-screen flex-col bg-layer40">
-  <app-header title="기록 초기화" />
+<app-header title="기록 초기화" />
 
-  <otp-verify-form [emailInput]="email()" (otp)="otpValue.set($event)" />
+<otp-verify-form [emailInput]="email()" page="reset" (otp)="otpValue.set($event)" />
 
-  <app-footer [hasButton]="true">
-    <app-button button text="기록 초기화" (click)="reset()" />
-  </app-footer>
-</div>
+<app-footer [hasButton]="true">
+  <app-button button text="기록 초기화" (click)="reset()" />
+</app-footer>

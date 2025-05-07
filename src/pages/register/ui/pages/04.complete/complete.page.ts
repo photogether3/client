@@ -10,6 +10,9 @@ import { StepService } from 'src/shared/services';
   selector: 'complete-page',
   templateUrl: './complete.page.html',
   imports: [HeaderWidget, IconComponent, FooterWidget, ButtonComponent],
+  host: {
+    class: 'h-full flex flex-col',
+  },
 })
 export class CompletePage {
   /** -------------------------------------------------------

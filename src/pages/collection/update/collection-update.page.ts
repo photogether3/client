@@ -12,6 +12,9 @@ import { CollectionFormComponent } from '../ui';
   selector: 'app-collection-update',
   templateUrl: './collection-update.page.html',
   imports: [FooterWidget, CollectionFormComponent, HeaderWidget, ButtonComponent],
+  host: {
+    class: 'flex h-screen flex-col',
+  },
 })
 export class CollectionUpdatePage {
   private readonly route = inject(ActivatedRoute);

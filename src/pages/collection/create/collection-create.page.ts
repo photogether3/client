@@ -12,6 +12,9 @@ import { CollectionFormComponent } from '../ui';
   selector: 'app-collection-create',
   templateUrl: './collection-create.page.html',
   imports: [FooterWidget, HeaderWidget, CollectionFormComponent, ButtonComponent],
+  host: {
+    class: 'flex h-screen flex-col',
+  },
 })
 export class CollectionCreatePage {
   private readonly modalReactiveService = inject(ModalReactiveService);

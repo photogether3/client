@@ -36,7 +36,7 @@
 </main>
 
 <!-- 회원가입, 회원탈퇴 페이지에서 자체적으로 버튼이 있기 때문에 해당 코드 없어도 됨 (리펙토링 예정) -->
-@if (page() !== 'register' || page() !== 'withdraw') {
+@if (page() !== 'register' && page() !== 'withdraw' && page() !== 'reset') {
   <app-footer [hasButton]="true">
     <app-button button text="다음으로" rightIcon="arrow-right" [iconSize]="16" [isDisabled]="!isVerified()" (click)="onNext()" />
   </app-footer>

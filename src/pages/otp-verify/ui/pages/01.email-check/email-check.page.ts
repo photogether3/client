@@ -12,7 +12,7 @@ import { FooterWidget } from 'src/widgets/footer';
   templateUrl: './email-check.page.html',
   imports: [ButtonComponent, FooterWidget, InputComponent, ReactiveFormsModule],
   host: {
-    class: 'flex min-h-screen flex-1 flex-col bg-layer40',
+    class: 'flex  flex-1 flex-col bg-layer40',
   },
 })
 export class EmailCheckComponent extends BaseForm<GenerateOtpDTO> {

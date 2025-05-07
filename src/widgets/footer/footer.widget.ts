@@ -7,16 +7,10 @@ import { IconComponent } from 'src/shared/components';
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.widget.html',
-  styles: [
-    `
-      :host {
-        position: sticky;
-        bottom: 0;
-        z-index: 40;
-      }
-    `,
-  ],
   imports: [IconComponent, RouterLink, NgClass],
+  host: {
+    class: 'sticky bottom-0 z-40',
+  },
 })
 export class FooterWidget {
   private readonly router = inject(Router);

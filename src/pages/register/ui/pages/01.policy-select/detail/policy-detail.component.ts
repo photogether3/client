@@ -10,7 +10,7 @@ import { IconComponent, LoadingComponent } from 'src/shared/components';
   templateUrl: './policy-detail.component.html',
   imports: [IconComponent, LoadingComponent],
   host: {
-    class: 'h-full min-h-screen flex flex-col',
+    class: 'h-full  flex flex-col',
   },
 })
 export class PolicyDetailComponent {

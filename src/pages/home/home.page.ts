@@ -7,7 +7,7 @@ import { filter, forkJoin, switchMap, tap } from 'rxjs';
 import { CategoriesGetDTO, CategoryApi } from 'src/entities/category';
 import { CollectionApi, CollectionType } from 'src/entities/collection';
 import { UserApi } from 'src/entities/user';
-import { BottomSheetService, ButtonComponent, IconComponent, SearchBarComponent } from 'src/shared/components';
+import { BottomSheetService, ButtonComponent, IconComponent } from 'src/shared/components';
 import { ThemeService } from 'src/shared/services';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
@@ -19,7 +19,10 @@ import { CollectionCardComponent } from './ui';
 @Component({
   selector: 'home-page',
   templateUrl: './home.page.html',
-  imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule, HeaderWidget, SearchBarComponent, SystemFoldersComponent],
+  imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule, HeaderWidget, SystemFoldersComponent],
+  host: {
+    class: 'flex h-screen flex-col',
+  },
 })
 export class HomePage implements OnInit {
   private readonly themeService = inject(ThemeService);

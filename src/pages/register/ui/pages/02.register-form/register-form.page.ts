@@ -13,7 +13,7 @@ import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 
 @Component({
-  selector: 'register-page',
+  selector: 'register-form',
   templateUrl: './register-form.page.html',
   imports: [ReactiveFormsModule, ButtonComponent, InputComponent, HeaderWidget, FooterWidget],
   providers: [
@@ -22,6 +22,9 @@ import { HeaderWidget } from 'src/widgets/header';
       useClass: AuthValidators,
     },
   ],
+  host: {
+    class: 'h-full flex flex-col',
+  },
 })
 export class RegisterFormPage extends BaseForm<RegisterFormType> {
   /** -------------------------------------------------------

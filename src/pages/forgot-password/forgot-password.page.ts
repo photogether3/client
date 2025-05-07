@@ -11,6 +11,9 @@ import { PasswordForgotFormComponent } from './ui';
   templateUrl: './forgot-password.page.html',
   imports: [HeaderWidget],
   providers: [StepService],
+  host: {
+    class: 'flex h-screen flex-col',
+  },
 })
 export class ForgotPasswordPage {
   private readonly stepService = inject(StepService);

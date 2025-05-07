@@ -7,7 +7,7 @@ import { TagComponent } from 'src/entities/category';
 import { CollectionApi, CollectionDetailResDTO } from 'src/entities/collection';
 import { PostApi, PostType } from 'src/entities/post';
 import { PostMoveComponent } from 'src/pages/post';
-import { BottomSheetService, ButtonComponent, IconComponent, ModalReactiveService, SearchBarComponent } from 'src/shared/components';
+import { BottomSheetService, ButtonComponent, IconComponent, ModalReactiveService } from 'src/shared/components';
 import { ActionButtonsComponent, ActionButtonType } from 'src/widgets/action-buttons';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
@@ -17,7 +17,10 @@ import { PostCardComponent } from '../ui';
 @Component({
   selector: 'app-collection-main',
   templateUrl: './collection-main.page.html',
-  imports: [TagComponent, FooterWidget, HeaderWidget, IconComponent, SearchBarComponent, PostCardComponent, ButtonComponent],
+  imports: [TagComponent, FooterWidget, HeaderWidget, IconComponent, PostCardComponent, ButtonComponent],
+  host: {
+    class: 'flex h-screen flex-col',
+  },
 })
 export class CollectionMainPage {
   private readonly router = inject(Router);

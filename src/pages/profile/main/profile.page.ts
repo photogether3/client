@@ -17,6 +17,9 @@ import { AccountSettingComponent } from '../ui';
   selector: 'profile-page',
   templateUrl: './profile.page.html',
   imports: [TagComponent, FooterWidget, HeaderWidget, IconComponent],
+  host: {
+    class: 'flex flex-col h-screen',
+  },
 })
 export class ProfilePage {
   private readonly router = inject(Router);

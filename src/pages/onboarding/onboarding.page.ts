@@ -16,6 +16,9 @@ import { ProfileUpdateForm } from 'src/widgets/profile-update-form';
   templateUrl: './onboarding.page.html',
   standalone: true,
   imports: [CommonModule, ButtonComponent, ProfileUpdateForm, CategorySelectorWidget, HeaderWidget, FooterWidget, ProfileUpdateButton],
+  host: {
+    class: 'flex flex-col h-screen',
+  },
 })
 export class OnboardingPage {
   private readonly router = inject(Router);

@@ -11,6 +11,9 @@ import { CompletePage } from './04.complete';
   selector: 'register-page',
   templateUrl: './register.page.html',
   providers: [StepService],
+  host: {
+    class: 'h-screen',
+  },
 })
 export class RegisterPage {
   /** -------------------------------------------------------

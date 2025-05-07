@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { UserApi } from 'src/entities/user';
 import { OtpVerifyFormComponent } from 'src/pages/otp-verify';
 import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
+import { StepService } from 'src/shared/services';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 
@@ -12,6 +13,10 @@ import { HeaderWidget } from 'src/widgets/header';
   selector: 'app-reset-page',
   templateUrl: './reset.page.html',
   imports: [CommonModule, HeaderWidget, FooterWidget, ButtonComponent, OtpVerifyFormComponent],
+  providers: [StepService],
+  host: {
+    class: 'flex h-screen flex-col',
+  },
 })
 export class ResetPage {
   private readonly userApi = inject(UserApi);

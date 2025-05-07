@@ -14,6 +14,9 @@ import { HeaderWidget } from 'src/widgets/header';
   templateUrl: './withdraw.page.html',
   imports: [CommonModule, HeaderWidget, FooterWidget, ButtonComponent, OtpVerifyFormComponent],
   providers: [StepService],
+  host: {
+    class: 'flex h-screen flex-col',
+  },
 })
 export class WithdrawPage {
   private readonly userApi = inject(UserApi);
