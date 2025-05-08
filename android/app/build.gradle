@@ -7,8 +7,14 @@ android {
         applicationId "com.photogether.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        
+        // 동적 버전 코드 생성
+        def currentDate = new Date()
+        def formattedDate = currentDate.format('yyyyMMdd')
+        def randomSuffix = new Random().nextInt(100)
+        versionCode Integer.parseInt(formattedDate + String.format('%02d', randomSuffix))
+        versionName "1.0.${formattedDate}"
+        
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
