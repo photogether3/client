@@ -31,15 +31,10 @@ export class FileUploadService {
       
       if (permissionStatus.photos === 'granted') {
         return true;
-      } else if (permissionStatus.photos === 'prompt') {
+      } else if (permissionStatus.photos === 'prompt' || permissionStatus.photos === 'denied') {
         // 권한 요청
-        const requestResult = await Camera.requestPermissions({
-          permissions: ['photos']
-        });
+        const requestResult = await Camera.requestPermissions();
         return requestResult.photos === 'granted';
-      } else if (permissionStatus.photos === 'denied') {
-        alert('갤러리 접근 권한이 필요합니다. 설정에서 권한을 허용해주세요.');
-        return false;
       }
       
       return false;
