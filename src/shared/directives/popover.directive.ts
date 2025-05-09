@@ -1,6 +1,10 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Directive, HostListener, inject, input, model, signal } from '@angular/core';
+import { NavigationStart, Router } from '@angular/router';
+
+import { filter } from 'rxjs';
+
 import { PopoverComponent, PopoverItemType } from 'src/pages/home';
 
 @Directive({
@@ -8,6 +12,7 @@ import { PopoverComponent, PopoverItemType } from 'src/pages/home';
 })
 export class PopoverDirective {
   private readonly overlay = inject(Overlay);
+  private readonly router = inject(Router);
 
   button = input.required<HTMLElement>();
   popoverItems = input.required<PopoverItemType[]>();
@@ -15,6 +20,14 @@ export class PopoverDirective {
   isPopoverOpen = model<boolean>();
 
   private overlayRef = signal<OverlayRef | null>(null);
+
+  constructor() {
+    this.router.events.pipe(filter((event) => event instanceof NavigationStart)).subscribe(() => {
+      if (this.overlayRef()) {
+        this.closePopover();
+      }
+    });
+  }
 
   @HostListener('click', ['$event'])
   togglePopover(event: MouseEvent) {
