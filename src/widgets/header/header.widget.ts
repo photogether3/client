@@ -5,14 +5,10 @@ import { IconComponent } from 'src/shared/components';
 @Component({
   selector: 'app-header',
   templateUrl: './header.widget.html',
-  styles: `
-    :host {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-    }
-  `,
   imports: [IconComponent],
+  host: {
+    class: 'sticky top-0 z-40 pt-[env(safe-area-inset-top)] bg-layer40',
+  },
 })
 export class HeaderWidget {
   title = input<string>('');

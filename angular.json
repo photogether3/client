@@ -25,7 +25,7 @@
                 "output": "assets"
               }
             ],
-            "styles": ["src/shared/theme/tailwind.css", "src/shared/theme/variants.css", "src/shared/theme/fonts.css"],
+            "styles": ["src/styles.css", "src/shared/theme/tailwind.css", "src/shared/theme/variants.css", "src/shared/theme/fonts.css"],
             "scripts": []
           },
           "configurations": {
@@ -79,7 +79,7 @@
                 "output": "assets"
               }
             ],
-            "styles": ["src/shared/theme/tailwind.css", "src/shared/theme/variants.css", "src/shared/theme/fonts.css"],
+            "styles": ["src/styles.css", "src/shared/theme/tailwind.css", "src/shared/theme/variants.css", "src/shared/theme/fonts.css"],
             "scripts": []
           }
         },
