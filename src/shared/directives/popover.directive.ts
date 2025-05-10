@@ -77,8 +77,9 @@ export class PopoverDirective {
     this.isPopoverOpen.set(true);
   }
 
-  private closePopover() {
+  closePopover() {
     this.overlayRef()?.dispose();
+    this.overlayRef()?.detach();
     this.overlayRef.set(null);
     this.isPopoverOpen.set(false);
   }

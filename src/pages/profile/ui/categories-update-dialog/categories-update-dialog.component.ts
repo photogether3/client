@@ -7,12 +7,10 @@ import { CategorySelectorWidget } from 'src/widgets/category-selector';
 @Component({
   selector: 'categories-update-dialog',
   templateUrl: './categories-update-dialog.component.html',
-  styles: `
-    :host {
-      height: 100%;
-    }
-  `,
   imports: [CategorySelectorWidget, ButtonComponent],
+  host: {
+    class: 'h-full',
+  },
 })
 export class CategoriesUpdateDialog {
   private readonly bottomSheetService = inject(BottomSheetService);

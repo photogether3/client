@@ -102,38 +102,6 @@ export class CollectionMainPage {
     });
   }
 
-  async postDelete() {
-    const modalData = {
-      iconName: 'modal-trash',
-      subTitle: '선택하신 게시물을 삭제합니다.',
-      content: '이 작업은 되돌릴 수 없습니다. 삭제를 원하시지 않을 경우 취소를 눌러주세요.',
-      buttons: ['취소', '확인'],
-    };
-
-    const result = await this.modalReactiveService.open(modalData);
-
-    if (result !== '확인') {
-      return;
-    }
-
-    this.postApi.deletePost(this.selectedPostIds()).subscribe((res) => {
-      console.log('게시물 삭제 api 전송 후 응답: ', res); //  null값 찍힘
-      const modalData = {
-        title: '게시물 삭제 완료',
-        subTitle: '게시물 삭제가 완료되었습니다.',
-        content: '확인버튼을 누르시면 홈 화면으로 돌아갑니다. 확인 버튼을 눌러주세요.',
-        buttons: ['확인'],
-      };
-
-      const result = this.modalReactiveService.open(modalData);
-      if (!result) {
-        return;
-      }
-
-      this.router.navigateByUrl('home');
-    });
-  }
-
   async openBottomSheet() {
     const actionButtons: ActionButtonType[] = [
       {
@@ -164,10 +132,72 @@ export class CollectionMainPage {
       case 'organize':
         return this.isEditMode.set(true);
       case 'delete':
-        return this.postDelete();
+        return this.collectionDetle();
       default:
         return;
     }
+  }
+
+  async collectionDetle() {
+    const modalData = {
+      iconName: 'modal-trash',
+      subTitle: '선택하신 사진첩을 삭제합니다.',
+      content: '이 작업은 되돌릴 수 없습니다. 삭제를 원하시지 않을 경우 취소를 눌러주세요.',
+      buttons: ['취소', '확인'],
+    };
+
+    const result = await this.modalReactiveService.open(modalData);
+
+    if (!result || result !== '확인') {
+      return;
+    }
+
+    this.collectionApi.deleteCollection(this.collection()!.id).subscribe(() => {
+      const modalData = {
+        title: '사진첩 삭제 완료',
+        subTitle: '사진첩 삭제가 완료되었습니다.',
+        content: '확인버튼을 누르시면 홈 화면으로 돌아갑니다. 확인 버튼을 눌러주세요.',
+        buttons: ['확인'],
+      };
+
+      const result = this.modalReactiveService.open(modalData);
+      if (!result) {
+        return;
+      }
+
+      this.router.navigateByUrl('home');
+    });
+  }
+
+  async postDelete() {
+    const modalData = {
+      iconName: 'modal-trash',
+      subTitle: '선택하신 게시물을 삭제합니다.',
+      content: '이 작업은 되돌릴 수 없습니다. 삭제를 원하시지 않을 경우 취소를 눌러주세요.',
+      buttons: ['취소', '확인'],
+    };
+
+    const result = await this.modalReactiveService.open(modalData);
+
+    if (result !== '확인') {
+      return;
+    }
+
+    this.postApi.deletePost(this.selectedPostIds()).subscribe(() => {
+      const modalData = {
+        title: '게시물 삭제 완료',
+        subTitle: '게시물 삭제가 완료되었습니다.',
+        content: '확인버튼을 누르시면 홈 화면으로 돌아갑니다. 확인 버튼을 눌러주세요.',
+        buttons: ['확인'],
+      };
+
+      const result = this.modalReactiveService.open(modalData);
+      if (!result) {
+        return;
+      }
+
+      this.router.navigateByUrl('home');
+    });
   }
 
   private async initializeLayout() {

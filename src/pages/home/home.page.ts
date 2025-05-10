@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal, Type } from '@angular/core';
+import { Component, computed, effect, inject, signal, Type } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { filter, forkJoin, switchMap, tap } from 'rxjs';
@@ -24,7 +24,7 @@ import { CollectionCardComponent } from './ui';
     class: 'flex h-screen flex-col',
   },
 })
-export class HomePage implements OnInit {
+export class HomePage {
   private readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
   private readonly userApi = inject(UserApi);
@@ -36,6 +36,8 @@ export class HomePage implements OnInit {
   filteredCategory = signal<CategoriesGetDTO[]>([]);
   searchValue = signal<string>('');
   allDefaultCollections = signal<CollectionType[]>([]);
+  isDeleted = signal<boolean>(false);
+
   defaultCollections = computed(() => {
     const collections = this.allDefaultCollections();
     const filters = this.filteredCategory();
@@ -45,9 +47,39 @@ export class HomePage implements OnInit {
     return collections.filter((c) => filters.some((f) => f.id === c.category?.id));
   });
 
-  constructor() {}
+  constructor() {
+    this.loadCollections();
 
-  ngOnInit(): void {
+    effect(() => {
+      const isDeleted = this.isDeleted();
+      if (!isDeleted) {
+        return;
+      }
+
+      this.loadCollections();
+    });
+  }
+
+  createCollection() {
+    this.router.navigateByUrl('collection/create');
+  }
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
+  }
+
+  async openBottomSheet() {
+    const result: CategoriesGetDTO[] = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, {
+      selectedCategories: this.filteredCategory(),
+    });
+
+    if (!result) {
+      return;
+    }
+    this.filteredCategory.set(result);
+  }
+
+  private loadCollections() {
     this.categoryApi
       .fetchFavCategories()
       .pipe(
@@ -69,24 +101,5 @@ export class HomePage implements OnInit {
         const defaultCollections = collections.filter((collection: CollectionType) => collection.type === 'DEFAULT');
         this.allDefaultCollections.set(defaultCollections);
       });
-  }
-
-  createCollection() {
-    this.router.navigateByUrl('collection/create');
-  }
-
-  toggleTheme() {
-    this.themeService.toggleTheme();
-  }
-
-  async openBottomSheet() {
-    const result: CategoriesGetDTO[] = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, {
-      selectedCategories: this.filteredCategory(),
-    });
-
-    if (!result) {
-      return;
-    }
-    this.filteredCategory.set(result);
   }
 }
