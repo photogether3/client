@@ -10,7 +10,7 @@ import { BottomSheetService, ButtonComponent, ModalReactiveService } from 'src/s
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 import { ProfileUpdateForm } from 'src/widgets/profile-update-form';
-import { ProfileUpdateButton } from 'src/widgets/porfile-update-button';
+import { ProfileUpdateButton } from 'src/widgets/profile-update-button';
 
 import { CategoriesUpdateDialog } from '../ui';
 

@@ -8,7 +8,7 @@ import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
 import { CategorySelectorWidget } from 'src/widgets/category-selector';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
-import { ProfileUpdateButton } from 'src/widgets/porfile-update-button';
+import { ProfileUpdateButton } from 'src/widgets/profile-update-button';
 import { ProfileUpdateForm } from 'src/widgets/profile-update-form';
 
 @Component({
