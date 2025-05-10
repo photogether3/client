@@ -33,8 +33,14 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- 갤러리 접근을 위한 권한 -->
+    <!-- Permissions -->
+    <!-- 포토게더는 사용자가 캡처한 상품 이미지를 불러와 텍스트를 추출하고, 
+        카테고리별 앨범에 저장하며, 프로필 이미지 선택을 위해 사진 라이브러리 접근 권한이 필요합니다. -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <!-- 안드로이드 13 미만 기기를 위한 권한 -->
+
+    <!-- Android 14 이상을 위한 사용자 선택 미디어 접근 권한 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+
+    <!-- 안드로이드 13 미만 기기를 위한 갤러리 접근 권한 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
 </manifest>
