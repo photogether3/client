@@ -17,15 +17,20 @@ import { CategorySelectorWidget } from 'src/widgets/category-selector';
 export class CategoriesUpdateDialog {
   private readonly bottomSheetService = inject(BottomSheetService);
 
-  selectedCategoryList = signal<CategoriesGetDTO[]>(this.bottomSheetService.data() || []);
+  type = signal<'all' | 'fav'>('all');
+  selectedCategoryList = signal<CategoriesGetDTO[]>([]);
 
-  constructor() {}
+  constructor() {
+    const data = this.bottomSheetService.data();
+
+    this.selectedCategoryList.set(data.selectedCategories);
+    this.type.set(data.type);
+  }
 
   updateSelectedCategories(updatedList: CategoriesGetDTO[]) {
     this.selectedCategoryList.set(updatedList);
   }
 
-  // 태그 선택 완료
   selectCategories() {
     this.bottomSheetService.close(this.selectedCategoryList());
   }
