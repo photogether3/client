@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, inject, input, output, signal, Type, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { PostApi, PostType } from 'src/entities/post';
+import { PostService, PostType } from 'src/entities/post';
 import { PopoverItemType } from 'src/pages/home';
 import { PostMoveComponent } from 'src/pages/post';
 import { BottomSheetService, IconComponent, ModalReactiveService } from 'src/shared/components';
@@ -15,7 +15,7 @@ import { PopoverDirective } from 'src/shared/directives';
 })
 export class PostCardComponent {
   private readonly router = inject(Router);
-  private readonly postApi = inject(PostApi);
+  private readonly postService = inject(PostService);
   private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly bottomSheetService = inject(BottomSheetService);
 
@@ -84,7 +84,7 @@ export class PostCardComponent {
           return;
         }
 
-        return this.postApi.deletePost([this.post().id]).subscribe({
+        return this.postService.deletePost([this.post().id]).subscribe({
           next: () => {
             const modalData = {
               title: '게시물 삭제 완료',

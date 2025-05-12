@@ -5,7 +5,7 @@ import { forkJoin } from 'rxjs';
 
 import { TagComponent } from 'src/entities/category';
 import { CollectionDetailResDTO, CollectionService } from 'src/entities/collection';
-import { PostApi, PostType } from 'src/entities/post';
+import { PostService } from 'src/entities/post';
 import { PostMoveComponent } from 'src/pages/post';
 import { BottomSheetService, ButtonComponent, IconComponent, ModalReactiveService } from 'src/shared/components';
 import { ActionButtonsComponent, ActionButtonType } from 'src/widgets/action-buttons';
@@ -26,16 +26,18 @@ export class CollectionMainPage {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly collectionService = inject(CollectionService);
-  private readonly postApi = inject(PostApi);
+  private readonly postService = inject(PostService);
   private readonly bottomSheetService = inject(BottomSheetService);
   private readonly modalReactiveService = inject(ModalReactiveService);
   private resizeObserver: ResizeObserver | null = null;
 
-  postList = signal<PostType[]>([]);
+  postList = this.postService.postList;
+
+  postCardList = viewChildren<PostCardComponent>('postCard');
+
   isEditMode = signal<boolean>(false);
   collection = signal<CollectionDetailResDTO | undefined>(undefined);
   selectedPostIds = signal<number[]>([]);
-  postCardList = viewChildren<PostCardComponent>('postCard');
 
   readonly title = computed(() => this.collection()?.title ?? '');
   readonly categoryName = computed(() => this.collection()?.category?.name ?? '');
@@ -58,10 +60,9 @@ export class CollectionMainPage {
 
     forkJoin({
       collection: this.collectionService.getCollection(this.collectionId),
-      postList: this.postApi.getCollection(this.collectionId),
-    }).subscribe(({ collection, postList }) => {
+      postList: this.postService.getPosts(this.collectionId),
+    }).subscribe(({ collection }) => {
       this.collection.set(collection);
-      this.postList.set(postList);
     });
 
     effect(() => {
@@ -183,7 +184,7 @@ export class CollectionMainPage {
       return;
     }
 
-    this.postApi.deletePost(this.selectedPostIds()).subscribe(() => {
+    this.postService.deletePost(this.selectedPostIds()).subscribe(() => {
       const modalData = {
         title: '게시물 삭제 완료',
         subTitle: '게시물 삭제가 완료되었습니다.',

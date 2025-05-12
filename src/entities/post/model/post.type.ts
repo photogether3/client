@@ -7,7 +7,6 @@ export type PostCreateFormType = {
 };
 
 export type PostUpdateFormType = {
-  postId: number;
   title: string;
   content: string;
   metadataList: ImgContentType[];

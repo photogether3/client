@@ -3,7 +3,7 @@ import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { CollectionService } from 'src/entities/collection';
-import { PostApi, PostMoveReqDTO } from 'src/entities/post';
+import { PostMoveReqDTO, PostService } from 'src/entities/post';
 import { CollectionCardComponent } from 'src/pages/home';
 import { BottomSheetService, ButtonComponent, ModalReactiveService } from 'src/shared/components';
 import { SystemFoldersComponent } from 'src/widgets/system-folders/system-folders.component';
@@ -17,7 +17,7 @@ export class PostMoveComponent {
   private readonly bottomSheetService = inject(BottomSheetService);
   private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly collectionService = inject(CollectionService);
-  private readonly postApi = inject(PostApi);
+  private readonly postService = inject(PostService);
   private readonly router = inject(Router);
 
   collections = this.collectionService.collections;
@@ -50,7 +50,7 @@ export class PostMoveComponent {
       collectionId: this.selectedCollectionId(),
     } as PostMoveReqDTO;
 
-    this.postApi.movePost(postMoveDTO).subscribe({
+    this.postService.movePost(postMoveDTO).subscribe({
       next: () => {
         const modalData = {
           iconName: 'modal-photo',
