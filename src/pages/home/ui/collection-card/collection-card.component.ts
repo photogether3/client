@@ -3,7 +3,7 @@ import { Component, computed, ElementRef, inject, input, OnInit, output, signal,
 import { Router } from '@angular/router';
 
 import { TagComponent } from 'src/entities/category';
-import { CollectionApi, CollectionType } from 'src/entities/collection';
+import { CollectionService, CollectionType } from 'src/entities/collection';
 import { IconComponent, ModalReactiveService } from 'src/shared/components';
 import { PopoverDirective } from 'src/shared/directives/popover.directive';
 
@@ -17,7 +17,7 @@ import { PopoverItemType } from '../popover';
 export class CollectionCardComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly modalReactiveService = inject(ModalReactiveService);
-  private readonly collectionApi = inject(CollectionApi);
+  private readonly collectionService = inject(CollectionService);
 
   collection = input.required<CollectionType>();
   isCheckable = input<boolean>(false);
@@ -105,7 +105,7 @@ export class CollectionCardComponent implements OnInit {
         if (!result || result !== '삭제') {
           return;
         }
-        return this.collectionApi.deleteCollection(this.collection().id).subscribe({
+        return this.collectionService.deleteCollection(this.collection().id).subscribe({
           next: () => {
             const modalData = {
               title: '사진첩 삭제 완료',

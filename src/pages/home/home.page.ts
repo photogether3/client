@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal, Type } from '@angular/core';
+import { Component, effect, inject, signal, Type } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { filter, forkJoin, switchMap, tap } from 'rxjs';
 
 import { CategoriesGetDTO, CategoryApi } from 'src/entities/category';
-import { CollectionApi, CollectionType } from 'src/entities/collection';
+import { CollectionService } from 'src/entities/collection';
 import { UserApi } from 'src/entities/user';
 import { BottomSheetService, ButtonComponent, IconComponent } from 'src/shared/components';
 import { ThemeService } from 'src/shared/services';
@@ -26,26 +26,18 @@ import { CollectionCardComponent } from './ui';
 })
 export class HomePage {
   private readonly themeService = inject(ThemeService);
+  private readonly collectionService = inject(CollectionService);
   private readonly router = inject(Router);
   private readonly userApi = inject(UserApi);
   private readonly categoryApi = inject(CategoryApi);
-  private readonly collectionApi = inject(CollectionApi);
   private readonly bottomSheetService = inject(BottomSheetService);
 
   nickname: string = '';
   filteredCategory = signal<CategoriesGetDTO[]>([]);
   searchValue = signal<string>('');
-  allDefaultCollections = signal<CollectionType[]>([]);
   isDeleted = signal<boolean>(false);
 
-  defaultCollections = computed(() => {
-    const collections = this.allDefaultCollections();
-    const filters = this.filteredCategory();
-
-    if (filters.length === 0) return collections;
-
-    return collections.filter((c) => filters.some((f) => f.id === c.category?.id));
-  });
+  collections = this.collectionService.collections;
 
   constructor() {
     this.loadCollections();
@@ -80,6 +72,8 @@ export class HomePage {
   }
 
   private loadCollections() {
+    this.collectionService.getCollections().subscribe();
+
     this.categoryApi
       .fetchFavCategories()
       .pipe(
@@ -92,14 +86,11 @@ export class HomePage {
         switchMap(() =>
           forkJoin({
             profile: this.userApi.getProfile(),
-            collections: this.collectionApi.getCollections(),
           }),
         ),
       )
-      .subscribe(({ profile, collections }) => {
+      .subscribe(({ profile }) => {
         this.nickname = profile.nickname;
-        const defaultCollections = collections.filter((collection: CollectionType) => collection.type === 'DEFAULT');
-        this.allDefaultCollections.set(defaultCollections);
       });
   }
 }

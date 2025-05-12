@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
 import { TagComponent } from 'src/entities/category';
-import { CollectionApi, CollectionDetailResDTO } from 'src/entities/collection';
+import { CollectionDetailResDTO, CollectionService } from 'src/entities/collection';
 import { PostApi, PostType } from 'src/entities/post';
 import { PostMoveComponent } from 'src/pages/post';
 import { BottomSheetService, ButtonComponent, IconComponent, ModalReactiveService } from 'src/shared/components';
@@ -25,7 +25,7 @@ import { PostCardComponent } from '../ui';
 export class CollectionMainPage {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly collectionApi = inject(CollectionApi);
+  private readonly collectionService = inject(CollectionService);
   private readonly postApi = inject(PostApi);
   private readonly bottomSheetService = inject(BottomSheetService);
   private readonly modalReactiveService = inject(ModalReactiveService);
@@ -57,7 +57,7 @@ export class CollectionMainPage {
     if (!this.collectionId) return;
 
     forkJoin({
-      collection: this.collectionApi.getCollection(this.collectionId),
+      collection: this.collectionService.getCollection(this.collectionId),
       postList: this.postApi.getCollection(this.collectionId),
     }).subscribe(({ collection, postList }) => {
       this.collection.set(collection);
@@ -152,7 +152,7 @@ export class CollectionMainPage {
       return;
     }
 
-    this.collectionApi.deleteCollection(this.collection()!.id).subscribe(() => {
+    this.collectionService.deleteCollection(this.collection()!.id).subscribe(() => {
       const modalData = {
         title: '사진첩 삭제 완료',
         subTitle: '사진첩 삭제가 완료되었습니다.',

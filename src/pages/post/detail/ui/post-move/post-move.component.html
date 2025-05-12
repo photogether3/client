@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-5">
   <!-- TODO 닉네임 불러오기 -->
-  @for (collection of defaultCollections(); track $index) {
+  @for (collection of collections().default; track $index) {
     <app-collection-card [collection]="collection" [isCheckable]="true" [isChecked]="collection.id === selectedCollectionId()" (clickEvent)="onCardChecked($event)" />
   }
 

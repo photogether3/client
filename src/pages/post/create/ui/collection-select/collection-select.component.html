@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-5">
     <p class="text-body-s font-bold text-white">{{ nickname }}의 사진첩</p>
     <div class="flex flex-col gap-5">
-      @for (collection of myCollections().default; track $index) {
+      @for (collection of collections().default; track $index) {
         <app-collection-card [collection]="collection" [isCheckable]="true" [isChecked]="selectedCollectionId() === collection.id" (clickEvent)="onCardChecked(collection.id)" />
       } @empty {
         <div class="col-span-full h-[275px] rounded-[12px] bg-layer20 p-4 text-white">등록된 사진첩이 없습니다</div>

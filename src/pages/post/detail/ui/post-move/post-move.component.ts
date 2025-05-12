@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { CollectionApi, CollectionType } from 'src/entities/collection';
+import { CollectionService } from 'src/entities/collection';
 import { PostApi, PostMoveReqDTO } from 'src/entities/post';
 import { CollectionCardComponent } from 'src/pages/home';
 import { BottomSheetService, ButtonComponent, ModalReactiveService } from 'src/shared/components';
@@ -16,38 +16,24 @@ import { SystemFoldersComponent } from 'src/widgets/system-folders/system-folder
 export class PostMoveComponent {
   private readonly bottomSheetService = inject(BottomSheetService);
   private readonly modalReactiveService = inject(ModalReactiveService);
-  private readonly collectionApi = inject(CollectionApi);
+  private readonly collectionService = inject(CollectionService);
   private readonly postApi = inject(PostApi);
   private readonly router = inject(Router);
 
+  collections = this.collectionService.collections;
+
   postIds: number[] = [];
-  defaultCollections = signal<CollectionType[]>([]);
   hasSystemFolders = signal<boolean>(false);
-  selectedCollectionId = signal<number | null>(null);
+  selectedCollectionId = signal<number | undefined>(undefined);
 
   constructor() {
     const { postIds, hasSystemFolders } = this.bottomSheetService.data();
     this.postIds = [...postIds];
     this.hasSystemFolders.set(hasSystemFolders);
 
-    effect(() => {
-      console.log(this.postIds, 'postIds');
-    });
-
-    effect(() => {
-      console.log(this.selectedCollectionId(), '선택된 사진첩');
-    });
-
-    this.collectionApi.getCollections().subscribe((collections) => {
-      const _default = collections.filter((c) => c.type === 'DEFAULT');
-      this.defaultCollections.set(_default);
-
-      if (this.hasSystemFolders()) {
-        const _uncategorized = collections.find((c) => c.type === 'UNCATEGORIZED')?.id;
-        console.log(_uncategorized);
-        this.selectedCollectionId.set(_uncategorized ?? null);
-      }
-    });
+    if (this.hasSystemFolders()) {
+      this.selectedCollectionId.set(this.collections()?.unCategorized?.id);
+    }
   }
 
   onCardChecked(collectionId?: number) {
@@ -55,7 +41,7 @@ export class PostMoveComponent {
       return;
     }
     const isSame = this.selectedCollectionId() === collectionId;
-    this.selectedCollectionId.set(isSame ? null : collectionId);
+    this.selectedCollectionId.set(isSame ? undefined : collectionId);
   }
 
   movePost() {

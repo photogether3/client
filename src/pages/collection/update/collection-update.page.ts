@@ -1,7 +1,7 @@
 import { Component, inject, viewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { CollectionApi } from 'src/entities/collection';
+import { CollectionService } from 'src/entities/collection';
 import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
@@ -18,7 +18,7 @@ import { CollectionFormComponent } from '../ui';
 })
 export class CollectionUpdatePage {
   private readonly route = inject(ActivatedRoute);
-  private readonly collectionApi = inject(CollectionApi);
+  private readonly collectionService = inject(CollectionService);
   private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly router = inject(Router);
 
@@ -28,7 +28,7 @@ export class CollectionUpdatePage {
   constructor() {
     this.collectionId = this.route.snapshot.paramMap.get('id') as string;
 
-    this.collectionApi.getCollection(this.collectionId).subscribe((res) => {
+    this.collectionService.getCollection(this.collectionId).subscribe((res) => {
       if (!res || !res.category) return;
 
       this.collectionUpdateForm().form.patchValue({
@@ -49,7 +49,7 @@ export class CollectionUpdatePage {
       categoryId: collectionUpdateDTO.category.id,
     };
 
-    this.collectionApi.updateCollection(this.collectionId, reqDTO).subscribe(() => {
+    this.collectionService.updateCollection(this.collectionId, reqDTO).subscribe(() => {
       const modalData = {
         iconName: 'modal-create',
         subTitle: '사진첩 수정이 완료되었습니다.',
