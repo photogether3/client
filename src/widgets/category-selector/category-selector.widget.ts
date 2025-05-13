@@ -1,71 +1,56 @@
-import { Component, effect, inject, input, model, signal } from '@angular/core';
+import { Component, effect, inject, input, untracked } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import { map, take, tap } from 'rxjs';
 
-import { CategoriesGetDTO, CategoryApi, TagComponent } from 'src/entities/category';
+import { CategoryService, TagComponent } from 'src/entities/category';
 
 @Component({
   selector: 'app-category-selector',
   templateUrl: './category-selector.widget.html',
+  imports: [TagComponent],
   styles: `
     :host {
       height: 100%;
       flex-grow: 1;
     }
   `,
-  imports: [TagComponent],
 })
 export class CategorySelectorWidget {
-  private readonly categoryApi = inject(CategoryApi);
+  private readonly categoryService = inject(CategoryService);
 
   type = input.required<'all' | 'fav'>();
   isMultiSelect = input<boolean>(true);
-  selectedCategoryList = model<CategoriesGetDTO[]>([]);
-  categoryList = signal<(CategoriesGetDTO & { selected: boolean })[]>([]);
+
+  categoryList = this.categoryService.categories;
+  selectedCategories = this.categoryService.selectedCategories;
 
   constructor() {
+    // type()이 바뀔 때만 실행되고, selectedCategories() 변경은 트리거하지 않음
     effect(() => {
-      const apiMethod = this.type() === 'all' ? this.categoryApi.fetchCategories.bind(this.categoryApi) : this.categoryApi.fetchFavCategories.bind(this.categoryApi);
-      this.fetchCategoriesData(apiMethod);
-    });
-  }
+      const isAll = this.type() === 'all';
+      const api$ = isAll ? this.categoryService.getCategories() : this.categoryService.getFavCategories();
 
-  // 카테고리 선택/해제 토글
-  toggleCategory(categoryId: number) {
-    this.categoryList.update((categories) => {
-      if (this.isMultiSelect()) {
-        return categories.map((category) => {
-          if (category.id === categoryId) {
-            return {
-              ...category,
-              selected: !category.selected,
-            };
-          } else {
-            return category;
-          }
+      api$
+        .pipe(
+          map((list) => {
+            const selected = untracked(() => this.selectedCategories());
+            const selectedIds = new Set(selected.map((c) => c.id));
+            const updatedList = list.map((item) => ({
+              ...item,
+              selected: selectedIds.has(item.id),
+            }));
+            console.log(updatedList);
+            return updatedList;
+          }),
+          tap((res) => console.log(res)),
+        )
+        .subscribe((mapped) => {
+          this.categoryService.setSelectedCategories(mapped);
         });
-      } else {
-        return categories.map((category) => ({
-          ...category,
-          selected: category.id === categoryId ? !category.selected : false,
-        }));
-      }
     });
-
-    const updatedList = this.categoryList()
-      .filter((category) => category.selected)
-      .map(({ id, name }) => ({ id, name }));
-    this.selectedCategoryList.set(updatedList);
   }
 
-  private fetchCategoriesData(apiMethod: () => Observable<CategoriesGetDTO[]>) {
-    apiMethod().subscribe((res) => {
-      this.categoryList.set(
-        res.map((category) => ({
-          ...category,
-          selected: this.selectedCategoryList().some((cat) => cat.id === category.id),
-        })),
-      );
-    });
+  onToggle(categoryId: number) {
+    this.categoryService.toggle(categoryId, this.isMultiSelect());
   }
 }

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
 import { AuthApi, AuthService } from 'src/entities/auth';
-import { CategoriesGetDTO, CategoryApi, TagComponent } from 'src/entities/category';
+import { CategoriesGetDTO, CategoryService, TagComponent } from 'src/entities/category';
 import { ProfileGetDTO, UserApi } from 'src/entities/user';
 import { BottomSheetService, IconComponent, ModalService } from 'src/shared/components';
 import { ActionButtonsComponent, ActionButtonType } from 'src/widgets/action-buttons';
@@ -26,19 +26,19 @@ export class ProfilePage {
   private readonly bottomSheetService = inject(BottomSheetService);
   private readonly authApi = inject(AuthApi);
   private readonly userApi = inject(UserApi);
-  private readonly categoryApi = inject(CategoryApi);
+  private readonly categoryService = inject(CategoryService);
   private readonly modalService = inject(ModalService);
 
-  profile: (ProfileGetDTO & { tags: CategoriesGetDTO[] }) | undefined = undefined;
+  profile: (ProfileGetDTO & { categories: CategoriesGetDTO[] }) | undefined = undefined;
 
   constructor() {
     forkJoin({
       profile: this.userApi.getProfile(),
-      tags: this.categoryApi.fetchFavCategories(),
-    }).subscribe(({ profile, tags }) => {
+      categories: this.categoryService.getFavCategories(),
+    }).subscribe(({ profile, categories }) => {
       this.profile = {
         ...profile,
-        tags: tags,
+        categories,
       };
     });
   }

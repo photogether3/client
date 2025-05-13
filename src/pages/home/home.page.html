@@ -11,9 +11,9 @@
       <button (click)="openBottomSheet()" class="relative flex items-center gap-1 text-detail-l font-bold">
         태그필터
         <app-icon name="filter" styleClass="size-5" class="text-white" />
-        @if (filteredCategory().length > 0) {
+        @if (selectedCategories().length > 0) {
           <span class="absolute -right-2 -top-2 flex size-[18px] items-center justify-center rounded-full bg-primary50 text-detail-m font-bold text-white">
-            {{ filteredCategory().length }}
+            {{ selectedCategories().length }}
           </span>
         }
       </button>

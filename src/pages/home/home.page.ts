@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { filter, forkJoin, switchMap, tap } from 'rxjs';
 
-import { CategoriesGetDTO, CategoryApi } from 'src/entities/category';
+import { CategoryService } from 'src/entities/category';
 import { CollectionService } from 'src/entities/collection';
 import { UserApi } from 'src/entities/user';
 import { BottomSheetService, ButtonComponent, IconComponent } from 'src/shared/components';
@@ -20,6 +20,7 @@ import { CollectionCardComponent } from './ui';
   selector: 'home-page',
   templateUrl: './home.page.html',
   imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule, HeaderWidget, SystemFoldersComponent],
+  providers: [CategoryService],
   host: {
     class: 'flex h-screen flex-col',
   },
@@ -29,15 +30,15 @@ export class HomePage {
   private readonly collectionService = inject(CollectionService);
   private readonly router = inject(Router);
   private readonly userApi = inject(UserApi);
-  private readonly categoryApi = inject(CategoryApi);
+  private readonly categoryService = inject(CategoryService);
   private readonly bottomSheetService = inject(BottomSheetService);
 
   nickname: string = '';
-  filteredCategory = signal<CategoriesGetDTO[]>([]);
   searchValue = signal<string>('');
   isDeleted = signal<boolean>(false);
 
   collections = this.collectionService.collections;
+  selectedCategories = this.categoryService.selectedCategories;
 
   constructor() {
     this.loadCollections();
@@ -61,21 +62,22 @@ export class HomePage {
   }
 
   async openBottomSheet() {
-    const result: CategoriesGetDTO[] = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, {
-      selectedCategories: this.filteredCategory(),
+    const result = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, {
+      type: 'fav',
     });
 
     if (!result) {
       return;
     }
-    this.filteredCategory.set(result);
+
+    this.categoryService.setSelectedCategories(result);
   }
 
   private loadCollections() {
     this.collectionService.getCollections().subscribe();
 
-    this.categoryApi
-      .fetchFavCategories()
+    this.categoryService
+      .getFavCategories()
       .pipe(
         tap((res) => {
           if (res.length === 0) {

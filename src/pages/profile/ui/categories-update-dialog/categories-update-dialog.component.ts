@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 
-import { CategoriesGetDTO } from 'src/entities/category';
+import { CategoryService } from 'src/entities/category';
 import { BottomSheetService, ButtonComponent } from 'src/shared/components';
 import { CategorySelectorWidget } from 'src/widgets/category-selector';
 
@@ -13,23 +13,19 @@ import { CategorySelectorWidget } from 'src/widgets/category-selector';
   },
 })
 export class CategoriesUpdateDialog {
+  private readonly categoryService = inject(CategoryService);
   private readonly bottomSheetService = inject(BottomSheetService);
 
+  selectedCategories = this.categoryService.selectedCategories;
+
   type = signal<'all' | 'fav'>('all');
-  selectedCategoryList = signal<CategoriesGetDTO[]>([]);
 
   constructor() {
-    const data = this.bottomSheetService.data();
-
-    this.selectedCategoryList.set(data.selectedCategories);
-    this.type.set(data.type);
-  }
-
-  updateSelectedCategories(updatedList: CategoriesGetDTO[]) {
-    this.selectedCategoryList.set(updatedList);
+    const type = this.bottomSheetService.data();
+    this.type.set(type);
   }
 
   selectCategories() {
-    this.bottomSheetService.close(this.selectedCategoryList());
+    this.bottomSheetService.close(this.selectedCategories());
   }
 }
