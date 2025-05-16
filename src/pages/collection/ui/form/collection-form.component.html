@@ -2,6 +2,6 @@
   <app-input formControlName="title" label="사진첩 제목" placeholder="사진첩 제목을 입력해주세요." [hasInfoIcon]="true" info="사진첩 제목은 추후에 변경이 가능합니다." />
   <div class="flex flex-1 flex-col gap-2">
     <span class="text-body-s text-white">관심사 선택</span>
-    <app-category-selector [isMultiSelect]="false" type="fav" class="flex-1" />
+    <app-category-selector formControlName="category" [isMultiSelect]="false" type="fav" class="flex-1" />
   </div>
 </form>

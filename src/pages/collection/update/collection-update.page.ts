@@ -7,7 +7,6 @@ import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
 
 import { CollectionFormComponent } from '../ui';
-import { CategoryService } from 'src/entities/category';
 
 @Component({
   selector: 'app-collection-update',
@@ -20,11 +19,11 @@ import { CategoryService } from 'src/entities/category';
 export class CollectionUpdatePage {
   private readonly route = inject(ActivatedRoute);
   private readonly collectionService = inject(CollectionService);
-  private readonly categoryService = inject(CategoryService);
   private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly router = inject(Router);
 
   readonly collectionUpdateForm = viewChild.required<CollectionFormComponent>('collectionUpdateForm');
+
   collectionId?: string;
 
   constructor() {
@@ -37,8 +36,6 @@ export class CollectionUpdatePage {
         title: res.title,
         category: res.category,
       });
-
-      this.categoryService.setSelectedCategories([{ ...res.category, selected: true }]);
     });
   }
 

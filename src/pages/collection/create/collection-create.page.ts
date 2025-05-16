@@ -21,13 +21,13 @@ export class CollectionCreatePage {
   private readonly collectionService = inject(CollectionService);
   private readonly router = inject(Router);
 
-  readonly collectionCreateForm = viewChild<CollectionFormComponent>('collectionCreateForm');
+  readonly collectionCreateForm = viewChild.required<CollectionFormComponent>('collectionCreateForm');
 
   constructor() {}
 
   // 사진첩 생성
   createCollection() {
-    const collectionCreateDTO = this.collectionCreateForm()!.getRawValue();
+    const collectionCreateDTO = this.collectionCreateForm().getRawValue();
     const reqDTO = {
       title: collectionCreateDTO.title,
       categoryId: collectionCreateDTO.category.id,

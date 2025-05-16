@@ -1,4 +1,4 @@
-import { Component, effect, inject, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CategoryService } from 'src/entities/category';
@@ -24,24 +24,10 @@ import { CategorySelectorWidget } from 'src/widgets/category-selector';
   providers: [CategoryService],
 })
 export class CollectionFormComponent extends BaseForm<CollectionFormType> {
-  private readonly categoryService = inject(CategoryService);
-
   mode = input.required<string>();
-
-  selectedCategories = this.categoryService.selectedCategories;
 
   constructor() {
     super();
-
-    this.initForm();
-
-    effect(() => {
-      const category = this.selectedCategories()[0];
-
-      requestAnimationFrame(() => {
-        this.form.patchValue({ category });
-      });
-    });
   }
 
   protected initForm() {
