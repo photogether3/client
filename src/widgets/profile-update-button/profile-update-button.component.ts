@@ -2,7 +2,7 @@ import { Component, inject, input, output } from '@angular/core';
 
 import { forkJoin } from 'rxjs';
 
-import { CategoryApi } from 'src/entities/category';
+import { CategoryService } from 'src/entities/category';
 import { UserApi } from 'src/entities/user';
 import { ProfileFormType } from 'src/entities/user/model/user.type';
 import { ButtonComponent } from 'src/shared/components';
@@ -13,7 +13,7 @@ import { ButtonComponent } from 'src/shared/components';
   imports: [ButtonComponent],
 })
 export class ProfileUpdateButton {
-  private readonly categoryApi = inject(CategoryApi);
+  private readonly categoryService = inject(CategoryService);
   private readonly userApi = inject(UserApi);
 
   form = input.required<ProfileFormType>();
@@ -37,7 +37,7 @@ export class ProfileUpdateButton {
 
     forkJoin({
       profile: this.userApi.updateProfile(updateProfileDTO),
-      favCategories: this.categoryApi.updateFavCategories(updateCategoryDTO),
+      favCategories: this.categoryService.updateFavCategories(updateCategoryDTO),
     }).subscribe(() => {
       this.handleButton.emit();
     });

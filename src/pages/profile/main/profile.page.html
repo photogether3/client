@@ -25,7 +25,7 @@
       </p>
     </div>
     <div class="flex flex-wrap gap-2 pt-5">
-      @for (tag of profile.tags; track $index) {
+      @for (tag of profile.categories; track $index) {
         <app-tag [tagName]="tag.name" type="solid" size="md" />
       }
     </div>

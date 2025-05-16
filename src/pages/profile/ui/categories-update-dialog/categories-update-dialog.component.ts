@@ -1,32 +1,31 @@
 import { Component, inject, signal } from '@angular/core';
 
-import { CategoriesGetDTO } from 'src/entities/category';
+import { CategoryService } from 'src/entities/category';
 import { BottomSheetService, ButtonComponent } from 'src/shared/components';
 import { CategorySelectorWidget } from 'src/widgets/category-selector';
 
 @Component({
   selector: 'categories-update-dialog',
   templateUrl: './categories-update-dialog.component.html',
-  styles: `
-    :host {
-      height: 100%;
-    }
-  `,
   imports: [CategorySelectorWidget, ButtonComponent],
+  host: {
+    class: 'h-full',
+  },
 })
 export class CategoriesUpdateDialog {
+  private readonly categoryService = inject(CategoryService);
   private readonly bottomSheetService = inject(BottomSheetService);
 
-  selectedCategoryList = signal<CategoriesGetDTO[]>(this.bottomSheetService.data() || []);
+  selectedCategories = this.categoryService.selectedCategories;
 
-  constructor() {}
+  type = signal<'all' | 'fav'>('all');
 
-  updateSelectedCategories(updatedList: CategoriesGetDTO[]) {
-    this.selectedCategoryList.set(updatedList);
+  constructor() {
+    const type = this.bottomSheetService.data();
+    this.type.set(type);
   }
 
-  // 태그 선택 완료
   selectCategories() {
-    this.bottomSheetService.close(this.selectedCategoryList());
+    this.bottomSheetService.close(this.selectedCategories());
   }
 }

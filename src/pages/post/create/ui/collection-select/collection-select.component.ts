@@ -1,10 +1,10 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { forkJoin } from 'rxjs';
 
-import { CollectionApi, CollectionType } from 'src/entities/collection';
-import { PostApi, PostCreateFormType } from 'src/entities/post';
+import { CollectionService } from 'src/entities/collection';
+import { PostCreateFormType, PostService } from 'src/entities/post';
 import { UserApi } from 'src/entities/user';
 import { CollectionCardComponent } from 'src/pages/home';
 import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
@@ -22,38 +22,29 @@ import { SystemFoldersComponent } from 'src/widgets/system-folders/system-folder
 })
 export class CollectionSelectComponent {
   private readonly router = inject(Router);
-  private readonly postApi = inject(PostApi);
   private readonly userApi = inject(UserApi);
-  private readonly collectionApi = inject(CollectionApi);
+  private readonly postService = inject(PostService);
+  private readonly collectionService = inject(CollectionService);
   private readonly stepService = inject(StepService);
   private readonly modalReactiveService = inject(ModalReactiveService);
+
+  collections = this.collectionService.collections;
 
   nickname: string = '';
   postFormValue = signal<PostCreateFormType | undefined>(undefined);
   selectedCollectionId = signal<number | null>(null);
-  collections = signal<CollectionType[]>([]);
-
-  myCollections = computed(() => ({
-    default: this.collections()?.filter((collection) => collection.type === 'DEFAULT'),
-    uncategorized: this.collections()?.find((collection) => collection.type === 'UNCATEGORIZED'),
-    trash: this.collections()?.find((collection) => collection.type === 'TRASH'),
-  }));
 
   constructor() {
     forkJoin({
-      collections: this.collectionApi.getCollections(),
       profile: this.userApi.getProfile(),
-    }).subscribe(({ collections, profile }) => {
+    }).subscribe(({ profile }) => {
       this.nickname = profile.nickname;
 
       const formValue = this.stepService.getExtraData('form');
       this.postFormValue.set({
         ...formValue,
-        collectionId: collections.find((collection) => collection.type === 'UNCATEGORIZED')?.id ?? 0,
+        collectionId: this.collections()?.unCategorized?.id ?? 0,
       });
-      this.collections.set(collections);
-
-      console.log(this.postFormValue());
     });
   }
 
@@ -79,7 +70,7 @@ export class CollectionSelectComponent {
       return;
     }
 
-    this.postApi.createPost(dto).subscribe({
+    this.postService.createPost(dto).subscribe({
       next: () => {
         const modalData = {
           iconName: 'modal-photo',

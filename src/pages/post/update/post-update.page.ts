@@ -1,11 +1,12 @@
 import { Component, inject, viewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { PostApi } from 'src/entities/post';
+import { PostService } from 'src/entities/post';
 import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
+import { StepService } from 'src/shared/services';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
-import { StepService } from 'src/shared/services';
+
 import { PostFormComponent } from '../ui';
 
 @Component({
@@ -16,16 +17,17 @@ import { PostFormComponent } from '../ui';
 })
 export class PostUpdatePage {
   private readonly router = inject(Router);
-  private readonly postApi = inject(PostApi);
+  private readonly route = inject(ActivatedRoute);
+  private readonly postService = inject(PostService);
   private readonly modalReactiveService = inject(ModalReactiveService);
 
   postForm = viewChild.required<PostFormComponent>('postForm');
-  postId: number = 0;
+  postId: string = '';
   previewUrl: string | ArrayBuffer | null | undefined = null;
 
   constructor() {
-    const postId = this.router.url.split('/').at(-1);
-    this.postId = Number(postId) || 0;
+    this.postId = this.route.snapshot.paramMap.get('id') as string;
+    if (!this.postId) return;
   }
 
   ngOnInit(): void {
@@ -34,7 +36,7 @@ export class PostUpdatePage {
       return;
     }
 
-    this.postApi.getPost(this.postId).subscribe((res) => {
+    this.postService.getPost(this.postId).subscribe((res) => {
       this.postForm().form.patchValue({
         title: res?.title,
         content: res?.content,
@@ -50,13 +52,12 @@ export class PostUpdatePage {
     const dto = this.postForm().getRawValue();
     const updateDTO = {
       ...dto,
-      postId: this.postId,
       metadataList: dto.metadataStringify.filter((metadata: any) => metadata.content.trim() !== ''),
     };
 
     if (!this.postId) return;
 
-    this.postApi.updatePost(this.postId, updateDTO).subscribe(() => {
+    this.postService.updatePost(this.postId, updateDTO).subscribe(() => {
       const modalData = {
         iconName: 'modal-create',
         subTitle: '게시물 수정이 완료되었습니다.',

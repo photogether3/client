@@ -2,7 +2,7 @@ import { Component, inject, Type } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TagComponent } from 'src/entities/category';
-import { PostApi, PostType } from 'src/entities/post';
+import { PostService, PostType } from 'src/entities/post';
 import { BottomSheetService, ButtonComponent, IconComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
@@ -19,7 +19,7 @@ export class PostDetailPage {
   private readonly bottomSheetService = inject(BottomSheetService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly postApi = inject(PostApi);
+  private readonly postService = inject(PostService);
   private readonly modalReactiveService = inject(ModalReactiveService);
 
   collectionId: string | undefined = undefined;
@@ -29,7 +29,7 @@ export class PostDetailPage {
     const postId = this.route.snapshot.paramMap.get('id') as string;
     this.collectionId = this.router.getCurrentNavigation()?.extras.state?.['collectionId'];
 
-    this.postApi.getPost(Number(postId)).subscribe((res) => {
+    this.postService.getPost(postId).subscribe((res) => {
       if (!res) {
         throw new Error('게시물을 찾을 수 없습니다.');
       }
@@ -96,7 +96,7 @@ export class PostDetailPage {
           return;
         }
 
-        return this.postApi.deletePost([this.post?.id]).subscribe({
+        return this.postService.deletePost([this.post?.id]).subscribe({
           next: () => {
             const modalData = {
               title: '게시물 삭제 완료',

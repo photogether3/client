@@ -2,13 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, inject, signal, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { CategoriesGetDTO } from 'src/entities/category';
+import { CategoryService } from 'src/entities/category';
 import { ProfileFormType } from 'src/entities/user/model/user.type';
-import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
+import { ButtonComponent } from 'src/shared/components';
 import { CategorySelectorWidget } from 'src/widgets/category-selector';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
-import { ProfileUpdateButton } from 'src/widgets/porfile-update-button';
+import { ProfileUpdateButton } from 'src/widgets/profile-update-button';
 import { ProfileUpdateForm } from 'src/widgets/profile-update-form';
 
 @Component({
@@ -16,16 +16,20 @@ import { ProfileUpdateForm } from 'src/widgets/profile-update-form';
   templateUrl: './onboarding.page.html',
   standalone: true,
   imports: [CommonModule, ButtonComponent, ProfileUpdateForm, CategorySelectorWidget, HeaderWidget, FooterWidget, ProfileUpdateButton],
+  providers: [CategoryService],
   host: {
     class: 'flex flex-col h-screen',
   },
 })
 export class OnboardingPage {
   private readonly router = inject(Router);
-  private readonly modalReactiveService = inject(ModalReactiveService);
+  private readonly categoryService = inject(CategoryService);
+
+  readonly selectedCategories = this.categoryService.selectedCategories;
+
+  profileForm = viewChild.required<ProfileUpdateForm>('profileForm');
 
   step = signal(1);
-  profileForm = viewChild.required<ProfileUpdateForm>('profileForm');
   profileSnapshot = signal<ProfileFormType | undefined>(undefined);
 
   get buttonDisabled(): boolean {
@@ -36,10 +40,11 @@ export class OnboardingPage {
     }
   }
 
-  constructor() {}
-
-  setCategories(categories: CategoriesGetDTO[]) {
-    this.profileSnapshot.update((prev) => ({ ...prev!, categories }));
+  constructor() {
+    effect(() => {
+      const categories = this.selectedCategories();
+      this.profileSnapshot.update((prev) => ({ ...prev!, categories }));
+    });
   }
 
   clickFooterButton() {

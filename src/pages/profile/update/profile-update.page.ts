@@ -4,13 +4,13 @@ import { Router } from '@angular/router';
 
 import { forkJoin } from 'rxjs';
 
-import { CategoriesGetDTO, CategoryApi, TagComponent } from 'src/entities/category';
+import { CategoriesGetDTO, CategoryService, TagComponent } from 'src/entities/category';
 import { UserApi } from 'src/entities/user';
 import { BottomSheetService, ButtonComponent, ModalReactiveService } from 'src/shared/components';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
+import { ProfileUpdateButton } from 'src/widgets/profile-update-button';
 import { ProfileUpdateForm } from 'src/widgets/profile-update-form';
-import { ProfileUpdateButton } from 'src/widgets/porfile-update-button';
 
 import { CategoriesUpdateDialog } from '../ui';
 
@@ -22,9 +22,11 @@ import { CategoriesUpdateDialog } from '../ui';
 export class ProfileUpdatePage {
   private readonly router = inject(Router);
   private readonly userApi = inject(UserApi);
-  private readonly categoryApi = inject(CategoryApi);
+  private readonly categoryService = inject(CategoryService);
   private readonly bottomSheetService = inject(BottomSheetService);
   private readonly modalReactiveService = inject(ModalReactiveService);
+
+  readonly selectedCategories = this.categoryService.selectedCategories;
 
   profileForm = viewChild.required<ProfileUpdateForm>('profileForm');
 
@@ -35,7 +37,7 @@ export class ProfileUpdatePage {
   constructor() {
     forkJoin({
       profile: this.userApi.getProfile(),
-      categories: this.categoryApi.fetchFavCategories(),
+      categories: this.categoryService.getFavCategories(),
     }).subscribe(({ profile, categories }) => {
       this.profileForm().form.patchValue({
         nickname: profile.nickname,
@@ -44,17 +46,23 @@ export class ProfileUpdatePage {
         previewUrl: profile.imageUrl,
       });
       categories.forEach((c) => this.categories.push(new FormControl(c, { nonNullable: true })));
+
+      const myCategories = this.categories.value.map((c) => ({ ...c, selected: true }));
+      this.categoryService.setSelectedCategories(myCategories);
     });
   }
 
   async updateCategory() {
-    const result = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, this.categories.value);
+    const result = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, 'all');
 
     if (!result) {
       return;
     }
-    this.categories.clear();
-    result.forEach((c: CategoriesGetDTO) => this.categories.push(new FormControl(c, { nonNullable: true })));
+
+    const newControls = result.map((c: any) => new FormControl<CategoriesGetDTO>(c, { nonNullable: true }));
+    const newFormArray = new FormArray(newControls);
+
+    this.profileForm().form.setControl('categories', newFormArray);
   }
 
   updateProfile() {

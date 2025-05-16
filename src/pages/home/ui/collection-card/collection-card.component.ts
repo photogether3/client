@@ -3,7 +3,7 @@ import { Component, computed, ElementRef, inject, input, OnInit, output, signal,
 import { Router } from '@angular/router';
 
 import { TagComponent } from 'src/entities/category';
-import { CollectionApi, CollectionType } from 'src/entities/collection';
+import { CollectionService, CollectionType } from 'src/entities/collection';
 import { IconComponent, ModalReactiveService } from 'src/shared/components';
 import { PopoverDirective } from 'src/shared/directives/popover.directive';
 
@@ -17,12 +17,16 @@ import { PopoverItemType } from '../popover';
 export class CollectionCardComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly modalReactiveService = inject(ModalReactiveService);
-  private readonly collectionApi = inject(CollectionApi);
+  private readonly collectionService = inject(CollectionService);
 
   collection = input.required<CollectionType>();
   isCheckable = input<boolean>(false);
   isChecked = input<boolean>(false);
+
+  popDirective = viewChild(PopoverDirective);
+
   clickEvent = output<number>();
+  deleted = output<boolean>();
 
   popoverBtn = viewChild.required<ElementRef<HTMLElement>>('popoverBtn');
 
@@ -87,8 +91,7 @@ export class CollectionCardComponent implements OnInit {
   async onClick(type: 'update' | 'organize' | 'delete') {
     switch (type) {
       case 'update':
-        this.router.navigateByUrl(`collection/update/${this.collection().id}`);
-        return this.closePopover();
+        return this.router.navigateByUrl(`collection/update/${this.collection().id}`);
 
       case 'delete':
         const modalData = {
@@ -99,10 +102,10 @@ export class CollectionCardComponent implements OnInit {
         };
 
         const result = await this.modalReactiveService.open(modalData);
-        if (result !== '삭제') {
+        if (!result || result !== '삭제') {
           return;
         }
-        this.collectionApi.deleteCollection(this.collection().id).subscribe({
+        return this.collectionService.deleteCollection(this.collection().id).subscribe({
           next: () => {
             const modalData = {
               title: '사진첩 삭제 완료',
@@ -112,23 +115,19 @@ export class CollectionCardComponent implements OnInit {
             };
 
             this.modalReactiveService.open(modalData).then(() => {
+              this.deleted.emit(true);
+              this.popDirective()?.closePopover();
               this.router.navigateByUrl('/home');
             });
           },
         });
-        return this.closePopover();
 
       case 'organize':
         // TODO 사진첩 내부로 이동, isEditMode 파라미터 전달
-        this.router.navigateByUrl(`collection/${this.collection().id}`);
-        return this.closePopover();
+        return this.router.navigateByUrl(`collection/${this.collection().id}`);
 
       default:
-        return this.closePopover();
+        return;
     }
-  }
-
-  private closePopover() {
-    this.isPopoverOpen.set(false);
   }
 }

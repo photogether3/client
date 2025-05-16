@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal, Type } from '@angular/core';
+import { Component, effect, inject, signal, Type } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { filter, forkJoin, switchMap, tap } from 'rxjs';
 
-import { CategoriesGetDTO, CategoryApi } from 'src/entities/category';
-import { CollectionApi, CollectionType } from 'src/entities/collection';
+import { CategoryService } from 'src/entities/category';
+import { CollectionService } from 'src/entities/collection';
 import { UserApi } from 'src/entities/user';
 import { BottomSheetService, ButtonComponent, IconComponent } from 'src/shared/components';
 import { ThemeService } from 'src/shared/services';
@@ -20,55 +20,37 @@ import { CollectionCardComponent } from './ui';
   selector: 'home-page',
   templateUrl: './home.page.html',
   imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule, HeaderWidget, SystemFoldersComponent],
+  providers: [CategoryService],
   host: {
     class: 'flex h-screen flex-col',
   },
 })
-export class HomePage implements OnInit {
+export class HomePage {
   private readonly themeService = inject(ThemeService);
+  private readonly collectionService = inject(CollectionService);
   private readonly router = inject(Router);
   private readonly userApi = inject(UserApi);
-  private readonly categoryApi = inject(CategoryApi);
-  private readonly collectionApi = inject(CollectionApi);
+  private readonly categoryService = inject(CategoryService);
   private readonly bottomSheetService = inject(BottomSheetService);
 
   nickname: string = '';
-  filteredCategory = signal<CategoriesGetDTO[]>([]);
   searchValue = signal<string>('');
-  allDefaultCollections = signal<CollectionType[]>([]);
-  defaultCollections = computed(() => {
-    const collections = this.allDefaultCollections();
-    const filters = this.filteredCategory();
+  isDeleted = signal<boolean>(false);
 
-    if (filters.length === 0) return collections;
+  collections = this.collectionService.collections;
+  selectedCategories = this.categoryService.selectedCategories;
 
-    return collections.filter((c) => filters.some((f) => f.id === c.category?.id));
-  });
+  constructor() {
+    this.loadCollections();
 
-  constructor() {}
+    effect(() => {
+      const isDeleted = this.isDeleted();
+      if (!isDeleted) {
+        return;
+      }
 
-  ngOnInit(): void {
-    this.categoryApi
-      .fetchFavCategories()
-      .pipe(
-        tap((res) => {
-          if (res.length === 0) {
-            this.router.navigateByUrl('/onboarding');
-          }
-        }),
-        filter((res) => res.length > 0),
-        switchMap(() =>
-          forkJoin({
-            profile: this.userApi.getProfile(),
-            collections: this.collectionApi.getCollections(),
-          }),
-        ),
-      )
-      .subscribe(({ profile, collections }) => {
-        this.nickname = profile.nickname;
-        const defaultCollections = collections.filter((collection: CollectionType) => collection.type === 'DEFAULT');
-        this.allDefaultCollections.set(defaultCollections);
-      });
+      this.loadCollections();
+    });
   }
 
   createCollection() {
@@ -80,11 +62,37 @@ export class HomePage implements OnInit {
   }
 
   async openBottomSheet() {
-    const result: CategoriesGetDTO[] = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, this.filteredCategory());
+    const result = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, {
+      type: 'fav',
+    });
 
     if (!result) {
       return;
     }
-    this.filteredCategory.set(result);
+
+    this.categoryService.setSelectedCategories(result);
+  }
+
+  private loadCollections() {
+    this.collectionService.getCollections().subscribe();
+
+    this.categoryService
+      .getFavCategories()
+      .pipe(
+        tap((res) => {
+          if (res.length === 0) {
+            this.router.navigateByUrl('/onboarding');
+          }
+        }),
+        filter((res) => res.length > 0),
+        switchMap(() =>
+          forkJoin({
+            profile: this.userApi.getProfile(),
+          }),
+        ),
+      )
+      .subscribe(({ profile }) => {
+        this.nickname = profile.nickname;
+      });
   }
 }

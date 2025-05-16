@@ -1,71 +1,103 @@
-import { Component, effect, inject, input, model, signal } from '@angular/core';
+import { Component, effect, forwardRef, inject, input, signal } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { Observable } from 'rxjs';
+import { map } from 'rxjs';
 
-import { CategoriesGetDTO, CategoryApi, TagComponent } from 'src/entities/category';
+import { CategoriesGetDTO, CategoryService, TagComponent } from 'src/entities/category';
 
 @Component({
   selector: 'app-category-selector',
   templateUrl: './category-selector.widget.html',
-  styles: `
-    :host {
-      height: 100%;
-      flex-grow: 1;
-    }
-  `,
   imports: [TagComponent],
+  host: {
+    class: 'h-full flex-1',
+  },
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => CategorySelectorWidget),
+      multi: true,
+    },
+    CategoryService,
+  ],
 })
-export class CategorySelectorWidget {
-  private readonly categoryApi = inject(CategoryApi);
+export class CategorySelectorWidget implements ControlValueAccessor {
+  private readonly categoryService = inject(CategoryService);
 
   type = input.required<'all' | 'fav'>();
   isMultiSelect = input<boolean>(true);
-  selectedCategoryList = model<CategoriesGetDTO[]>([]);
-  categoryList = signal<(CategoriesGetDTO & { selected: boolean })[]>([]);
+
+  categoryList = this.categoryService.categories;
+
+  /** CVA: 폼 바인딩용 internal value */
+  private _innerValue = signal<CategoriesGetDTO[]>([]);
+  private _isFormMode = signal(false);
+
+  // CVA 콜백
+  private onChange: (v: CategoriesGetDTO[]) => void = () => {};
+  private onTouched: () => void = () => {};
 
   constructor() {
     effect(() => {
-      const apiMethod = this.type() === 'all' ? this.categoryApi.fetchCategories.bind(this.categoryApi) : this.categoryApi.fetchFavCategories.bind(this.categoryApi);
-      this.fetchCategoriesData(apiMethod);
-    });
-  }
+      const isAll = this.type() === 'all';
+      const api$ = isAll ? this.categoryService.getCategories() : this.categoryService.getFavCategories();
 
-  // 카테고리 선택/해제 토글
-  toggleCategory(categoryId: number) {
-    this.categoryList.update((categories) => {
-      if (this.isMultiSelect()) {
-        return categories.map((category) => {
-          if (category.id === categoryId) {
-            return {
-              ...category,
-              selected: !category.selected,
-            };
-          } else {
-            return category;
-          }
+      api$
+        .pipe(
+          map((list) => {
+            if (this._isFormMode()) {
+              const selIds = new Set(this._innerValue().map((c) => c.id));
+              return list.map((item) => ({ ...item, selected: selIds.has(item.id) }));
+            }
+
+            const serviceSelIds = new Set(this.categoryService.selectedCategories().map((c) => c.id));
+            return list.map((item) => ({ ...item, selected: serviceSelIds.has(item.id) }));
+          }),
+        )
+        .subscribe((mapped) => {
+          this.categoryService.setSelectedCategories(mapped);
         });
+    });
+  }
+
+  onToggle(category: CategoriesGetDTO) {
+    // 1. 폼 모드: _innerValue가 있으면 폼 콜백만 호출
+    if (this._isFormMode()) {
+      let next: CategoriesGetDTO[];
+
+      if (this.isMultiSelect()) {
+        next = this._innerValue().some((c) => c.id === category.id) ? this._innerValue().filter((c) => c.id !== category.id) : [...this._innerValue(), category];
       } else {
-        return categories.map((category) => ({
-          ...category,
-          selected: category.id === categoryId ? !category.selected : false,
-        }));
+        next = [category];
       }
-    });
 
-    const updatedList = this.categoryList()
-      .filter((category) => category.selected)
-      .map(({ id, name }) => ({ id, name }));
-    this.selectedCategoryList.set(updatedList);
+      this._innerValue.set(next);
+      const toEmit = this.isMultiSelect() ? next : (next[0] ?? null);
+
+      this.onChange(toEmit as any);
+    }
+
+    // 2. 서비스 모드: 직접 토글
+    this.categoryService.toggle(category.id, this.isMultiSelect());
   }
 
-  private fetchCategoriesData(apiMethod: () => Observable<CategoriesGetDTO[]>) {
-    apiMethod().subscribe((res) => {
-      this.categoryList.set(
-        res.map((category) => ({
-          ...category,
-          selected: this.selectedCategoryList().some((cat) => cat.id === category.id),
-        })),
-      );
-    });
+  // --- ControlValueAccessor 구현 ---
+  writeValue(value: CategoriesGetDTO[] | CategoriesGetDTO): void {
+    this._isFormMode.set(true);
+
+    if (Array.isArray(value)) {
+      this._innerValue.set(value);
+    } else if (value !== null) {
+      this._innerValue.set([value]);
+    } else {
+      this._innerValue.set([]);
+    }
   }
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+  // --------------------------------
 }
