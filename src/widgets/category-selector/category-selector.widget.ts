@@ -1,31 +1,43 @@
-import { Component, effect, inject, input, untracked } from '@angular/core';
+import { Component, effect, forwardRef, inject, input, signal } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { map, take, tap } from 'rxjs';
+import { map } from 'rxjs';
 
-import { CategoryService, TagComponent } from 'src/entities/category';
+import { CategoriesGetDTO, CategoryService, TagComponent } from 'src/entities/category';
 
 @Component({
   selector: 'app-category-selector',
   templateUrl: './category-selector.widget.html',
   imports: [TagComponent],
-  styles: `
-    :host {
-      height: 100%;
-      flex-grow: 1;
-    }
-  `,
+  host: {
+    class: 'h-full flex-1',
+  },
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => CategorySelectorWidget),
+      multi: true,
+    },
+    CategoryService,
+  ],
 })
-export class CategorySelectorWidget {
+export class CategorySelectorWidget implements ControlValueAccessor {
   private readonly categoryService = inject(CategoryService);
 
   type = input.required<'all' | 'fav'>();
   isMultiSelect = input<boolean>(true);
 
   categoryList = this.categoryService.categories;
-  selectedCategories = this.categoryService.selectedCategories;
+
+  /** CVA: 폼 바인딩용 internal value */
+  private _innerValue = signal<CategoriesGetDTO[]>([]);
+  private _isFormMode = signal(false);
+
+  // CVA 콜백
+  private onChange: (v: CategoriesGetDTO[]) => void = () => {};
+  private onTouched: () => void = () => {};
 
   constructor() {
-    // type()이 바뀔 때만 실행되고, selectedCategories() 변경은 트리거하지 않음
     effect(() => {
       const isAll = this.type() === 'all';
       const api$ = isAll ? this.categoryService.getCategories() : this.categoryService.getFavCategories();
@@ -33,16 +45,14 @@ export class CategorySelectorWidget {
       api$
         .pipe(
           map((list) => {
-            const selected = untracked(() => this.selectedCategories());
-            const selectedIds = new Set(selected.map((c) => c.id));
-            const updatedList = list.map((item) => ({
-              ...item,
-              selected: selectedIds.has(item.id),
-            }));
-            console.log(updatedList);
-            return updatedList;
+            if (this._isFormMode()) {
+              const selIds = new Set(this._innerValue().map((c) => c.id));
+              return list.map((item) => ({ ...item, selected: selIds.has(item.id) }));
+            }
+
+            const serviceSelIds = new Set(this.categoryService.selectedCategories().map((c) => c.id));
+            return list.map((item) => ({ ...item, selected: serviceSelIds.has(item.id) }));
           }),
-          tap((res) => console.log(res)),
         )
         .subscribe((mapped) => {
           this.categoryService.setSelectedCategories(mapped);
@@ -50,7 +60,44 @@ export class CategorySelectorWidget {
     });
   }
 
-  onToggle(categoryId: number) {
-    this.categoryService.toggle(categoryId, this.isMultiSelect());
+  onToggle(category: CategoriesGetDTO) {
+    // 1. 폼 모드: _innerValue가 있으면 폼 콜백만 호출
+    if (this._isFormMode()) {
+      let next: CategoriesGetDTO[];
+
+      if (this.isMultiSelect()) {
+        next = this._innerValue().some((c) => c.id === category.id) ? this._innerValue().filter((c) => c.id !== category.id) : [...this._innerValue(), category];
+      } else {
+        next = [category];
+      }
+
+      this._innerValue.set(next);
+      const toEmit = this.isMultiSelect() ? next : (next[0] ?? null);
+
+      this.onChange(toEmit as any);
+    }
+
+    // 2. 서비스 모드: 직접 토글
+    this.categoryService.toggle(category.id, this.isMultiSelect());
   }
+
+  // --- ControlValueAccessor 구현 ---
+  writeValue(value: CategoriesGetDTO[] | CategoriesGetDTO): void {
+    this._isFormMode.set(true);
+
+    if (Array.isArray(value)) {
+      this._innerValue.set(value);
+    } else if (value !== null) {
+      this._innerValue.set([value]);
+    } else {
+      this._innerValue.set([]);
+    }
+  }
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+  // --------------------------------
 }
