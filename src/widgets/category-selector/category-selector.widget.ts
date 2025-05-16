@@ -18,7 +18,6 @@ import { CategoriesGetDTO, CategoryService, TagComponent } from 'src/entities/ca
       useExisting: forwardRef(() => CategorySelectorWidget),
       multi: true,
     },
-    CategoryService,
   ],
 })
 export class CategorySelectorWidget implements ControlValueAccessor {
@@ -26,11 +25,12 @@ export class CategorySelectorWidget implements ControlValueAccessor {
 
   type = input.required<'all' | 'fav'>();
   isMultiSelect = input<boolean>(true);
+  selectedList = input<CategoriesGetDTO[]>([]);
 
   categoryList = this.categoryService.categories;
 
   /** CVA: 폼 바인딩용 internal value */
-  private _innerValue = signal<CategoriesGetDTO[]>([]);
+  private _formValue = signal<CategoriesGetDTO[]>([]);
   private _isFormMode = signal(false);
 
   // CVA 콜백
@@ -46,11 +46,11 @@ export class CategorySelectorWidget implements ControlValueAccessor {
         .pipe(
           map((list) => {
             if (this._isFormMode()) {
-              const selIds = new Set(this._innerValue().map((c) => c.id));
+              const selIds = new Set(this._formValue().map((c) => c.id));
               return list.map((item) => ({ ...item, selected: selIds.has(item.id) }));
             }
 
-            const serviceSelIds = new Set(this.categoryService.selectedCategories().map((c) => c.id));
+            const serviceSelIds = new Set(this.selectedList().map((c) => c.id));
             return list.map((item) => ({ ...item, selected: serviceSelIds.has(item.id) }));
           }),
         )
@@ -61,17 +61,17 @@ export class CategorySelectorWidget implements ControlValueAccessor {
   }
 
   onToggle(category: CategoriesGetDTO) {
-    // 1. 폼 모드: _innerValue가 있으면 폼 콜백만 호출
+    // 1. 폼 모드: _formValue가 있으면 폼 콜백만 호출
     if (this._isFormMode()) {
       let next: CategoriesGetDTO[];
 
       if (this.isMultiSelect()) {
-        next = this._innerValue().some((c) => c.id === category.id) ? this._innerValue().filter((c) => c.id !== category.id) : [...this._innerValue(), category];
+        next = this._formValue().some((c) => c.id === category.id) ? this._formValue().filter((c) => c.id !== category.id) : [...this._formValue(), category];
       } else {
         next = [category];
       }
 
-      this._innerValue.set(next);
+      this._formValue.set(next);
       const toEmit = this.isMultiSelect() ? next : (next[0] ?? null);
 
       this.onChange(toEmit as any);
@@ -86,11 +86,11 @@ export class CategorySelectorWidget implements ControlValueAccessor {
     this._isFormMode.set(true);
 
     if (Array.isArray(value)) {
-      this._innerValue.set(value);
+      this._formValue.set(value);
     } else if (value !== null) {
-      this._innerValue.set([value]);
+      this._formValue.set([value]);
     } else {
-      this._innerValue.set([]);
+      this._formValue.set([]);
     }
   }
   registerOnChange(fn: any): void {

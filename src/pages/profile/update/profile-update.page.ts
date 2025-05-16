@@ -53,7 +53,10 @@ export class ProfileUpdatePage {
   }
 
   async updateCategory() {
-    const result = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, 'all');
+    const result = await this.bottomSheetService.open(CategoriesUpdateDialog as Type<Component>, {
+      type: 'all',
+      list: this.selectedCategories(),
+    });
 
     if (!result) {
       return;
