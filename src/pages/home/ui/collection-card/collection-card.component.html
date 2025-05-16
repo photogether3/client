@@ -1,9 +1,9 @@
-<!-- TODO 테두리 바꿔야 함  -->
 <section
   (click)="clickCard()"
   class="relative flex h-[275px] flex-col items-center justify-center gap-4 overflow-hidden rounded-[12px] border border-gray70 bg-[#23252B]/85 px-5 py-4 shadow-custom">
   <div
     class="absolute inset-0 z-0 h-full w-full bg-cover bg-center blur-[20px]"
+    style="background-blend-mode: multiply; opacity: 55%"
     [ngStyle]="collection().imageUrls.length ? { 'background-image': 'url(' + collection().imageUrls[0].blur + ')' } : {}"></div>
   <div class="absolute inset-0 z-10 bg-[#2A2C34]/35"></div>
 
