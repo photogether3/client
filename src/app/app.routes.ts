@@ -1,3 +1,4 @@
+import { authGuard } from 'src/entities/auth';
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -15,35 +16,42 @@ export const routes: Routes = [
     loadComponent: () => import('../pages/register/ui/pages').then((m) => m.RegisterPage),
   },
   {
+    path: 'forgot-password',
+    loadComponent: () => import('../pages/forgot-password').then((m) => m.ForgotPasswordPage),
+  },
+  {
     path: 'otp-verify',
     loadComponent: () => import('../pages/otp-verify').then((m) => m.OtpVerifyPage),
   },
   {
     path: 'withdraw',
     loadComponent: () => import('../pages/withdraw').then((m) => m.WithdrawPage),
+    canActivate: [authGuard],
   },
   {
     path: 'reset',
     loadComponent: () => import('../pages/reset').then((m) => m.ResetPage),
+    canActivate: [authGuard],
   },
-  {
-    path: 'forgot-password',
-    loadComponent: () => import('../pages/forgot-password').then((m) => m.ForgotPasswordPage),
-  },
+
   {
     path: 'password-update',
     loadComponent: () => import('../pages/password-update').then((m) => m.PasswordUpdatePage),
+    canActivate: [authGuard],
   },
   {
     path: 'onboarding',
     loadComponent: () => import('../pages/onboarding').then((m) => m.OnboardingPage),
+    canActivate: [authGuard],
   },
   {
     path: 'home',
     loadComponent: () => import('../pages/home').then((m) => m.HomePage),
+    canActivate: [authGuard],
   },
   {
     path: 'collection',
+    canActivate: [authGuard],
     children: [
       {
         path: 'create',
@@ -61,6 +69,7 @@ export const routes: Routes = [
   },
   {
     path: 'profile',
+    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -74,6 +83,7 @@ export const routes: Routes = [
   },
   {
     path: 'post',
+    canActivate: [authGuard],
     children: [
       {
         path: 'create',

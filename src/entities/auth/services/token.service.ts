@@ -1,7 +1,7 @@
+import { Injectable, signal } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 
 import { JwtResource } from '../model';
-import { computed, Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
@@ -14,14 +14,9 @@ export class TokenService {
   private _expiresInKey = 'EXP';
 
   private _isLoggedIn = signal<boolean>(false);
+  readonly isLoggedIn = this._isLoggedIn.asReadonly();
 
   private static instance: TokenService;
-
-  readonly isLoggedIn = computed(async () => {
-    const access = await this.getAccessToken();
-    const refresh = await this.getRefreshToken();
-    return !!(access || refresh);
-  });
 
   private constructor() {}
 
