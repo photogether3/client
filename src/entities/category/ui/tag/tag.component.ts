@@ -6,11 +6,6 @@ import { customTwMerge, TagProps, tagVariants } from './tag.styles';
 @Component({
   selector: 'app-tag',
   templateUrl: 'tag.component.html',
-  styles: `
-    :host {
-      height: fit-content;
-    }
-  `,
   imports: [CommonModule],
 })
 export class TagComponent {
