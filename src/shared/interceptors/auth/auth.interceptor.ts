@@ -2,20 +2,11 @@ import { HttpContext, HttpContextToken, HttpInterceptorFn } from '@angular/commo
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { catchError, EMPTY, lastValueFrom, Observable, tap } from 'rxjs';
+import { catchError, EMPTY, from, lastValueFrom, Observable, switchMap } from 'rxjs';
 
 import { AuthApi, AuthService } from 'src/entities/auth';
 
 const instance = AuthService.getInstance();
-
-// 토큰 재발급하는 경우
-// - 인증이 필요한 api의 경우만 해당됨, 인증이 필요하지 않은 경우는 해당 interceptor 건너뜀
-
-// api 호출 시, 액세스 토큰 확인 후 다음과 같은 경우 토큰 재발급 api 요청
-// 1. 액세스 토큰x, 리프레쉬 토큰o (액세스 토큰 유실)
-// 2. 만료기한 종료 전 5분
-
-// 여러 api 요청이 왔을 때 대기열에 저장했다가 순차대로 인증 필요한지 확인, 이후 api 요청
 
 const skipJwtContextToken = new HttpContextToken(() => false);
 
@@ -30,7 +21,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authApi = inject(AuthApi);
   const router = inject(Router);
 
-  // 1. 인증이 필요하지 않은 요청은 interceptor 건너뜀
   if (req.context.get(skipJwtContextToken)) {
     return next(req);
   }
@@ -39,73 +29,131 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
-  // 2. refresh token 확인
-  const refreshToken = instance.getRefreshToken();
-
-  if (!refreshToken) {
-    alert('세션이 만료되었습니다. 다시 로그인해주세요. (리프레쉬토큰 없음)');
-    router.navigateByUrl('/login');
-    return EMPTY;
-  }
-
-  // 3. 이 조건문에 걸린다는거는 5분미만 남아서 사실상 사용할 수는 있지만 이것 또한 실패될것으로 간주
-  if (isTokenExpired()) {
-    console.log('만료됨');
-
-    if (!isRefreshing) {
-      isRefreshing = true;
-      const refreshToken = instance.getRefreshToken() as string;
-
-      lastValueFrom(authApi.refresh(refreshToken))
-        .then(async (newToken) => {
-          console.log('토큰 재발급중 ..');
-          await instance.store(newToken);
-          requestQueue.forEach((ck) => ck());
-        })
-        .catch(() => {
-          alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-          router.navigateByUrl('/login');
-        })
-        .finally(() => {
-          isRefreshing = false;
-          console.log(requestQueue);
-        });
-    }
-
-    // 무조건 일단 실패했다고 보고 API 를 대기열 큐에 일단 저장
-    return new Observable((subscriber) => {
-      requestQueue.push(() => {
-        const accessToken = instance.getAccessToken();
-        const cloneReq = req.clone({
-          setHeaders: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        next(cloneReq).subscribe(subscriber); // 재요청 실행
-      });
-    }).pipe(tap(console.log));
-  }
-
-  // 4. Access Token 유효한 경우 요청 실행
-  const accessToken = instance.getAccessToken();
-
-  const cloneReq = req.clone({
-    setHeaders: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  return next(cloneReq).pipe(
-    catchError((err) => {
-      if (err.error.errorCode === 401) {
-        alert('(401 ERROR) 세션이 만료되었습니다. 다시 로그인해주세요.');
+  return from(instance.getRefreshToken()).pipe(
+    switchMap(async (refreshToken) => {
+      // 1. 리프레쉬가 없는 경우
+      if (!refreshToken) {
+        alert('세션이 만료되었습니다. 다시 로그인해주세요. (리프레쉬토큰 없음)');
         router.navigateByUrl('/login');
         return EMPTY;
       }
 
-      throw err;
+      // 2. 만료기한이 다 한 경우
+      if (isTokenExpired()) {
+        if (!isRefreshing) {
+          isRefreshing = true;
+
+          lastValueFrom(authApi.refresh(refreshToken))
+            .then(async (newToken) => {
+              console.log('토큰 재발급중 ..');
+              await instance.store(newToken);
+              requestQueue.forEach((ck) => ck());
+            })
+            .catch(() => {
+              alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+              router.navigateByUrl('/login');
+            })
+            .finally(() => {
+              isRefreshing = false;
+            });
+        }
+
+        return new Observable((subscriber) => {
+          requestQueue.push(() => {
+            const accessToken = instance.getAccessToken();
+            const cloneReq = req.clone({
+              setHeaders: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            });
+            next(cloneReq).subscribe(subscriber);
+          });
+        });
+      }
+
+      return instance.getAccessToken();
+    }),
+
+    // 3. 액세스 토큰이 있는 경우
+    switchMap((accessToken) => {
+      const cloneReq = req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      return next(cloneReq).pipe(
+        catchError((err) => {
+          if (err.error.errorCode === 401) {
+            alert('(401 ERROR) 세션이 만료되었습니다. 다시 로그인해주세요.');
+            router.navigateByUrl('/login');
+            return EMPTY;
+          }
+
+          throw err;
+        }),
+      );
     }),
   );
+  // const refreshToken = instance.getRefreshToken();
+
+  // if (!refreshToken) {
+  //   alert('세션이 만료되었습니다. 다시 로그인해주세요. (리프레쉬토큰 없음)');
+  //   router.navigateByUrl('/login');
+  //   return EMPTY;
+  // }
+
+  // if (isTokenExpired()) {
+  //   if (!isRefreshing) {
+  //     isRefreshing = true;
+
+  //     lastValueFrom(authApi.refresh(refreshToken))
+  //       .then(async (newToken) => {
+  //         console.log('토큰 재발급중 ..');
+  //         await instance.store(newToken);
+  //         requestQueue.forEach((ck) => ck());
+  //       })
+  //       .catch(() => {
+  //         alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+  //         router.navigateByUrl('/login');
+  //       })
+  //       .finally(() => {
+  //         isRefreshing = false;
+  //       });
+  //   }
+
+  //   return new Observable((subscriber) => {
+  //     requestQueue.push(() => {
+  //       const accessToken = instance.getAccessToken();
+  //       const cloneReq = req.clone({
+  //         setHeaders: {
+  //           Authorization: `Bearer ${accessToken}`,
+  //         },
+  //       });
+  //       next(cloneReq).subscribe(subscriber);
+  //     });
+  //   });
+  // }
+
+  // const accessToken = instance.getAccessToken();
+
+  // const cloneReq = req.clone({
+  //   setHeaders: {
+  //     Authorization: `Bearer ${accessToken}`,
+  //   },
+  // });
+
+  // return next(cloneReq).pipe(
+  //   catchError((err) => {
+  //     if (err.error.errorCode === 401) {
+  //       alert('(401 ERROR) 세션이 만료되었습니다. 다시 로그인해주세요.');
+  //       router.navigateByUrl('/login');
+  //       return EMPTY;
+  //     }
+
+  //     throw err;
+  //   }),
+  // );
 };
 
 // 토큰 만료 확인 함수
@@ -115,7 +163,7 @@ const isTokenExpired = (): boolean => {
   if (!expiresIn) {
     return true;
   } else {
-    const timeUntilExpiry = expiresIn * 1000 - Date.now();
+    const timeUntilExpiry = Number(expiresIn) * 1000 - Date.now();
     return timeUntilExpiry < 5 * 60 * 1000;
   }
 };

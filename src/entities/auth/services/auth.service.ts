@@ -1,14 +1,21 @@
-import { environment } from 'src/shared/environments';
+import { Preferences } from '@capacitor/preferences';
+
 import { JwtResource } from '../model';
+import { computed, signal } from '@angular/core';
 
 export class AuthService {
-  private accessToken: string | null = null;
-  private expiresIn: number | null = null;
+  private _accessToken: string | null = null;
+  private _expiresIn: number | null = null;
   private refreshTokenKey = 'RT';
-  private accessTokenKey = 'AT';
-  private expiresInKey = 'EXP';
+  private _accessTokenKey = 'AT';
+  private _expiresInKey = 'EXP';
+
+  private _isLoggedIn = signal<boolean>(false);
 
   private static instance: AuthService;
+
+  readonly isLoggedIn = computed(() => this._isLoggedIn());
+
   private constructor() {}
 
   static getInstance(): AuthService {
@@ -19,48 +26,42 @@ export class AuthService {
     return this.instance;
   }
 
-  getAccessToken(): string | null {
-    if (!environment.production) {
-      const accessToken = localStorage.getItem(this.accessTokenKey);
-      return accessToken;
-    }
-
-    return this.accessToken;
+  async getAccessToken(): Promise<string | null> {
+    const _accessToken = await Preferences.get({ key: this._accessTokenKey });
+    return _accessToken.value;
   }
 
-  getRefreshToken(): string | null {
-    return localStorage.getItem(this.refreshTokenKey);
+  async getRefreshToken(): Promise<string | null> {
+    const refreshToken = await Preferences.get({ key: this.refreshTokenKey });
+    return refreshToken.value;
   }
 
-  getExpiresIn(): number | null {
-    if (!environment.production) {
-      return Number(localStorage.getItem(this.expiresInKey));
-    }
-
-    return this.expiresIn;
+  async getExpiresIn(): Promise<number | null> {
+    const exp = await Preferences.get({ key: this._expiresInKey });
+    return exp.value ? Number(exp.value) : null;
   }
 
-  store(resource: JwtResource): Promise<void> {
+  async store(resource: JwtResource): Promise<void> {
     const { accessToken, expiresIn, refreshToken } = resource;
-    this.accessToken = accessToken;
-    this.expiresIn = expiresIn;
+    this._accessToken = accessToken;
+    this._expiresIn = expiresIn;
 
     if (refreshToken) {
-      if (!environment.production) {
-        localStorage.setItem(this.accessTokenKey, accessToken);
-        localStorage.setItem(this.expiresInKey, expiresIn.toString());
-      }
-
-      localStorage.setItem(this.refreshTokenKey, refreshToken);
+      await Preferences.set({ key: this._accessTokenKey, value: this._accessToken });
+      await Preferences.set({ key: this.refreshTokenKey, value: refreshToken });
+      await Preferences.set({ key: this._expiresInKey, value: this._expiresIn.toString() });
     }
 
-    return Promise.resolve();
+    this._isLoggedIn.set(true);
   }
 
-  clear() {
-    this.accessToken = null;
-    this.expiresIn = null;
+  async clear() {
+    this._accessToken = null;
+    this._expiresIn = null;
+    this._isLoggedIn.set(false);
 
-    localStorage.removeItem(this.refreshTokenKey);
+    await Preferences.remove({ key: this.refreshTokenKey });
+    await Preferences.remove({ key: this._accessTokenKey });
+    await Preferences.remove({ key: this._expiresInKey });
   }
 }
