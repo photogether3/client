@@ -6,6 +6,7 @@ import { App } from '@capacitor/app';
 
 import { ToastComponent } from 'src/shared/components';
 import { LoadingComponent, LoadingService } from 'src/shared/components/loading';
+import { TokenService } from 'src/entities/auth';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ import { LoadingComponent, LoadingService } from 'src/shared/components/loading'
 export class AppComponent {
   public readonly isLoading = computed(() => this.loadingService.loading());
 
+  private readonly tokenService = inject(TokenService);
   private readonly loadingService = inject(LoadingService);
   private readonly platform = inject(Platform);
 
@@ -25,10 +27,22 @@ export class AppComponent {
   constructor() {
     this.initializeApp();
     this.setupBackButtonHandler();
+    this.checkLoginStatus();
   }
 
   async initializeApp() {
     await this.platform.ready();
+  }
+
+  /**
+   * 앱 시작시 로그인 상태 체크
+   */
+  private checkLoginStatus() {
+    App.addListener('resume', async () => {
+      await this.tokenService.checkLoginStatus();
+    });
+
+    this.tokenService.checkLoginStatus();
   }
 
   /**

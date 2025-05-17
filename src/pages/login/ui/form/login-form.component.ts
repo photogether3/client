@@ -67,17 +67,14 @@ export class LoginFormComponent extends BaseForm<LoginFormType> {
           throw error;
         }),
       )
-      .subscribe((res) => {
-        if (res) {
-          alert('로그인 성공! ✨');
-
-          const instance = TokenService.getInstance();
-          instance.store(res);
-
-          this.router.navigateByUrl('/home');
-        } else {
-          alert('로그인 실패 😥');
+      .subscribe(async (res) => {
+        if (!res) {
+          return;
         }
+
+        const instance = TokenService.getInstance();
+        await instance.store(res);
+        this.router.navigateByUrl('/home');
       });
   }
 }
