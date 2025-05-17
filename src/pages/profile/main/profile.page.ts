@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { forkJoin } from 'rxjs';
 
-import { AuthApi, AuthService } from 'src/entities/auth';
+import { AuthApi, TokenService } from 'src/entities/auth';
 import { CategoriesGetDTO, CategoryService, TagComponent } from 'src/entities/category';
 import { ProfileGetDTO, UserApi } from 'src/entities/user';
 import { BottomSheetService, IconComponent, ModalService } from 'src/shared/components';
@@ -45,7 +45,7 @@ export class ProfilePage {
 
   onLogout() {
     this.authApi.logout().subscribe(() => {
-      const instance = AuthService.getInstance();
+      const instance = TokenService.getInstance();
       instance.clear();
       this.router.navigateByUrl('login');
     });

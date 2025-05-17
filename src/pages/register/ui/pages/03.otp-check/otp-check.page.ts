@@ -5,7 +5,7 @@ import { HeaderWidget } from 'src/widgets/header';
 import { OtpVerifyFormComponent } from 'src/pages/otp-verify';
 import { FooterWidget } from 'src/widgets/footer';
 import { StepService } from 'src/shared/services';
-import { AuthApi, AuthService } from 'src/entities/auth';
+import { AuthApi, TokenService } from 'src/entities/auth';
 
 @Component({
   selector: 'otp-check-page',
@@ -50,7 +50,7 @@ export class OtpCheckPage {
 
     this.authApi.verifyOtpWithJwt(formValue).subscribe({
       next: (res) => {
-        const instance = AuthService.getInstance();
+        const instance = TokenService.getInstance();
         instance.store(res);
         console.log('토큰 저장 완료?', res);
         this.stepService.nextStep();

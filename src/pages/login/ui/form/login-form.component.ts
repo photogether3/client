@@ -3,7 +3,7 @@ import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs';
 
-import { AuthApi, AuthService, LoginFormType } from 'src/entities/auth';
+import { AuthApi, TokenService, LoginFormType } from 'src/entities/auth';
 import { ButtonComponent, InputComponent } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
@@ -71,7 +71,7 @@ export class LoginFormComponent extends BaseForm<LoginFormType> {
         if (res) {
           alert('로그인 성공! ✨');
 
-          const instance = AuthService.getInstance();
+          const instance = TokenService.getInstance();
           instance.store(res);
 
           this.router.navigateByUrl('/home');

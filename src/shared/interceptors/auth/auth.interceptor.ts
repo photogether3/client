@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 
 import { catchError, EMPTY, from, lastValueFrom, Observable, switchMap } from 'rxjs';
 
-import { AuthApi, AuthService } from 'src/entities/auth';
+import { AuthApi, TokenService } from 'src/entities/auth';
 
-const instance = AuthService.getInstance();
+const instance = TokenService.getInstance();
 
 const skipJwtContextToken = new HttpContextToken(() => false);
 

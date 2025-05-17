@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { interval, Subscription, take, takeWhile } from 'rxjs';
 
-import { AuthApi, AuthService, OtpFormType } from 'src/entities/auth';
+import { AuthApi, TokenService, OtpFormType } from 'src/entities/auth';
 import { ButtonComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
 import { OTP_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
@@ -118,7 +118,7 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
 
     this.authApi.verifyOtpWithJwt(formValue).subscribe({
       next: (res) => {
-        const instance = AuthService.getInstance();
+        const instance = TokenService.getInstance();
         instance.store(res);
         console.log('토큰 저장 완료?', res);
 
