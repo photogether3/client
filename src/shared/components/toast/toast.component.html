@@ -1,9 +1,9 @@
 @if (errorService.errorMessage()) {
   <div
     [ngClass]="{ 'border-gray70 bg-layer40': type() === 'default', 'border-primary50 bg-[#182B28]': type() === 'success', 'border-accent70 bg-[#311A1F]': type() === 'error' }"
-    class="animate-slide-down fixed left-1 right-1 top-4 z-[9999] mx-4 flex h-14 items-center gap-3 rounded-[12px] border px-4">
+    class="animate-slide-down fixed left-1 right-1 top-[calc(env(safe-area-inset-top)+16px)] z-[9999] mx-4 flex h-14 items-center gap-3 rounded-[12px] border px-4">
     <app-icon name="info" [ngClass]="{ 'text-white': type() === 'default', 'text-primary40': type() === 'success', 'text-accent40': type() === 'error' }" />
-    <p [ngClass]="{ 'text-white': type() === 'default', 'text-primary40': type() === 'success', 'text-accent40': type() === 'error' }" class="flex-1 text-body-s font-bold">
+    <p [ngClass]="{ 'text-white': type() === 'default', 'text-primary40': type() === 'success', 'text-accent40': type() === 'error' }" class="flex-1 font-bold text-body-s">
       {{ errorService.errorMessage() }}
     </p>
     <button (click)="close()">
