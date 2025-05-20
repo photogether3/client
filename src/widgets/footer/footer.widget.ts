@@ -9,7 +9,7 @@ import { IconComponent } from 'src/shared/components';
   templateUrl: './footer.widget.html',
   imports: [IconComponent, RouterLink, NgClass],
   host: {
-    class: 'sticky bottom-0 z-40 pb-[env(safe-area-inset-bottom)] bg-layer40',
+    class: 'sticky bottom-0 z-40 pb-[env(safe-area-inset-bottom)]',
   },
 })
 export class FooterWidget {

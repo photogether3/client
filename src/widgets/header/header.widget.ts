@@ -7,7 +7,7 @@ import { IconComponent } from 'src/shared/components';
   templateUrl: './header.widget.html',
   imports: [IconComponent],
   host: {
-    class: 'sticky top-0 z-40 pt-[env(safe-area-inset-top)] bg-layer40',
+    class: 'sticky top-0 z-40 pt-[env(safe-area-inset-top)]',
   },
 })
 export class HeaderWidget {
