@@ -5,7 +5,7 @@ export const tagVariants = cva('flex items-center justify-center whitespace-nowr
   variants: {
     type: {
       outline: 'border border-gray70 text-gray70 bg-layer30',
-      solid: 'border border-primary50 bg-[#182B28] text-primary50 font-bold',
+      solid: 'border border-primary50 bg-[#182B28] text-primary20 font-bold',
       solidPastel: 'bg-secondary5 text-secondary60',
     },
     size: {

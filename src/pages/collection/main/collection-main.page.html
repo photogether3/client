@@ -4,7 +4,7 @@
       <app-icon name="more" [size]="13" />
     </button>
   } @else {
-    <label rightContent class="flex gap-2 whitespace-nowrap text-body-s font-bold">
+    <label rightContent class="flex items-center gap-2 whitespace-nowrap text-body-s font-bold">
       <input type="checkbox" (change)="selectAll($event)" />
       전체선택
     </label>
@@ -43,13 +43,21 @@
   <app-footer />
 } @else {
   <app-footer [hasButton]="true">
-    <div button class="flex items-center justify-between">
-      <app-button text="삭제" size="sm" appearance="danger" [isDisabled]="selectedPostIds().length === 0" (click)="postDelete()" />
-      <p class="text-body-s font-bold text-white">
+    <div button class="flex items-center justify-between gap-3">
+      <app-button
+        leftIcon="trash"
+        [iconSize]="14"
+        text="삭제"
+        size="xs"
+        appearance="danger"
+        [isDisabled]="selectedPostIds().length === 0"
+        (click)="postDelete()"
+        class="block min-w-[90px]" />
+      <p class="flex-1 text-center text-body-s font-bold text-white">
         <span class="text-primary60">{{ selectedPostIds().length }}</span>
         개 선택됨
       </p>
-      <app-button text="이동" size="sm" [isDisabled]="selectedPostIds().length === 0" (click)="postMove()" />
+      <app-button leftIcon="upload" text="이동" size="xs" [isDisabled]="selectedPostIds().length === 0" (click)="postMove()" class="block min-w-[90px]" />
     </div>
   </app-footer>
 }
