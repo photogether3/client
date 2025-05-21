@@ -1,4 +1,5 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, inject, signal } from '@angular/core';
 
 import { BottomSheetService, ButtonComponent } from 'src/shared/components';
 import { ButtonProps } from 'src/shared/components/button/button.styles';
@@ -13,7 +14,7 @@ export type ActionButtonType = {
 @Component({
   selector: 'app-action-buttons',
   templateUrl: './action-buttons.component.html',
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, NgClass],
 })
 export class ActionButtonsComponent {
   private readonly bottomSheetService = inject<BottomSheetService<ActionButtonType[], string>>(BottomSheetService);

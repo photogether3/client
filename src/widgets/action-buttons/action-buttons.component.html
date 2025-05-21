@@ -1,5 +1,11 @@
-<div class="w-full divide-y divide-white/20 [&>*]:py-4">
-  @for (action of actionTypes(); track $index) {
-    <app-button [text]="action.text" [leftIcon]="action.icon" [iconSize]="15" [appearance]="action.appearance" (click)="handleClick(action.type)" />
+<div class="w-full divide-y divide-white/20">
+  @for (action of actionTypes(); track $index; let first = $first) {
+    <app-button
+      [text]="action.text"
+      [leftIcon]="action.icon"
+      [iconSize]="15"
+      [appearance]="action.appearance"
+      (click)="handleClick(action.type)"
+      [ngClass]="first ? 'pb-4' : 'py-4'" />
   }
 </div>
