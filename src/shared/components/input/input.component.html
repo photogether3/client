@@ -1,6 +1,6 @@
 <label class="flex flex-col gap-2">
   @if (label()) {
-    <span class="text-body-s font-normal text-white">{{ label() }}</span>
+    <span class="font-normal text-white text-body-s">{{ label() }}</span>
   }
 
   @if (info()) {
@@ -16,7 +16,23 @@
 
   @switch (type()) {
     @case ('input') {
-      <input [type]="inputType()" [value]="value" (input)="onInput($event)" [placeholder]="placeholder()" [class]="computedClass()" />
+      <div class="relative">
+        <input
+          #inputField
+          [type]="inputType()"
+          [value]="value"
+          (input)="onInput($event)"
+          [placeholder]="placeholder()"
+          [class]="computedClass()"
+          [ngClass]="{ 'pl-10': leftIcon() }"
+          class="w-full" />
+        <app-icon [name]="leftIcon()" [size]="16" class="absolute inset-y-0 flex items-center justify-center text-white left-4" />
+        <!-- @if (value) {
+          <button (click)="clear()" class="absolute inset-y-0 flex items-center justify-center p-1 right-8" aria-label="Clear input">
+            <app-icon name="close-circle" class="relative pr-2.5" />
+          </button>
+        } -->
+      </div>
     }
     @case ('textarea') {
       <textarea [value]="value" (input)="onInput($event)" [placeholder]="placeholder()" [class]="computedClass()"></textarea>

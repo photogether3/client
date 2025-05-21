@@ -1,5 +1,6 @@
-import { Component, computed, forwardRef, input } from '@angular/core';
+import { Component, computed, ElementRef, forwardRef, input, viewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NgClass } from '@angular/common';
 
 import { inputVariants, InputProps, customTwMerge } from './input.styles';
 import { IconComponent } from '../icon';
@@ -15,7 +16,7 @@ import { IconComponent } from '../icon';
       multi: true,
     },
   ],
-  imports: [IconComponent],
+  imports: [IconComponent, NgClass],
 })
 export class InputComponent implements ControlValueAccessor {
   label = input<string>('');
@@ -25,7 +26,10 @@ export class InputComponent implements ControlValueAccessor {
   placeholder = input<string>('');
   info = input<string>('');
   hasError = input<boolean>(false);
+  leftIcon = input<string>('');
   hasInfoIcon = input<boolean>(false);
+
+  inputField = viewChild.required<ElementRef<HTMLInputElement>>('inputField');
 
   computedClass = computed(() => {
     return customTwMerge(inputVariants({ type: this.type(), size: this.size(), state: this.hasError() ? 'error' : 'default' }));
