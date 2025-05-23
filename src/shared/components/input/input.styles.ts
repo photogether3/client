@@ -14,8 +14,7 @@ export const inputVariants = cva('border rounded-[8px] px-4 placeholder:text-gra
       textarea: 'py-2 resize-none min-h-[144px]',
     },
     state: {
-      // TODO border border-image-source로 줘야 함 (임시: border-gray60)
-      default: 'bg-layer30 focus:border-primary50 focus:border-2 border-gray70 text-white',
+      default: 'bg-layer30 focus:border-primary50 focus:border-2 border-white/20 text-white',
       error: 'bg-layer30 border-accent50 border-2 text-white',
       disabled: 'bg-layer20 border-gray50 text-gray50',
     },

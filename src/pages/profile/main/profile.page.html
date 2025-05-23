@@ -5,21 +5,20 @@
     </button>
   </app-header>
 
-  <!-- TODO 테두리 -->
   <main class="m-5 divide-y divide-white/20 rounded-[8px] border border-gray70 bg-layer30 px-4 py-5">
     <div class="pb-5">
       <img [src]="profile.imageUrl || 'assets/images/default-image.webp'" alt="프로필 이미지" class="mx-auto block size-[100px] rounded-full border-2 border-primary50" />
       <div class="mt-2.5">
         <span class="block text-center text-detail-l text-gray40">닉네임</span>
-        <span class="block text-center text-body-m font-bold text-white">&#64;{{ profile.nickname }}</span>
+        <span class="block font-bold text-center text-white text-body-m">&#64;{{ profile.nickname }}</span>
       </div>
     </div>
     <p class="py-5 text-body-s text-gray40">
-      <span class="mr-2 text-body-s font-bold text-white">이메일</span>
+      <span class="mr-2 font-bold text-white text-body-s">이메일</span>
       {{ profile.email }}
     </p>
     <div class="py-5">
-      <span class="text-body-s font-bold text-white">자기소개</span>
+      <span class="font-bold text-white text-body-s">자기소개</span>
       <p class="mt-1 text-body-s text-gray40">
         {{ profile.bio }}
       </p>

@@ -1,14 +1,13 @@
 <div (click)="onContainerClick()" class="relative">
   @if (isCheckable()) {
-    <input #checkboxRef type="checkbox" (click)="onCheckboxClick($event)" class="absolute right-2 top-2 z-20 size-6 cursor-pointer" />
+    <input #checkboxRef type="checkbox" (click)="onCheckboxClick($event)" class="absolute z-20 cursor-pointer right-2 top-2 size-6" />
   }
-  <!-- TODO 테두리 -->
-  <figure class="relative cursor-pointer overflow-hidden rounded-[12px] border border-gray70 bg-[#23252B]/85 px-3 py-2 shadow-custom">
+  <figure class="relative cursor-pointer overflow-hidden rounded-[12px] border border-white/20 bg-[#23252B]/85 px-3 py-2 shadow-custom">
     <div class="absolute inset-0 z-0 bg-cover bg-center blur-[20px]" [ngStyle]="{ 'background-image': 'url(' + post().imageUrl + ')' }"></div>
     <div class="absolute inset-0 z-10 bg-[#2A2C34]/25"></div>
     <div class="relative z-10 space-y-2">
       <div class="relative flex gap-1 text-white">
-        <figcaption class="block w-full flex-1 truncate text-body-s font-bold">
+        <figcaption class="flex-1 block w-full font-bold truncate text-body-s">
           {{ post().title }}
         </figcaption>
         <button
@@ -18,7 +17,7 @@
           [popoverItems]="popoverItems"
           [(isPopoverOpen)]="isPopoverOpen"
           [ngClass]="isPopoverOpen() ? 'bg-primary50' : ''"
-          class="flex size-5 items-center justify-center rounded-full">
+          class="flex items-center justify-center rounded-full size-5">
           <app-icon name="kebab" />
         </button>
       </div>
