@@ -6,7 +6,7 @@ import { App } from '@capacitor/app';
 
 import { ToastComponent } from 'src/shared/components';
 import { LoadingComponent, LoadingService } from 'src/shared/components/loading';
-import { TokenService } from 'src/entities/auth';
+import { AuthService, TokenService } from 'src/entities/auth';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +17,7 @@ import { TokenService } from 'src/entities/auth';
 export class AppComponent {
   public readonly isLoading = computed(() => this.loadingService.loading());
 
+  private readonly authService = inject(AuthService);
   private readonly tokenService = inject(TokenService);
   private readonly loadingService = inject(LoadingService);
   private readonly platform = inject(Platform);
@@ -43,6 +44,13 @@ export class AppComponent {
     });
 
     this.tokenService.checkLoginStatus();
+
+    // 토큰 유효시간이 만료되기 전 토큰 재발급 시도
+    App.addListener('appStateChange', ({ isActive }) => {
+      if (isActive) {
+        this.authService.checkAndRefreshToken();
+      }
+    });
   }
 
   /**

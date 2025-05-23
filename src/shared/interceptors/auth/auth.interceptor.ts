@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { catchError, EMPTY, from, lastValueFrom, Observable, switchMap } from 'rxjs';
 
-import { AuthApi, TokenService } from 'src/entities/auth';
+import { AuthApi, AuthService, TokenService } from 'src/entities/auth';
 
 const instance = TokenService.getInstance();
 
@@ -18,6 +18,7 @@ export function skipAuth(): HttpContext {
 }
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
   const authApi = inject(AuthApi);
   const router = inject(Router);
 
@@ -38,7 +39,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       // 2. 만료기한이 다 한 경우
-      if (isTokenExpired()) {
+      if (authService.isTokenExpired()) {
         if (!isRefreshing) {
           isRefreshing = true;
 
@@ -151,16 +152,4 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   //     throw err;
   //   }),
   // );
-};
-
-// 토큰 만료 확인 함수
-const isTokenExpired = (): boolean => {
-  const expiresIn = instance.getExpiresIn();
-
-  if (!expiresIn) {
-    return true;
-  } else {
-    const timeUntilExpiry = Number(expiresIn) * 1000 - Date.now();
-    return timeUntilExpiry < 5 * 60 * 1000;
-  }
 };

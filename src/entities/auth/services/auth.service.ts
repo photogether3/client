@@ -1,67 +1,54 @@
-import { Preferences } from '@capacitor/preferences';
+import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
-import { JwtResource } from '../model';
-import { computed, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 
+import { TokenService } from './token.service';
+import { AuthApi } from '../api';
+
+@Injectable({
+  providedIn: 'root',
+})
 export class AuthService {
-  private _accessToken: string | null = null;
-  private _expiresIn: number | null = null;
-  private refreshTokenKey = 'RT';
-  private _accessTokenKey = 'AT';
-  private _expiresInKey = 'EXP';
+  private readonly tokenService = inject(TokenService);
+  private readonly router = inject(Router);
+  private readonly authApi = inject(AuthApi);
 
-  private _isLoggedIn = signal<boolean>(false);
+  private instance = TokenService.getInstance();
 
-  private static instance: AuthService;
+  // 토큰 만료 확인 함수
+  isTokenExpired(): boolean {
+    const expiresIn = this.instance.getExpiresIn();
 
-  readonly isLoggedIn = computed(() => this._isLoggedIn());
+    if (!expiresIn) {
+      return true;
+    } else {
+      const timeUntilExpiry = Number(expiresIn) * 1000 - Date.now();
+      return timeUntilExpiry < 5 * 60 * 1000;
+    }
+  }
 
-  private constructor() {}
+  async checkAndRefreshToken(): Promise<void> {
+    const [accessToken, refreshToken] = await Promise.all([this.tokenService.getAccessToken(), this.tokenService.getRefreshToken()]);
 
-  static getInstance(): AuthService {
-    if (!this.instance) {
-      this.instance = new AuthService();
+    // 둘 다 없으면 재발급 불가 → 로그아웃
+    if (!accessToken || !refreshToken) {
+      this.tokenService.clear();
+      this.router.navigateByUrl('/login');
+      return;
     }
 
-    return this.instance;
-  }
-
-  async getAccessToken(): Promise<string | null> {
-    const _accessToken = await Preferences.get({ key: this._accessTokenKey });
-    return _accessToken.value;
-  }
-
-  async getRefreshToken(): Promise<string | null> {
-    const refreshToken = await Preferences.get({ key: this.refreshTokenKey });
-    return refreshToken.value;
-  }
-
-  async getExpiresIn(): Promise<number | null> {
-    const exp = await Preferences.get({ key: this._expiresInKey });
-    return exp.value ? Number(exp.value) : null;
-  }
-
-  async store(resource: JwtResource): Promise<void> {
-    const { accessToken, expiresIn, refreshToken } = resource;
-    this._accessToken = accessToken;
-    this._expiresIn = expiresIn;
-
-    if (refreshToken) {
-      await Preferences.set({ key: this._accessTokenKey, value: this._accessToken });
-      await Preferences.set({ key: this.refreshTokenKey, value: refreshToken });
-      await Preferences.set({ key: this._expiresInKey, value: this._expiresIn.toString() });
+    // 만료 전이면 아무 작업 안 함
+    if (!this.isTokenExpired()) {
+      return;
     }
 
-    this._isLoggedIn.set(true);
-  }
-
-  async clear() {
-    this._accessToken = null;
-    this._expiresIn = null;
-    this._isLoggedIn.set(false);
-
-    await Preferences.remove({ key: this.refreshTokenKey });
-    await Preferences.remove({ key: this._accessTokenKey });
-    await Preferences.remove({ key: this._expiresInKey });
+    try {
+      const newTokens = await firstValueFrom(this.authApi.refresh(refreshToken));
+      await this.tokenService.store(newTokens);
+    } catch (err) {
+      this.tokenService.clear();
+      this.router.navigateByUrl('/login');
+    }
   }
 }
