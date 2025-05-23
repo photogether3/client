@@ -1,14 +1,13 @@
-<header
-  class="sticky top-0 z-10 flex max-h-[73px] w-full items-center gap-3 border-b border-b-primary50 bg-[#1b1d21]/80 px-4 py-5 text-white shadow-[2px_5px_8px_0_rgba(0,0,0,0.2)] backdrop-blur-[20px]">
+<header class="sticky top-0 z-10 flex max-h-[73px] w-full items-center gap-3 border-b border-b-primary50 px-4 py-5 text-white">
   @if (hasBackButton()) {
-    <button (click)="goBack()" class="flex size-8 items-center justify-center font-bold">
+    <button (click)="goBack()" class="flex items-center justify-center font-bold size-8">
       <app-icon name="arrow-left" class="text-white" />
     </button>
   }
   @if (hasLogo()) {
     <app-icon name="logo-lg" class="mb-1" />
   } @else {
-    <span class="w-full truncate text-xl font-bold">{{ title() }}</span>
+    <span class="w-full text-xl font-bold truncate">{{ title() }}</span>
   }
   <ng-content select="[rightContent]" />
 </header>
