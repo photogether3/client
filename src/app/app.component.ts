@@ -29,6 +29,9 @@ export class AppComponent {
     this.initializeApp();
     this.setupBackButtonHandler();
     this.checkLoginStatus();
+
+    // 최초 앱 실행 시 자동 로그인 복원
+    this.authService.restoreSession();
   }
 
   async initializeApp() {
@@ -48,7 +51,7 @@ export class AppComponent {
     // 토큰 유효시간이 만료되기 전 토큰 재발급 시도
     App.addListener('appStateChange', ({ isActive }) => {
       if (isActive) {
-        this.authService.checkAndRefreshToken();
+        this.authService.restoreSession();
       }
     });
   }

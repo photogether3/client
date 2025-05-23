@@ -13,8 +13,7 @@ export class TokenService {
   private _accessTokenKey = 'AT';
   private _expiresInKey = 'EXP';
 
-  private _isLoggedIn = signal<boolean>(false);
-  readonly isLoggedIn = this._isLoggedIn.asReadonly();
+  isLoggedIn = signal<boolean>(false);
 
   private static instance: TokenService;
 
@@ -54,13 +53,13 @@ export class TokenService {
       await Preferences.set({ key: this._expiresInKey, value: this._expiresIn.toString() });
     }
 
-    this._isLoggedIn.set(true);
+    this.isLoggedIn.set(true);
   }
 
   async clear() {
     this._accessToken = null;
     this._expiresIn = null;
-    this._isLoggedIn.set(false);
+    this.isLoggedIn.set(false);
 
     await Preferences.remove({ key: this.refreshTokenKey });
     await Preferences.remove({ key: this._accessTokenKey });
@@ -72,6 +71,6 @@ export class TokenService {
     const refreshToken = await this.getRefreshToken();
 
     const isLoggedIn = !!(accessToken || refreshToken);
-    this._isLoggedIn.set(isLoggedIn);
+    this.isLoggedIn.set(isLoggedIn);
   }
 }

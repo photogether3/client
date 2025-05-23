@@ -17,8 +17,8 @@ export class AuthService {
   private instance = TokenService.getInstance();
 
   // 토큰 만료 확인 함수
-  isTokenExpired(): boolean {
-    const expiresIn = this.instance.getExpiresIn();
+  async isTokenExpired(): Promise<boolean> {
+    const expiresIn = await this.instance.getExpiresIn();
 
     if (!expiresIn) {
       return true;
@@ -28,7 +28,7 @@ export class AuthService {
     }
   }
 
-  async checkAndRefreshToken(): Promise<void> {
+  async restoreSession(): Promise<void> {
     const [accessToken, refreshToken] = await Promise.all([this.tokenService.getAccessToken(), this.tokenService.getRefreshToken()]);
 
     // 둘 다 없으면 재발급 불가 → 로그아웃
@@ -38,17 +38,16 @@ export class AuthService {
       return;
     }
 
-    // 만료 전이면 아무 작업 안 함
-    if (!this.isTokenExpired()) {
-      return;
-    }
-
-    try {
-      const newTokens = await firstValueFrom(this.authApi.refresh(refreshToken));
-      await this.tokenService.store(newTokens);
-    } catch (err) {
-      this.tokenService.clear();
-      this.router.navigateByUrl('/login');
+    // accessToken이 없거나 만료된 경우 → refresh 시도
+    if (await this.isTokenExpired()) {
+      try {
+        const newTokens = await firstValueFrom(this.authApi.refresh(refreshToken));
+        await this.tokenService.store(newTokens);
+      } catch {
+        this.tokenService.clear();
+        this.router.navigateByUrl('/login');
+        return;
+      }
     }
   }
 }

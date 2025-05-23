@@ -39,7 +39,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       // 2. 만료기한이 다 한 경우
-      if (authService.isTokenExpired()) {
+      if (await authService.isTokenExpired()) {
         if (!isRefreshing) {
           isRefreshing = true;
 
