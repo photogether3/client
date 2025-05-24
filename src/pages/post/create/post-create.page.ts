@@ -9,6 +9,9 @@ import { CollectionSelectComponent } from './ui/collection-select/collection-sel
   templateUrl: './post-create.page.html',
   imports: [HeaderWidget],
   providers: [StepService],
+  host: {
+    class: 'h-screen flex flex-col',
+  },
 })
 export class PostCreatePage {
   private readonly stepService = inject(StepService);

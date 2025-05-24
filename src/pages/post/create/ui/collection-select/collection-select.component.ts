@@ -17,7 +17,7 @@ import { SystemFoldersComponent } from 'src/widgets/system-folders/system-folder
   templateUrl: './collection-select.component.html',
   imports: [CollectionCardComponent, SystemFoldersComponent, FooterWidget, ButtonComponent],
   host: {
-    class: 'flex  flex-1 flex-col bg-layer40',
+    class: 'flex-1 flex flex-col',
   },
 })
 export class CollectionSelectComponent {
