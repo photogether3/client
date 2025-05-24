@@ -16,6 +16,8 @@ export class AuthService {
 
   private instance = TokenService.getInstance();
 
+  private readonly _publicRoutes = ['/login', '/register', '/forgot-password'];
+
   // 토큰 만료 확인 함수
   async isTokenExpired(): Promise<boolean> {
     const expiresIn = await this.instance.getExpiresIn();
@@ -33,8 +35,10 @@ export class AuthService {
 
     // 둘 다 없으면 재발급 불가 → 로그아웃
     if (!accessToken || !refreshToken) {
-      this.tokenService.clear();
-      this.router.navigateByUrl('/login');
+      if (!this.isPublicPage()) {
+        this.tokenService.clear();
+        this.router.navigateByUrl('/login');
+      }
       return;
     }
 
@@ -49,5 +53,10 @@ export class AuthService {
         return;
       }
     }
+  }
+
+  private isPublicPage(): boolean {
+    const currentUrl = this.router.url;
+    return this._publicRoutes.some((route) => currentUrl.startsWith(route));
   }
 }
