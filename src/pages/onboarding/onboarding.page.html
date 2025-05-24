@@ -1,7 +1,7 @@
 <!-- TODO step 1,2가 있는 것 상태관리 -->
 <app-header title="환영합니다">
   <div rightContent class="flex items-center gap-2 text-white">
-    <span class="whitespace-nowrap text-body-m font-bold">{{ step() === 1 ? '정보입력' : '관심주제' }}</span>
+    <span class="font-bold whitespace-nowrap text-body-m">{{ step() === 1 ? '정보입력' : '관심주제' }}</span>
     <p class="flex text-body-m">
       <span class="font-bold text-primary60">{{ step() }}</span>
       /2
@@ -9,7 +9,7 @@
   </div>
 </app-header>
 
-<main class="flex flex-1 flex-col px-4 pt-4">
+<main class="flex flex-col flex-1 p-4">
   @if (step() === 1) {
     <p class="mb-10 text-body-s text-gray40">
       회원가입이 거의 완료되었습니다. <br />
@@ -22,7 +22,7 @@
       선택한 주제에 대한 사진첩을 만드실 수 있습니다.
     </p>
     <app-category-selector type="all" [isMultiSelect]="true" />
-    <p class="mb-5 text-center text-body-s font-bold text-primary40">선택한 주제는 나중에 다시 수정할 수 있어요!</p>
+    <p class="mb-5 font-bold text-center text-body-s text-primary40">선택한 주제는 나중에 다시 수정할 수 있어요!</p>
   }
 </main>
 

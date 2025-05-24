@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 
 import { ButtonComponent } from 'src/shared/components';
 import { HeaderWidget } from 'src/widgets/header';
-import { OtpVerifyFormComponent } from 'src/pages/otp-verify';
+import { OtpVerifyFormComponent } from 'src/features';
 import { FooterWidget } from 'src/widgets/footer';
 import { StepService } from 'src/shared/services';
 import { AuthApi, TokenService } from 'src/entities/auth';

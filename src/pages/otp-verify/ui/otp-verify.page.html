@@ -1,12 +1,13 @@
 <app-header title="OTP 인증">
   <div rightContent class="flex items-center gap-2 text-white">
-    <span class="whitespace-nowrap text-body-m font-bold">정보입력</span>
+    <span class="font-bold whitespace-nowrap text-body-m">정보입력</span>
     <p class="flex text-body-m">
       <span class="text-primary60">{{ currentStep() }}</span
       >/<span>{{ totalSteps() }}</span>
     </p>
   </div>
 </app-header>
+
 <ng-template #dynamicView />
 
 <!-- TODO main class와 footer 디자인 공통으로 관리하기 -->

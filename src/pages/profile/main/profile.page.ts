@@ -80,6 +80,8 @@ export class ProfilePage {
         return this.router.navigateByUrl('/profile/update');
       case 'privacy':
         return this.modalService.open(AccountSettingComponent).subscribe((res) => {
+          if (!res) return;
+
           if (res == 'withdraw') {
             this.withdraw();
           } else if (res === 'reset') {

@@ -3,7 +3,7 @@ import { Component, effect, inject, viewChild, ViewContainerRef } from '@angular
 
 import { HeaderWidget } from 'src/widgets/header';
 
-import { EmailCheckComponent, OtpVerifyFormComponent } from './pages';
+import { EmailCheckComponent, OtpVerifyComponent } from './pages';
 import { StepService } from 'src/shared/services';
 
 @Component({
@@ -26,7 +26,7 @@ export class OtpVerifyPage {
 
   constructor() {
     this.stepService.addComponent(EmailCheckComponent);
-    this.stepService.addComponent(OtpVerifyFormComponent);
+    this.stepService.addComponent(OtpVerifyComponent);
 
     this.stepService.setExtraData('page', 'otp-verify');
 

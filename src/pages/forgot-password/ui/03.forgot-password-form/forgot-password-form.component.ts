@@ -1,9 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { ForgotPasswordDTO, UserApi } from 'src/entities/user';
 import { PasswordForgotType } from 'src/entities/user/model/user.type';
-import { ButtonComponent, InputComponent } from 'src/shared/components';
+import { ButtonComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
 import { PASSWORD_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
 import { StepService } from 'src/shared/services';
@@ -20,6 +21,8 @@ import { FooterWidget } from 'src/widgets/footer';
 export class PasswordForgotFormComponent extends BaseForm<PasswordForgotType> {
   private readonly stepService = inject(StepService);
   private readonly userApi = inject(UserApi);
+  private readonly modalReactiveService = inject(ModalReactiveService);
+  private readonly router = inject(Router);
 
   formValue = signal<ForgotPasswordDTO>({
     otp: '',
@@ -61,9 +64,17 @@ export class PasswordForgotFormComponent extends BaseForm<PasswordForgotType> {
     const password = this.form.getRawValue().password as string;
 
     this.formValue.set({ email, otp, password });
-    this.userApi.recoverPassword(this.formValue()).subscribe((res) => {
-      // TODO 비밀번호 변경 성공적으로 이루어졌을 때 나타나는 모달
-      console.log(res, '비밀번호 찾기 성공');
+
+    this.userApi.recoverPassword(this.formValue()).subscribe(() => {
+      const modalData = {
+        iconName: 'modal-lock',
+        subTitle: '비밀번호 재설정이 완료되었습니다.',
+        content: '확인 버튼을 누르시면 로그인 화면으로 돌아갑니다. 확인버튼을 눌러주세요.',
+        buttons: ['확인'],
+      };
+      this.modalReactiveService.open(modalData).then(() => {
+        this.router.navigateByUrl('/login');
+      });
     });
   }
 }

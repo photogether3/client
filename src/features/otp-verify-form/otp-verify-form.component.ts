@@ -4,30 +4,37 @@ import { Router } from '@angular/router';
 
 import { interval, Subscription, take, takeWhile } from 'rxjs';
 
-import { AuthApi, TokenService, OtpFormType } from 'src/entities/auth';
+import { AuthApi, OtpFormType } from 'src/entities/auth';
 import { ButtonComponent, InputComponent, ModalReactiveService } from 'src/shared/components';
 import { OTP_REGEX } from 'src/shared/const';
 import { BaseForm } from 'src/shared/lib';
 import { StepService } from 'src/shared/services';
-import { FooterWidget } from 'src/widgets/footer';
 
 @Component({
   selector: 'otp-verify-form',
   templateUrl: './otp-verify-form.component.html',
-  imports: [ReactiveFormsModule, ButtonComponent, InputComponent, FooterWidget],
+  imports: [ReactiveFormsModule, ButtonComponent, InputComponent],
   host: {
-    class: 'flex min-h-full flex-1 flex-col',
+    class: 'flex-1',
   },
 })
 export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnDestroy {
+  /**
+   * 비밀번호 찾기 페이지 (스텝서비스)
+   * otp 인증 페이지 - 로그인 페이지에서 로그인 버튼 클릭시 이메일 인증 안 되었을 때 해당 페이지로 이동 (스텝서비스)
+   * 회원가입 otp 체크 페이지 (페이지 버튼o, 스텝서비스)
+   * 기록초기화 (페이지 버튼o, 템플릿)
+   * 회원탈퇴 페이지 (페이지 버튼o, 템플릿)
+   */
   private readonly authApi = inject(AuthApi);
   private readonly router = inject(Router);
   private readonly modalReactiveService = inject(ModalReactiveService);
   private readonly stepService = inject(StepService);
 
-  page = input<string>('');
   emailInput = input<string>('');
+
   otp = output<string>();
+
   isVerified = signal<boolean>(false);
   email = signal<string>('');
 
@@ -45,7 +52,6 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
 
     const email = this.stepService.getExtraData('email');
     this.email.set(email);
-    console.log('이메일:', this.email() || this.emailInput());
 
     this.errorMessages = {
       otp: {
@@ -56,7 +62,7 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
       },
     };
 
-    effect(() => this.requestOtp(), { allowSignalWrites: true });
+    effect(() => this.requestOtp());
   }
 
   protected override initForm(): void {
@@ -106,31 +112,6 @@ export class OtpVerifyFormComponent extends BaseForm<OtpFormType> implements OnD
       .subscribe({
         next: () => this.startTimer(),
       });
-  }
-
-  // TODO 버튼 페이지에서 넘어가는 로직 리펙토링
-  onNext() {
-    const otp = this.getRawValue().otp;
-    const formValue = {
-      email: this.email(),
-      otp: otp,
-    };
-
-    this.authApi.verifyOtpWithJwt(formValue).subscribe({
-      next: (res) => {
-        const instance = TokenService.getInstance();
-        instance.store(res);
-        console.log('토큰 저장 완료?', res);
-
-        const router = this.stepService.getExtraData('page');
-
-        if (router === 'otp-verify') {
-          this.router.navigateByUrl('/onboarding');
-        } else {
-          this.stepService.setExtraData('otp', otp).nextStep();
-        }
-      },
-    });
   }
 
   private startTimer() {

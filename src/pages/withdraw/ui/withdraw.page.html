@@ -1,6 +1,12 @@
 <app-header title="회원탈퇴" />
 
-<otp-verify-form [emailInput]="email()" page="withdraw" (otp)="otpValue.set($event)" class="flex-1" />
+<main class="flex-1 px-5 pt-2.5">
+  <p class="mb-10 text-body-s text-gray40">
+    이메일로 인증코드가 발송되었습니다.<br />
+    이메일 확인 후, 인증 코드를 입력해주세요.
+  </p>
+  <otp-verify-form [emailInput]="email()" (otp)="otpValue.set($event)" />
+</main>
 
 <app-footer [hasButton]="true">
   <app-button button text="회원탈퇴" (click)="withdraw()" />

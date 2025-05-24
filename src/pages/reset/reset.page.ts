@@ -3,7 +3,7 @@ import { Component, inject, signal } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { UserApi } from 'src/entities/user';
-import { OtpVerifyFormComponent } from 'src/pages/otp-verify';
+import { OtpVerifyFormComponent } from 'src/features';
 import { ButtonComponent, ModalReactiveService } from 'src/shared/components';
 import { StepService } from 'src/shared/services';
 import { FooterWidget } from 'src/widgets/footer';

@@ -1,13 +1,13 @@
-<app-header title="기록 초기화" />
-
 <main class="flex-1 px-5 pt-2.5">
   <p class="mb-10 text-body-s text-gray40">
     이메일로 인증코드가 발송되었습니다.<br />
     이메일 확인 후, 인증 코드를 입력해주세요.
   </p>
-  <otp-verify-form [emailInput]="email()" (otp)="otpValue.set($event)" />
+  <otp-verify-form (otp)="otpValue.set($event)" />
+
+  <!-- <otp-verify-form [emailInput]="email()" (otp)="otpValue.set($event)" /> -->
 </main>
 
 <app-footer [hasButton]="true">
-  <app-button button text="기록 초기화" (click)="reset()" />
+  <app-button button text="다음으로" rightIcon="arrow-right" [iconSize]="16" (click)="onVerify()" />
 </app-footer>

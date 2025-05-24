@@ -3,8 +3,8 @@ import { Component, effect, inject, viewChild, ViewContainerRef } from '@angular
 import { StepService } from 'src/shared/services';
 import { HeaderWidget } from 'src/widgets/header';
 
-import { EmailCheckComponent, OtpVerifyFormComponent } from '../otp-verify';
-import { PasswordForgotFormComponent } from './ui';
+import { EmailCheckComponent } from '../otp-verify';
+import { OtpVerifyActionComponent, PasswordForgotFormComponent } from './ui';
 
 @Component({
   selector: 'app-forgot-password-page',
@@ -26,10 +26,8 @@ export class ForgotPasswordPage {
 
   constructor() {
     this.stepService.addComponent(EmailCheckComponent);
-    this.stepService.addComponent(OtpVerifyFormComponent);
+    this.stepService.addComponent(OtpVerifyActionComponent);
     this.stepService.addComponent(PasswordForgotFormComponent);
-
-    this.stepService.setExtraData('page', 'forgot-password');
 
     effect(() => this.render());
   }
