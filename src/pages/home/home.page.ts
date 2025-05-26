@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, signal, Type } from '@angular/core';
+import { Component, inject, signal, Type } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 
-import { filter, forkJoin, switchMap, tap } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged, filter, forkJoin, map, switchMap, tap } from 'rxjs';
 
 import { CategoryService } from 'src/entities/category';
 import { CollectionService } from 'src/entities/collection';
 import { UserApi } from 'src/entities/user';
-import { BottomSheetService, ButtonComponent, IconComponent } from 'src/shared/components';
+import { BottomSheetService, ButtonComponent, IconComponent, SearchBarComponent } from 'src/shared/components';
 import { ThemeService } from 'src/shared/services';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
@@ -19,7 +20,7 @@ import { CollectionCardComponent } from './ui';
 @Component({
   selector: 'home-page',
   templateUrl: './home.page.html',
-  imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule, HeaderWidget, SystemFoldersComponent],
+  imports: [FooterWidget, IconComponent, CollectionCardComponent, ButtonComponent, CommonModule, HeaderWidget, SystemFoldersComponent, SearchBarComponent],
   providers: [CategoryService],
   host: {
     class: 'flex h-screen flex-col',
@@ -35,7 +36,6 @@ export class HomePage {
 
   nickname: string = '';
   searchValue = signal<string>('');
-  isDeleted = signal<boolean>(false);
 
   collections = this.collectionService.collections;
   selectedCategories = this.categoryService.selectedCategories;
@@ -43,14 +43,23 @@ export class HomePage {
   constructor() {
     this.loadCollections();
 
-    effect(() => {
-      const isDeleted = this.isDeleted();
-      if (!isDeleted) {
-        return;
-      }
+    const search$ = toObservable(this.searchValue).pipe(debounceTime(500), distinctUntilChanged());
 
-      this.loadCollections();
-    });
+    const categories$ = toObservable(this.selectedCategories).pipe(
+      map((categories) => categories.map((c) => c.id)),
+      distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
+    );
+
+    combineLatest([search$, categories$])
+      .pipe(
+        switchMap(([keyword, categoryIds]) => {
+          if (keyword.trim() === '' && categoryIds.length === 0) {
+            return this.collectionService.getCollections();
+          }
+          return this.collectionService.getCollections(keyword, categoryIds);
+        }),
+      )
+      .subscribe();
   }
 
   createCollection() {
@@ -75,8 +84,6 @@ export class HomePage {
   }
 
   private loadCollections() {
-    this.collectionService.getCollections().subscribe();
-
     this.categoryService
       .getFavCategories()
       .pipe(

@@ -4,7 +4,7 @@
 
 <main class="flex flex-grow flex-col gap-5 px-4 py-5">
   <!-- <app-button (click)="toggleTheme()" [text]="themeService.theme() === 'dark' ? '🌙 Light Mode' : '☀️ Light Mode'" /> -->
-  <!-- <app-search-bar placeholder="사진첩 전체 검색하기" [value]="searchValue()" /> -->
+  <app-search-bar placeholder="사진첩 전체 검색하기" [(value)]="searchValue" />
   <div class="">
     <p class="mb-5 flex items-center justify-between text-white">
       <span class="text-body-s font-bold">{{ nickname }}의 사진첩</span>
@@ -20,7 +20,7 @@
     </p>
     <div class="flex flex-col gap-5">
       @for (collection of collections().default; track $index) {
-        <app-collection-card [collection]="collection" (deleted)="isDeleted.set($event)" />
+        <app-collection-card [collection]="collection" />
       } @empty {
         <div class="col-span-full h-[275px] rounded-[12px] bg-layer20 p-4 text-white">등록된 사진첩이 없습니다</div>
       }

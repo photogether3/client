@@ -21,8 +21,8 @@ export class CollectionService {
 
   constructor() {}
 
-  getCollections() {
-    return this.collectionApi.getCollections().pipe(
+  getCollections(keyword?: string, categoryId?: number[]) {
+    return this.collectionApi.getCollections(keyword, categoryId).pipe(
       tap((res) => {
         this._collections.set(res);
       }),

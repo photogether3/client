@@ -13,8 +13,8 @@ import { CollectionDetailResDTO, CollectionReqDTO, CollectionsResDTO } from '../
 export class CollectionApi {
   private readonly http = inject(HttpClient);
 
-  getCollections() {
-    const params = new HttpParams({
+  getCollections(keyword?: string, categoryId?: number[]) {
+    let params = new HttpParams({
       fromObject: {
         page: 1,
         perPage: 10,
@@ -22,6 +22,15 @@ export class CollectionApi {
         sortBy: 'title',
       },
     });
+
+    if (keyword !== undefined) {
+      params = params.set('keyword', keyword);
+    }
+
+    if (categoryId !== undefined) {
+      categoryId.forEach((id) => (params = params.set('categoryId', id)));
+    }
+
     return this.http.get<CollectionsResDTO>(`${environment.serverUrl}/v1/collections`, { params }).pipe(map((res) => res.items));
   }
 

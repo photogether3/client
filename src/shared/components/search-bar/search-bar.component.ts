@@ -1,6 +1,6 @@
 import { Component, input, model } from '@angular/core';
-
 import { FormsModule } from '@angular/forms';
+
 import { IconComponent } from '../icon';
 
 @Component({
@@ -10,6 +10,7 @@ import { IconComponent } from '../icon';
 })
 export class SearchBarComponent {
   placeholder = input<string>('');
+
   value = model<string>('');
 
   constructor() {}
