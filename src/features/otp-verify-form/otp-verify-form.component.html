@@ -11,20 +11,20 @@
         maxlength="6"
         formControlName="otp"
         [hasError]="!!getErrorMessage('otp')"
-        class="flex-1 w-full" />
+        class="w-full flex-1" />
       <app-button text="확인" appearance="secondary" [isDisabled]="!isValid()" (click)="onVerify()" class="w-24" />
     </div>
     @if (getErrorMessage('otp')) {
-      <p class="mt-2 text-detail-l text-accent50">{{ getErrorMessage('otp') }}</p>
+      <p class="mt-2 text-detail-l text-accent40">{{ getErrorMessage('otp') }}</p>
     }
   </div>
-  <span class="text-white text-body-s">
+  <span class="text-body-s text-white">
     남은 입력시간:
     <span class="font-bold text-accent40">{{ formattedTime }}</span>
   </span>
   <div class="flex justify-between text-body-s">
     <p class="text-gray20">인증코드가 이메일로 전송되지 않았나요?</p>
-    <button (click)="requestOtp()" class="underline text-primary40">재요청</button>
+    <button (click)="requestOtp()" class="text-primary40 underline">재요청</button>
   </div>
 </form>
 
