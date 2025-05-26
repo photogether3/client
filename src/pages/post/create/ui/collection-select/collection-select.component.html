@@ -1,6 +1,6 @@
-<div class="flex-1 px-5 pt-5">
+<div class="flex-1 p-5">
   <div class="flex flex-col gap-5">
-    <p class="text-body-s font-bold text-white">{{ nickname }}의 사진첩</p>
+    <p class="font-bold text-white text-body-s">{{ nickname }}의 사진첩</p>
     <div class="flex flex-col gap-5">
       @for (collection of collections().default; track $index) {
         <app-collection-card [collection]="collection" [isCheckable]="true" [isChecked]="selectedCollectionId() === collection.id" (clickEvent)="onCardChecked(collection.id)" />
