@@ -25,10 +25,17 @@ export class FooterWidget {
           this.url.set(event.url);
         }
       });
+
+      console.log(this.url());
     });
   }
 
   isCurrentUrl(path: string): boolean {
+    if (path === 'home') {
+      if (this.url().includes('collection') || this.url().includes('post')) {
+        return true;
+      }
+    }
     return this.url().includes(path);
   }
 }
