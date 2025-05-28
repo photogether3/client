@@ -1,4 +1,4 @@
-import { Component, effect, forwardRef, inject, input, signal } from '@angular/core';
+import { Component, forwardRef, inject, input, OnInit, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { map } from 'rxjs';
@@ -20,7 +20,7 @@ import { CategoriesGetDTO, CategoryService, TagComponent } from 'src/entities/ca
     },
   ],
 })
-export class CategorySelectorWidget implements ControlValueAccessor {
+export class CategorySelectorWidget implements ControlValueAccessor, OnInit {
   private readonly categoryService = inject(CategoryService);
 
   type = input.required<'all' | 'fav'>();
@@ -37,27 +37,21 @@ export class CategorySelectorWidget implements ControlValueAccessor {
   private onChange: (v: CategoriesGetDTO[]) => void = () => {};
   private onTouched: () => void = () => {};
 
-  constructor() {
-    effect(() => {
-      const isAll = this.type() === 'all';
-      const api$ = isAll ? this.categoryService.getCategories() : this.categoryService.getFavCategories();
+  constructor() {}
 
-      api$
-        .pipe(
-          map((list) => {
-            if (this._isFormMode()) {
-              const selIds = new Set(this._formValue().map((c) => c.id));
-              return list.map((item) => ({ ...item, selected: selIds.has(item.id) }));
-            }
+  ngOnInit() {
+    const api$ = this.type() === 'all' ? this.categoryService.getCategories() : this.categoryService.getFavCategories();
 
-            const serviceSelIds = new Set(this.selectedList().map((c) => c.id));
-            return list.map((item) => ({ ...item, selected: serviceSelIds.has(item.id) }));
-          }),
-        )
-        .subscribe((mapped) => {
-          this.categoryService.setSelectedCategories(mapped);
-        });
-    });
+    api$
+      .pipe(
+        map((list) => {
+          const serviceSelIds = new Set(this.selectedList().map((c) => c.id));
+          return list.map((item) => ({ ...item, selected: serviceSelIds.has(item.id) }));
+        }),
+      )
+      .subscribe((mapped) => {
+        this.categoryService.setSelectedCategories(mapped);
+      });
   }
 
   onToggle(category: CategoriesGetDTO) {
@@ -89,6 +83,11 @@ export class CategorySelectorWidget implements ControlValueAccessor {
       this._formValue.set(value);
     } else if (value !== null) {
       this._formValue.set([value]);
+
+      const selIds = new Set(this._formValue().map((c) => c.id));
+      const mapped = this.categoryList().map((item) => ({ ...item, selected: selIds.has(item.id) }));
+
+      this.categoryService.setSelectedCategories(mapped);
     } else {
       this._formValue.set([]);
     }
