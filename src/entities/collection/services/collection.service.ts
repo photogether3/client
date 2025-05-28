@@ -42,6 +42,10 @@ export class CollectionService {
   }
 
   deleteCollection(collectionId: number) {
-    return this.collectionApi.deleteCollection(collectionId);
+    return this.collectionApi.deleteCollection(collectionId).pipe(
+      tap((res) => {
+        this._collections.update((current) => current.filter((c) => c.id !== collectionId));
+      }),
+    );
   }
 }

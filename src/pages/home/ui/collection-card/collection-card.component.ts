@@ -26,7 +26,6 @@ export class CollectionCardComponent implements OnInit {
   popDirective = viewChild(PopoverDirective);
 
   clickEvent = output<number>();
-  deleted = output<boolean>();
 
   popoverBtn = viewChild.required<ElementRef<HTMLElement>>('popoverBtn');
 
@@ -115,7 +114,6 @@ export class CollectionCardComponent implements OnInit {
             };
 
             this.modalReactiveService.open(modalData).then(() => {
-              this.deleted.emit(true);
               this.popDirective()?.closePopover();
               this.router.navigateByUrl('/home');
             });
