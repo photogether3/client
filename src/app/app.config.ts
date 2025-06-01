@@ -2,6 +2,8 @@ import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAngularSvgIcon } from 'angular-svg-icon';
 
+import { provideLottieOptions } from 'ngx-lottie';
+
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AuthValidators } from 'src/entities/auth/custom-validators';
 import { provideValidationService } from 'src/shared/lib/validation.service';
@@ -15,5 +17,8 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideValidationService(AuthValidators),
+    provideLottieOptions({
+      player: () => import('lottie-web'),
+    }),
   ],
 };
