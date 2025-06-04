@@ -8,9 +8,9 @@ import { LoginFormComponent } from '../form';
 @Component({
   selector: 'login-page',
   templateUrl: './login.page.html',
-  imports: [RouterLink, LoginFormComponent, IconComponent, ButtonComponent],
+  imports: [RouterLink, LoginFormComponent, IconComponent, ButtonComponent, IconComponent],
   host: {
-    class: 'flex h-full flex-col items-center justify-between p-10',
+    class: 'flex h-full flex-col items-center justify-between px-10 py-5',
   },
 })
 export class LoginPage {
