@@ -23,11 +23,13 @@ export class CollectionCardComponent implements OnInit {
   isCheckable = input<boolean>(false);
   isChecked = input<boolean>(false);
 
-  popDirective = viewChild(PopoverDirective);
-
   clickEvent = output<number>();
 
   popoverBtn = viewChild.required<ElementRef<HTMLElement>>('popoverBtn');
+  imageContainer = viewChild.required<ElementRef<HTMLElement>>('imageContainer');
+  popDirective = viewChild(PopoverDirective);
+
+  hasScrolled = false;
 
   isPopoverOpen = signal<boolean>(false);
   imageLoadStatus = signal<boolean[]>([]);
@@ -126,6 +128,17 @@ export class CollectionCardComponent implements OnInit {
 
       default:
         return;
+    }
+  }
+
+  onUserScroll() {
+    if (!this.imageContainer) return;
+
+    const el = this.imageContainer().nativeElement;
+    const isOverflowing = el.scrollWidth > el.clientWidth;
+
+    if (isOverflowing && !this.hasScrolled) {
+      this.hasScrolled = true;
     }
   }
 }
