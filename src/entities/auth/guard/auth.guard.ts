@@ -13,7 +13,6 @@ export const authGuard: CanActivateFn = async () => {
     return true;
   }
 
-  alert('로그인 먼저 진행해주세요!');
   router.navigateByUrl('/login');
   return false;
 };
