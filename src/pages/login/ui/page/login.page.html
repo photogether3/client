@@ -14,7 +14,7 @@
 
 <div class="w-full space-y-4">
   <app-button text="이메일 회원가입" appearance="secondary" (click)="goRegisterPage()" class="w-full" />
-  <button class="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#FEE500] px-4 text-body-m">
+  <button (click)="loginWithKakao()" class="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#FEE500] px-4 text-body-m">
     <app-icon name="kakao" />
     카카오로 시작하기
   </button>

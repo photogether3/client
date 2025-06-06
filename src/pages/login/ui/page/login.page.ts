@@ -1,6 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
+import { App } from '@capacitor/app';
+
+import { KakaoAuthService } from 'src/entities/auth';
 import { ButtonComponent, IconComponent } from 'src/shared/components';
 
 import { LoginFormComponent } from '../form';
@@ -15,10 +18,19 @@ import { LoginFormComponent } from '../form';
 })
 export class LoginPage {
   private readonly router = inject(Router);
+  private readonly kakaoAuthService = inject(KakaoAuthService);
 
-  constructor() {}
+  constructor() {
+    App.addListener('appUrlOpen', (data) => {
+      this.kakaoAuthService.handleRedirect(data.url);
+    });
+  }
 
   goRegisterPage() {
     this.router.navigateByUrl('/register');
+  }
+
+  loginWithKakao() {
+    this.kakaoAuthService.loginWithKakao();
   }
 }
