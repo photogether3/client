@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Browser } from '@capacitor/browser';
 import { Capacitor } from '@capacitor/core';
 
+import { TokenService } from './token.service';
 import { KakaoAuthApi } from '../api';
 
 type ProviderType = { id: string; email: string };
@@ -59,9 +60,24 @@ export class KakaoAuthService {
 
     if (code === 'UNREGISTER') {
       this.setProvider({ id: providerId || '', email: providerEmail || '' });
+    } else if (code === 'LOGIN') {
+      const accessToken = params.get('accessToken');
+      const refreshToken = params.get('refreshToken');
+      const expiresIn = params.get('expiresIn');
+
+      if (!accessToken || !refreshToken || !expiresIn) return;
+
+      const jwt = {
+        accessToken,
+        refreshToken,
+        expiresIn: Number(expiresIn),
+      };
+
+      const instance = TokenService.getInstance();
+      instance.store(jwt);
     }
 
-    this.router.navigateByUrl('/home');
+    this.router.navigateByUrl('');
 
     Browser.close();
   }
