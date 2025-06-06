@@ -61,5 +61,15 @@
 	<string>
 		포토게더에서 상품 이미지를 직접 촬영하거나 프로필 사진을 찍어 바로 앨범에 분류·저장하기 위해 카메라 접근 권한이 필요합니다.
 	</string>
+	<!-- CFBundleURLSchemes: 앱이 처리할 수 있는 커스텀 URL 스킴 목록 정의 -->
+	<key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>photogether</string>
+        </array>
+      </dict>
+    </array>
 	</dict>
 </plist>
