@@ -9,6 +9,13 @@ export type RegisterDTO = {
   policyIds: number[];
 };
 
+export type RegisterKakaoDTO = {
+  provider: string;
+  providerId: string;
+  providerEmail: string;
+  policyIds: number[];
+};
+
 export type GenerateOtpDTO = {
   email: string;
 };
