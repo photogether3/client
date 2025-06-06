@@ -64,7 +64,6 @@ export class OnboardingPage {
   }
 
   styles: Partial<CSSStyleDeclaration> = {
-    maxHeight: '350px',
     paddingLeft: '60px',
     paddingRight: '60px',
     margin: '0 auto',
