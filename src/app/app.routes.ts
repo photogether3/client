@@ -16,6 +16,10 @@ export const routes: Routes = [
     loadComponent: () => import('../pages/register/ui/pages').then((m) => m.RegisterPage),
   },
   {
+    path: 'kakao-register',
+    loadComponent: () => import('../pages/register/ui/pages').then((m) => m.KakaoRegisterPage),
+  },
+  {
     path: 'forgot-password',
     loadComponent: () => import('../pages/forgot-password').then((m) => m.ForgotPasswordPage),
   },
