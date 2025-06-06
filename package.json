@@ -26,6 +26,7 @@
     "@capacitor/android": "^7.1.0",
     "@capacitor/app": "^7.0.1",
     "@capacitor/assets": "^3.0.5",
+    "@capacitor/browser": "^7.0.1",
     "@capacitor/camera": "^7.0.1",
     "@capacitor/core": "^7.1.0",
     "@capacitor/filesystem": "^7.0.1",
