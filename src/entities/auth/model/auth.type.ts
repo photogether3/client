@@ -8,6 +8,7 @@ export type RegisterFormType = {
 export type LoginFormType = {
   email: string;
   password: string;
+  rememberMe: boolean;
 };
 
 export type OtpFormType = {
