@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 
-import { tap } from 'rxjs';
+import { map, tap } from 'rxjs';
 
 import { PostApi } from '../api';
 import { PostMoveReqDTO, PostReqDto, PostType, PostUpdateFormType } from '../model';
@@ -26,7 +26,12 @@ export class PostService {
   }
 
   getPost(postId: string) {
-    return this.postApi.getPost(postId);
+    return this.postApi.getPost(postId).pipe(
+      map((post) => ({
+        ...post,
+        metadataList: (post?.metadataList ?? []).filter((m) => m.isPublic),
+      })),
+    );
   }
 
   createPost(reqDTO: PostReqDto) {

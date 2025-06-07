@@ -25,23 +25,32 @@ export class PostDetailPage {
   collectionId: string | undefined = undefined;
   post: PostType | undefined = undefined;
 
-  constructor() {
-    const postId = this.route.snapshot.paramMap.get('id') as string;
-    this.collectionId = this.router.getCurrentNavigation()?.extras.state?.['collectionId'];
+  constructor() {}
 
-    this.postService.getPost(postId).subscribe((res) => {
-      if (!res) {
-        throw new Error('게시물을 찾을 수 없습니다.');
+  ngOnInit() {
+    this.collectionId = history.state.collectionId;
+
+    this.route.paramMap.subscribe((params) => {
+      const postId = params.get('id');
+
+      if (!postId) {
+        this.router.navigateByUrl(`/collection/${this.collectionId}`);
+        return;
       }
-      this.post = {
-        ...res,
-        metadataList: res.metadataList.filter((meta) => meta.isPublic),
-      };
+
+      this.loadPost(postId);
     });
   }
 
   goPage() {
     this.router.navigateByUrl(`collection/${this.collectionId}`);
+  }
+
+  navigatePost(direction: 'prev' | 'next') {
+    if (!this.post) return;
+
+    const loadedPostId = direction === 'prev' ? this.post.prevPost.id : this.post.nextPost.id;
+    this.router.navigateByUrl(`post/${loadedPostId}`);
   }
 
   isLink(content: string): boolean {
@@ -113,5 +122,17 @@ export class PostDetailPage {
       default:
         return;
     }
+  }
+
+  private loadPost(postId: string) {
+    this.postService.getPost(postId).subscribe((res) => {
+      if (!res) {
+        throw new Error('게시물을 찾을 수 없습니다.');
+      }
+
+      this.post = {
+        ...res,
+      };
+    });
   }
 }
