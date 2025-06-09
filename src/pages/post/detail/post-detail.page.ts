@@ -93,7 +93,7 @@ export class PostDetailPage {
   }
 
   goPage() {
-    this.router.navigateByUrl(`collection/${this.collectionId}`);
+    this.router.navigateByUrl(`collection/${this.post()?.collectionId}`);
   }
 
   isLink(content: string): boolean {
