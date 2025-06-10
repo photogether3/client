@@ -1,5 +1,6 @@
-import { Component, inject, Type } from '@angular/core';
+import { Component, effect, inject, signal, Type } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 import { TagComponent } from 'src/entities/category';
 import { PostService, PostType } from 'src/entities/post';
@@ -13,7 +14,43 @@ import { PostMoveComponent } from './ui';
 @Component({
   selector: 'post-detail-page',
   templateUrl: './post-detail.page.html',
-  imports: [ButtonComponent, FooterWidget, TagComponent, HeaderWidget, IconComponent],
+  styles: `
+    .carousel-container {
+      width: 270px;
+    }
+
+    .carousel-wrapper {
+      width: 270px;
+      position: relative;
+    }
+
+    .carousel {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+
+    .cell {
+      flex-shrink: 0;
+    }
+
+    .cell img {
+      width: 270px;
+      height: 500px;
+      object-fit: cover;
+      border-radius: 20px;
+    }
+
+    .nav-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  `,
+  imports: [ButtonComponent, FooterWidget, TagComponent, HeaderWidget, IconComponent, CommonModule],
 })
 export class PostDetailPage {
   private readonly bottomSheetService = inject(BottomSheetService);
@@ -23,25 +60,40 @@ export class PostDetailPage {
   private readonly modalReactiveService = inject(ModalReactiveService);
 
   collectionId: string | undefined = undefined;
-  post: PostType | undefined = undefined;
+
+  post = signal<PostType | undefined>(undefined);
+  imgUrls = signal<string[]>([]);
+  currentIdx = signal(1);
+
+  readonly MAX_INDEX = this.imgUrls().length - 1;
+  readonly IMAGE_WIDTH = 270;
 
   constructor() {
-    const postId = this.route.snapshot.paramMap.get('id') as string;
-    this.collectionId = this.router.getCurrentNavigation()?.extras.state?.['collectionId'];
+    effect(() => {
+      const postDetail = this.post();
+      if (!postDetail) return;
 
-    this.postService.getPost(postId).subscribe((res) => {
-      if (!res) {
-        throw new Error('게시물을 찾을 수 없습니다.');
+      this.imgUrls.set([postDetail.prevPost?.images.blur, postDetail.imageUrl, postDetail.nextPost?.images.blur]);
+    });
+  }
+
+  ngOnInit() {
+    this.collectionId = history.state.collectionId;
+
+    this.route.paramMap.subscribe((params) => {
+      const postId = params.get('id');
+
+      if (!postId) {
+        this.router.navigateByUrl(`/collection/${this.collectionId}`);
+        return;
       }
-      this.post = {
-        ...res,
-        metadataList: res.metadataList.filter((meta) => meta.isPublic),
-      };
+
+      this.loadPost(postId);
     });
   }
 
   goPage() {
-    this.router.navigateByUrl(`collection/${this.collectionId}`);
+    this.router.navigateByUrl(`collection/${this.post()?.collectionId}`);
   }
 
   isLink(content: string): boolean {
@@ -77,10 +129,10 @@ export class PostDetailPage {
 
     switch (result) {
       case 'update':
-        return this.router.navigateByUrl(`post/update/${this.post!.id}`);
+        return this.router.navigateByUrl(`post/update/${this.post()!.id}`);
       case 'organize':
         return this.bottomSheetService.open(PostMoveComponent as Type<Component>, {
-          postIds: [this.post?.id],
+          postIds: [this.post()?.id],
           hasSystemFolders: true,
         });
       case 'delete':
@@ -92,11 +144,11 @@ export class PostDetailPage {
         };
 
         const result = await this.modalReactiveService.open(modalData);
-        if (result !== '삭제' || !this.post?.id) {
+        if (result !== '삭제' || !this.post()?.id) {
           return;
         }
 
-        return this.postService.deletePost([this.post?.id]).subscribe({
+        return this.postService.deletePost([this.post()!.id]).subscribe({
           next: () => {
             const modalData = {
               title: '게시물 삭제 완료',
@@ -113,5 +165,63 @@ export class PostDetailPage {
       default:
         return;
     }
+  }
+
+  /**
+   *
+   * 캐러셀 구현
+   *
+   */
+  navigatePost(direction: 'prev' | 'next') {
+    if (!this.post) return;
+
+    const loadedPostId = direction === 'prev' ? this.post()!.prevPost.id : this.post()!.nextPost.id;
+    this.router.navigateByUrl(`post/${loadedPostId}`);
+  }
+
+  getStyle(index: number) {
+    const idx = this.currentIdx();
+    const diff = index - idx;
+
+    // 현재
+    if (diff === 0) {
+      return {
+        transform: 'translateX(0) scale(1) rotateY(0deg)',
+        opacity: '1',
+        zIndex: '3',
+      };
+    }
+    // 다음
+    if (diff === 1) {
+      return {
+        transform: 'translateX(0px) scale(0.9) rotateY(-20deg)',
+        opacity: '0.7',
+        zIndex: '2',
+      };
+    }
+    // 이전
+    if (diff === -1) {
+      return {
+        transform: 'translateX(-0px) scale(0.9) rotateY(20deg)',
+        opacity: '0.7',
+        zIndex: '2',
+      };
+    }
+    // 그 외
+    return {
+      transform: 'scale(0.6) rotateY(0deg)',
+      opacity: '0.5',
+      zIndex: '1',
+    };
+  }
+
+  private loadPost(postId: string) {
+    this.postService.getPost(postId).subscribe((res) => {
+      if (!res) {
+        throw new Error('게시물을 찾을 수 없습니다.');
+      }
+
+      this.post.set(res);
+    });
   }
 }

@@ -26,7 +26,7 @@ export class PostApi {
     return this.http.get<PostResDTO>(`${environment.serverUrl}/v1/posts`, { params }).pipe(map((res) => res.items));
   }
 
-  getPost(postId: string): Observable<PostType | undefined> {
+  getPost(postId: string): Observable<PostType> {
     return this.http.get<PostType>(`${environment.serverUrl}/v1/posts/${postId}`);
   }
 

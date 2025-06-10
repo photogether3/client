@@ -1,4 +1,5 @@
 import { CategoriesGetDTO } from 'src/entities/category';
+import { ImgUrlType } from 'src/entities/collection';
 
 export type PostReqDto = {
   collectionId: number;
@@ -49,4 +50,12 @@ export type PostType = {
     content: string;
     isPublic: boolean;
   }[];
+  prevPost: {
+    id: number;
+    images: ImgUrlType;
+  };
+  nextPost: {
+    id: number;
+    images: ImgUrlType;
+  };
 };

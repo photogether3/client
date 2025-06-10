@@ -1,38 +1,63 @@
 <div class="flex flex-col">
-  <app-header [title]="post?.title ?? ''">
+  <app-header [title]="post()?.title ?? ''">
     <button rightContent (click)="openBottomSheet()" class="flex size-5 items-center justify-center rounded-full border border-primary50 bg-[#182B28] px-1 text-primary20">
       <app-icon name="more" [size]="13" />
     </button>
   </app-header>
 
-  <main class="flex-1 w-full px-5 py-10">
+  <main class="relative w-full flex-1 py-10">
+    <div class="absolute inset-0 -z-10 bg-cover bg-center blur-[20px]" [ngStyle]="{ 'background-image': 'url(' + post()!.imageUrl }"></div>
+    <div class="absolute inset-0 -z-10 bg-[#000]/25"></div>
     @defer {
-      @if (post) {
-        <!-- TODO 게시물 상세 페이지 캐러셀 -->
-        <!-- TODO 게시물 상세 페이지 배경색 -->
-        <img [src]="post.imageUrl" alt="임시 이미지" class="mx-auto mb-10 w-[270px] rounded-[12px] border-2 border-primary50 shadow-custom" />
+      @if (post()) {
+        <div class="relative w-full">
+          <div class="carousel-wrapper mx-auto mb-10">
+            <div class="carousel" [style.transform]="'translateX(' + currentIdx() * -IMAGE_WIDTH + 'px)'">
+              @for (url of imgUrls(); track $index) {
+                <div class="cell" [ngStyle]="getStyle($index)">
+                  <img [src]="url" [alt]="'이미지'" [ngClass]="currentIdx() === $index ? 'border-2 border-primary50 shadow-custom' : ''" class="w-[80%] max-w-[270px]" />
+                </div>
+              }
+            </div>
+          </div>
 
-        <section class="mb-5 rounded-[12px] border border-gray70 bg-layer40 px-4 py-5">
-          <div class="flex items-center justify-between pb-4 border-b border-b-white/20">
-            <app-tag [tagName]="post.category ? post.category.name : post.collection.title" [type]="post.category ? 'solid' : 'outline'" />
+          @if (post()!.prevPost) {
+            <button
+              (click)="navigatePost('prev')"
+              class="nav-button left-2 flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-full border border-gray40 bg-white/10 text-gray40">
+              <app-icon name="arrow-left" />
+            </button>
+          }
+          @if (post()!.nextPost) {
+            <button
+              (click)="navigatePost('next')"
+              class="nav-button right-2 flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-full border border-gray40 bg-white/10 text-gray40">
+              <app-icon name="arrow-right" />
+            </button>
+          }
+        </div>
+
+        <section class="mx-5 mb-5 rounded-[12px] border border-gray70 bg-layer40 px-4 py-5">
+          <div class="flex items-center justify-between border-b border-b-white/20 pb-4">
+            <app-tag [tagName]="post()!.category ? post()!.category!.name : post()!.collection.title" [type]="post()!.category ? 'solid' : 'outline'" />
             <p class="flex items-center gap-1.5 text-white">
               <app-icon name="folder" [size]="16" />
-              <span class="font-bold text-detail-l">{{ post.collection.title }}</span>
+              <span class="text-detail-l font-bold">{{ post()!.collection.title }}</span>
             </p>
           </div>
 
-          <div class="py-5 border-b border-b-white/20">
-            <span class="font-bold text-white text-body-s">게시물 내용</span>
-            <p class="mt-2.5 text-detail-l text-gray40">{{ post.content }}</p>
+          <div class="border-b border-b-white/20 py-5">
+            <span class="text-body-s font-bold text-white">게시물 내용</span>
+            <p class="mt-2.5 text-detail-l text-gray40">{{ post()!.content }}</p>
           </div>
 
           <div class="pt-5">
-            <span class="font-bold text-white text-body-s">사진 내용</span>
+            <span class="text-body-s font-bold text-white">사진 내용</span>
             <ul class="mt-2.5 flex flex-col gap-2.5">
-              @for (imgContent of post.metadataList; track $index) {
-                <li class="list-disc list-inside text-detail-l text-gray40">
+              @for (imgContent of post()!.metadataList; track $index) {
+                <li class="list-inside list-disc text-detail-l text-gray40">
                   @if (isLink(imgContent.content)) {
-                    <a [href]="getHref(imgContent.content)" target="_blank" rel="noopener noreferrer" class="underline text-primary40">
+                    <a [href]="getHref(imgContent.content)" target="_blank" rel="noopener noreferrer" class="text-primary40 underline">
                       {{ imgContent.content }}
                     </a>
                   } @else {
@@ -45,9 +70,9 @@
         </section>
       }
     } @loading {
-      <div class="flex flex-col items-center justify-center text-center bg-white">게시물 정보를 찾을 수 없습니다. 다시 시도해주세요.</div>
+      <div class="flex flex-col items-center justify-center bg-white text-center">게시물 정보를 찾을 수 없습니다. 다시 시도해주세요.</div>
     }
-    <app-button text="목록으로 돌아가기" width="full" (click)="goPage()" />
+    <app-button text="목록으로 돌아가기" width="full" (click)="goPage()" class="px-5" />
   </main>
 
   <app-footer />
