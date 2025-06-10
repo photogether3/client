@@ -21,7 +21,8 @@
           [popoverItems]="popoverItems"
           [(isPopoverOpen)]="isPopoverOpen"
           [ngClass]="isPopoverOpen() ? 'bg-primary50' : ''"
-          class="flex size-5 items-center justify-center rounded-full">
+          class="flex size-5 items-center justify-center rounded-full"
+          (click)="$event.stopPropagation()">
           <app-icon name="kebab" />
         </button>
       </div>
