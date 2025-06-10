@@ -1,59 +1,67 @@
 <!-- TODO step 1,2가 있는 것 상태관리 -->
 
 @if (hasLottie()) {
-  <div class="flex h-full flex-col gap-5">
-    <div class="mt-5 px-5 pt-[env(safe-area-inset-bottom)] text-right">
+  <div class="flex h-screen flex-col overflow-hidden">
+    <div class="px-5 pb-5 pt-[calc(env(safe-area-inset-bottom)+20px)] text-right">
       <span (click)="skipLottie()" class="text-detail-l text-primary40 underline">건너뛰기</span>
     </div>
-    <ng-lottie [options]="options()" [styles]="styles" (animationCreated)="animationCreated($event)" class="flex-1" />
-    <div class="mx-auto flex h-10 w-20 items-center gap-1 rounded-full border border-white/20 bg-layer30 px-4">
-      @for (step of [1, 2, 3]; track $index) {
-        <span [ngClass]="step === lottieStep() ? 'w-5 bg-primary50' : 'w-2 bg-layer10'" class="block h-2 rounded-full"></span>
-      }
-    </div>
-    <div class="px-5">
-      <p class="text-title-s font-bold text-white">
-        <span class="text-primary40">{{ lottieStep() }}</span>
-        {{ stepContents[lottieStep() - 1].title }}
-      </p>
-      <p class="pl-5 pt-2.5 text-detail-l text-gray40">{{ stepContents[lottieStep() - 1].subtitle }}</p>
+
+    <div class="flex-1 overflow-hidden">
+      <ng-lottie [options]="options()" [styles]="styles" (animationCreated)="animationCreated($event)" />
     </div>
 
-    <app-button button text="다음으로" rightIcon="arrow-right" (click)="updateLottieStep()" class="mb-5 px-5 pb-[env(safe-area-inset-bottom)]" />
+    <div class="shrink-0 pt-5">
+      <div class="mx-auto mb-5 flex min-h-10 w-20 items-center gap-1 rounded-full border border-white/20 bg-layer30 px-4">
+        @for (step of [1, 2, 3]; track $index) {
+          <span [ngClass]="step === lottieStep() ? 'w-5 bg-primary50' : 'w-2 bg-layer10'" class="block h-2 rounded-full"></span>
+        }
+      </div>
+      <div class="px-5">
+        <p class="text-title-s font-bold text-white">
+          <span class="text-primary40">{{ lottieStep() }}</span>
+          {{ stepContents[lottieStep() - 1].title }}
+        </p>
+        <p class="mb-[35px] pl-5 pt-2.5 text-detail-l text-gray40">{{ stepContents[lottieStep() - 1].subtitle }}</p>
+      </div>
+
+      <app-button button text="다음으로" rightIcon="arrow-right" (click)="updateLottieStep()" class="block px-5 pb-[calc(env(safe-area-inset-bottom)+20px)]" />
+    </div>
   </div>
 } @else {
-  <app-header title="환영합니다">
-    <div rightContent class="flex items-center gap-2 text-white">
-      <span class="whitespace-nowrap text-body-m font-bold">{{ step() === 1 ? '정보입력' : '관심주제' }}</span>
-      <p class="flex text-body-m">
-        <span class="font-bold text-primary60">{{ step() }}</span>
-        /2
-      </p>
-    </div>
-  </app-header>
+  <div class="flex h-screen flex-col">
+    <app-header title="환영합니다">
+      <div rightContent class="flex items-center gap-2 text-white">
+        <span class="whitespace-nowrap text-body-m font-bold">{{ step() === 1 ? '정보입력' : '관심주제' }}</span>
+        <p class="flex text-body-m">
+          <span class="font-bold text-primary60">{{ step() }}</span>
+          /2
+        </p>
+      </div>
+    </app-header>
 
-  <main class="flex flex-1 flex-col p-4">
-    @if (step() === 1) {
-      <p class="mb-10 text-body-s text-gray40">
-        회원가입이 거의 완료되었습니다. <br />
-        회원님에 대해서 알려주세요.
-      </p>
-      <app-profile-update-form #profileForm />
-    } @else {
-      <p class="mb-10 text-body-s text-gray40">
-        회원님의 관심주제를 선택해주세요. <br />
-        선택한 주제에 대한 사진첩을 만드실 수 있습니다.
-      </p>
-      <app-category-selector type="all" [isMultiSelect]="true" />
-      <p class="mb-5 text-center text-body-s font-bold text-primary40">선택한 주제는 나중에 다시 수정할 수 있어요!</p>
-    }
-  </main>
+    <main class="flex flex-1 flex-col p-4">
+      @if (step() === 1) {
+        <p class="mb-10 text-body-s text-gray40">
+          회원가입이 거의 완료되었습니다. <br />
+          회원님에 대해서 알려주세요.
+        </p>
+        <app-profile-update-form #profileForm />
+      } @else {
+        <p class="mb-10 text-body-s text-gray40">
+          회원님의 관심주제를 선택해주세요. <br />
+          선택한 주제에 대한 사진첩을 만드실 수 있습니다.
+        </p>
+        <app-category-selector type="all" [isMultiSelect]="true" />
+        <p class="mb-5 text-center text-body-s font-bold text-primary40">선택한 주제는 나중에 다시 수정할 수 있어요!</p>
+      }
+    </main>
 
-  <app-footer [hasButton]="true">
-    @if (step() === 1) {
-      <app-button button text="다음으로" [isDisabled]="buttonDisabled" (click)="clickFooterButton()" />
-    } @else {
-      <app-profile-update-button button buttonText="사진첩 정리하러 가기" [isDisabled]="buttonDisabled" [form]="profileSnapshot()!" (handleButton)="updateProfile()" />
-    }
-  </app-footer>
+    <app-footer [hasButton]="true">
+      @if (step() === 1) {
+        <app-button button text="다음으로" [isDisabled]="buttonDisabled" (click)="clickFooterButton()" />
+      } @else {
+        <app-profile-update-button button buttonText="사진첩 정리하러 가기" [isDisabled]="buttonDisabled" [form]="profileSnapshot()!" (handleButton)="updateProfile()" />
+      }
+    </app-footer>
+  </div>
 }
