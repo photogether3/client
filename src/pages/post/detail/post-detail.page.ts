@@ -1,13 +1,13 @@
-import { Component, effect, inject, signal, Type } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Component, inject, signal, Type } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { TagComponent } from 'src/entities/category';
 import { PostService, PostType } from 'src/entities/post';
 import { BottomSheetService, ButtonComponent, IconComponent, ModalReactiveService } from 'src/shared/components';
+import { ActionButtonsComponent, ActionButtonType } from 'src/widgets/action-buttons';
 import { FooterWidget } from 'src/widgets/footer';
 import { HeaderWidget } from 'src/widgets/header';
-import { ActionButtonsComponent, ActionButtonType } from 'src/widgets/action-buttons';
 
 import { PostMoveComponent } from './ui';
 
@@ -62,24 +62,20 @@ export class PostDetailPage {
   collectionId: string | undefined = undefined;
 
   post = signal<PostType | undefined>(undefined);
-  imgUrls = signal<string[]>([]);
+  images = signal<any[]>([]);
   currentIdx = signal(1);
 
-  readonly MAX_INDEX = this.imgUrls().length - 1;
+  // readonly MAX_INDEX = this.images().length - 1;
   readonly IMAGE_WIDTH = 270;
 
   constructor() {
-    effect(() => {
-      const postDetail = this.post();
-      if (!postDetail) return;
-
-      this.imgUrls.set([postDetail.prevPost?.images.blur, postDetail.imageUrl, postDetail.nextPost?.images.blur]);
-    });
+    this.route.queryParamMap.subscribe(params => {
+      const collectionId = params.get('collectionId')
+      this.collectionId = collectionId ?? '';
+    })
   }
 
   ngOnInit() {
-    this.collectionId = history.state.collectionId;
-
     this.route.paramMap.subscribe((params) => {
       const postId = params.get('id');
 
@@ -176,7 +172,11 @@ export class PostDetailPage {
     if (!this.post) return;
 
     const loadedPostId = direction === 'prev' ? this.post()!.prevPost.id : this.post()!.nextPost.id;
-    this.router.navigateByUrl(`post/${loadedPostId}`);
+    this.router.navigate([`post/${loadedPostId}`], {
+      queryParams: {
+        collectionId: this.collectionId
+      }
+    });
   }
 
   getStyle(index: number) {
@@ -222,6 +222,16 @@ export class PostDetailPage {
       }
 
       this.post.set(res);
+      this.loadImages(res.id);
     });
+  }
+
+  private loadImages(postId: number) {
+    this.postService.getPostImages(this.collectionId!).subscribe(res => {
+      this.images.set(res);
+
+      const imageIdx = this.images().findIndex(image => image.id === postId);
+      this.currentIdx.set(imageIdx);
+    })
   }
 }

@@ -30,6 +30,19 @@ export class PostApi {
     return this.http.get<PostType>(`${environment.serverUrl}/v1/posts/${postId}`);
   }
 
+  getPostImages(collectionId: string, keyword?: string) {
+    let params = new HttpParams()
+      .set('sortOrder', 'desc')
+      .set('sortBy', 'created_at')
+      .set('collectionId', collectionId);
+
+    if (keyword !== undefined) {
+      params = params.set('keyword', keyword);
+    }
+
+    return this.http.get<any>(`${environment.serverUrl}/v1/posts/images`, { params });
+  }
+
   createPost(postReqDto: PostReqDto) {
     const formData = convertToFormData(postReqDto);
     return this.http.post<PostReqDto>(`${environment.serverUrl}/v1/posts`, formData, {

@@ -49,7 +49,7 @@ export class PostCardComponent {
     },
   ];
 
-  constructor() {}
+  constructor() { }
 
   onCheckboxClick(event: Event) {
     event.stopPropagation();
@@ -60,8 +60,10 @@ export class PostCardComponent {
     if (this.isCheckable()) {
       this.checkboxRef().nativeElement.click();
     } else {
-      this.router.navigateByUrl(`post/${this.post().id}`, {
-        state: { collectionId: this.post().collectionId, postId: this.post().id },
+      this.router.navigate([`post/${this.post().id}`], {
+        queryParams: {
+          collectionId: this.post().collectionId,
+        },
       });
     }
   }

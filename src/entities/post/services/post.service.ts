@@ -15,7 +15,7 @@ export class PostService {
 
   readonly postList = computed(() => this._postList());
 
-  constructor() {}
+  constructor() { }
 
   getPosts(collectionId: string) {
     return this.postApi.getPosts(collectionId).pipe(
@@ -32,6 +32,10 @@ export class PostService {
         metadataList: (post?.metadataList ?? []).filter((m) => m.isPublic),
       })),
     );
+  }
+
+  getPostImages(collectionId: string, keyword?: string) {
+    return this.postApi.getPostImages(collectionId, keyword);
   }
 
   createPost(reqDTO: PostReqDto) {

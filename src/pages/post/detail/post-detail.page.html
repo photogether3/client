@@ -13,9 +13,13 @@
         <div class="relative w-full">
           <div class="carousel-wrapper mx-auto mb-10">
             <div class="carousel" [style.transform]="'translateX(' + currentIdx() * -IMAGE_WIDTH + 'px)'">
-              @for (url of imgUrls(); track $index) {
+              @for (image of images(); track $index) {
                 <div class="cell" [ngStyle]="getStyle($index)">
-                  <img [src]="url" [alt]="'이미지'" [ngClass]="currentIdx() === $index ? 'border-2 border-primary50 shadow-custom' : ''" class="w-[80%] max-w-[270px]" />
+                  <img
+                    [src]="post()!.id === image.id ? image.images.detail : image.images.blur"
+                    [alt]="'이미지'"
+                    [ngClass]="currentIdx() === $index ? 'border-2 border-primary50 shadow-custom' : ''"
+                    class="w-[80%] max-w-[270px]" />
                 </div>
               }
             </div>
