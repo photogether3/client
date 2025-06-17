@@ -171,8 +171,14 @@ export class PostDetailPage {
   navigatePost(direction: 'prev' | 'next') {
     if (!this.post) return;
 
-    const loadedPostId = direction === 'prev' ? this.post()!.prevPost.id : this.post()!.nextPost.id;
-    this.router.navigate([`post/${loadedPostId}`], {
+    const images = this.images();
+    const currentIndex = this.currentIdx();
+
+    let nextIndex = direction === 'prev' ? currentIndex - 1 : currentIndex + 1;
+
+    const nextImage = images[nextIndex];
+
+    this.router.navigate([`post/${nextImage.id}`], {
       queryParams: {
         collectionId: this.collectionId
       }

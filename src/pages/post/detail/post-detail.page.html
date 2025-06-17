@@ -25,14 +25,14 @@
             </div>
           </div>
 
-          @if (post()!.prevPost) {
+          @if (currentIdx() > 0) {
             <button
               (click)="navigatePost('prev')"
               class="nav-button left-2 flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-full border border-gray40 bg-white/10 text-gray40">
               <app-icon name="arrow-left" />
             </button>
           }
-          @if (post()!.nextPost) {
+          @if (currentIdx() < images().length - 1) {
             <button
               (click)="navigatePost('next')"
               class="nav-button right-2 flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-full border border-gray40 bg-white/10 text-gray40">
